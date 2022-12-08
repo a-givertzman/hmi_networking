@@ -4,12 +4,15 @@ which was build for industrial HMI application.
 
 ## Features
 ### - Read data from industrial controllers or/and common microcontrollers
-    - Simple color state indicator
-    - Icon color state indicator
+    - PROFINET
+    - Modbus - not implemented yet
+    - CanBus - not implemented yet
+    - IEC 60870-5-104 - not implemented yet
+    - IEC 61850 MMS - not implemented yet
 ### - Data type convertions ond distributions to the view layer in the streams
-    - Linear
-    - Circular
-### - Recieving and calculating some diagnostics information
+    - int <-> bool
+    - int <-> double
+### - Recieving and calculating diagnostics information
     - about self
     - about communication lines
     - about connected controllers
