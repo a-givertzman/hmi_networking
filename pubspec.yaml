@@ -2,6 +2,7 @@ name: hmi_networking
 description: A Flutter package used in hmi_widgets which is helps to visualize states, values, changes and other artefacts from technological processes.
 version: 0.0.1
 homepage: https://github.com/a-givertzman/hmi_networking
+publish_to: none
 
 environment:
   sdk: '>=2.18.5 <3.0.0'
@@ -10,6 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  hmi_core:
+      git:
+        url: https://github.com/a-givertzman/hmi_core.git
+        ref: master # branch name
 
 dev_dependencies:
   flutter_test:

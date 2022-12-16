@@ -1,7 +1,6 @@
 library hmi_networking;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'src/core/ds_line_socket.dart';
+export 'src/core/line_socket.dart';
+export 'src/protocols/custom_protocol_line.dart';
+export 'src/protocols/jsd_line.dart';
