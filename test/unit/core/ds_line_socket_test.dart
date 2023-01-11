@@ -54,19 +54,39 @@ void main() {
         expect(lineSocket.isConnected, false);
       });
 
-      test('requestAll', () async {
+      test('requestAll when isConnected == true', () async {
         final events = <DsDataPoint>[];
         lineSocketSubscription = lineSocket.stream.listen((event) {
           events.add(decodeDataPoints(event).first);
         });
-
         await Future.delayed(const Duration(milliseconds: 100));
 
-        await lineSocket.requestAll();
-
+        lineSocket.requestAll();
         await Future.delayed(const Duration(milliseconds: 100));
 
-        expect(events.every((event) => event.type == DsDataType.bool && event.value == 1), true);
+        expect(
+          events.every(
+            (event) => event.type == DsDataType.bool && event.value == 1),
+            true,
+        );
+      });
+
+      test('requestAll when isConnected == false', () async {
+        final events = <DsDataPoint>[];
+        lineSocketSubscription = lineSocket.stream.listen((event) {
+          events.add(decodeDataPoints(event).first);
+        });
+        await lineSocket.close();
+        await Future.delayed(const Duration(milliseconds: 100));
+
+        lineSocket.requestAll();
+        await Future.delayed(const Duration(milliseconds: 100));
+
+        expect(
+          events.every(
+            (event) => event.type == DsDataType.bool && event.value == 0), 
+            true,
+        );
       });
 
       test('send', () async {
@@ -133,6 +153,7 @@ void main() {
 
       test('stream', () async {
         final receivedData = <String>[];
+        final targetData = <String>[];
         lineSocketSubscription = lineSocket.stream.listen((event) { receivedData.add(utf8.decode(event)); });
         final clientSocket = await socketServer.first;
         
@@ -143,10 +164,10 @@ void main() {
 
         for(var i = 0; i < sendRepetitions; i++) {
           clientSocket.write(testMessage);
+          targetData.add(testMessage);
           await Future.delayed(const Duration(milliseconds: 100));
         }
 
-        final targetData = List.generate(sendRepetitions, (index) => testMessage);
         // removing connection event
         receivedData.removeAt(0);
         expect(receivedData, targetData);

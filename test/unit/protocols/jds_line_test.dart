@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 
@@ -163,16 +164,27 @@ void main() {
       });
 
       test('send', () async {
-        final receivedEvents = <DsDataPoint>[];
-        lineSubscription = line.stream.listen((event) { receivedEvents.add(event); });
+        final receivedCommands = <DsCommand>[];
+        final targetCommands = <DsCommand>[];
+        lineSubscription = line.stream.listen((event) { print(event); });
         
         // Do not remove! `Connection reset by peer` error will be thrown on group run.
         clientSocket = await socketServer.first;
+        
+        clientSocket!.listen((event) { 
+          receivedCommands.add(DsCommand.fromJson(utf8.decode(event))); 
+        });
+
 
         await Future.delayed(const Duration(milliseconds: 100));
-        final result = await line.send(testDsCommand);
 
-        expect(result.data, true);
+        for (final command in commandPool) {
+          final result = await line.send(command);
+          expect(result.data, true);
+          targetCommands.add(command);
+        }
+
+        expect(receivedCommands, targetCommands);
       });
 
       test('close', () async {

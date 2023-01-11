@@ -35,20 +35,10 @@ Uint8List encodeDataPoints(List<DsDataPoint> dataPoints) {
   );
 }
 
-bool compareDataPoints(DsDataPoint first, DsDataPoint second) {
-  return first.type == second.type
-    && first.path == second.path
-    && first.name == second.name
-    && first.value == second.value
-    && first.status == second.status
-    && first.history == second.history
-    && first.alarm == second.alarm
-    && first.timestamp == second.timestamp;
-}
 
 bool compareDataPointCollections(List<DsDataPoint> first, List<DsDataPoint> second) {
   return first.asMap().entries
-    .every((entry) => compareDataPoints(entry.value, second[entry.key]));
+    .every((entry) => entry.value == second[entry.key]);
 }
 
 Completer<T> wrapInCompleter<T>(Future<T> future) {
