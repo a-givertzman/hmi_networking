@@ -38,7 +38,7 @@ class JdsLine implements CustomProtocolLine {
       final dType = DsDataType.fromString(json['type'] as String);
       if (dType == DsDataType.bool) {
         return DsDataPoint<bool>(
-          type: DsDataType.fromString(json['type'] as String),
+          type: dType,
           path: json['path'] as String,
           name: json['name'] as String,
           value: int.parse(json['value']) > 0,
@@ -47,12 +47,27 @@ class JdsLine implements CustomProtocolLine {
           alarm: json['alarm'] as int? ?? 0,
           timestamp: json['timestamp'] as String,
         );
-      } else if (dType == DsDataType.integer) {
+      } else if (dType == DsDataType.integer 
+              || dType == DsDataType.uInt 
+              || dType == DsDataType.dInt 
+              || dType == DsDataType.word 
+              || dType == DsDataType.lInt) {
         return DsDataPoint<int>(
-          type: DsDataType.fromString(json['type'] as String),
+          type: dType,
           path: json['path'] as String,
           name: json['name'] as String,
           value: int.parse(json['value']),
+          status: DsStatus.fromValue(json['status']  as int),
+          history: json['history'] as int? ?? 0,
+          alarm: json['alarm'] as int? ?? 0,
+          timestamp: json['timestamp'] as String,
+        );
+      } else if (dType == DsDataType.real) {
+        return DsDataPoint<double>(
+          type: dType,
+          path: json['path'] as String,
+          name: json['name'] as String,
+          value: double.parse(json['value']),
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
           alarm: json['alarm'] as int? ?? 0,
