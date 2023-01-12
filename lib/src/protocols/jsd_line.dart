@@ -121,7 +121,7 @@ class JdsLine implements CustomProtocolLine {
   }
   ///
   /// converts json string into DsCommand dipending on the type stored in the json['type']
-  static DsCommand _dsCommandFromJson<T>(String json) {
+  static DsCommand _dsCommandFromJson(String json) {
     // log(true, '[$DataPoint.fromJson] json: $json');
     try {
       final decoded = const JsonCodec().decode(json) as Map;
