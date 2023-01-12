@@ -12,11 +12,10 @@ final testDsCommand = DsCommand(
   timestamp: DsTimeStamp.now(),
 );
 
-/// Commands with all DsDataClass-DsDataType combinations
-final commandPool = [
+final validCommandsPool = [
   for (final dataClass in DsDataClass.values)
     [
-      DsCommand(
+  DsCommand(
         dsClass: dataClass,
         type: DsDataType.bool, 
         path: '', 
@@ -72,15 +71,6 @@ final commandPool = [
       ),
       DsCommand(
         dsClass: dataClass,
-        type: DsDataType.real, 
-        path: '', 
-        name: '', 
-        value: 12345.123, 
-        status: DsStatus.ok, 
-        timestamp: DsTimeStamp.now(),
-      ),
-      DsCommand(
-        dsClass: dataClass,
         type: DsDataType.time, 
         path: '',
         name: '', 
@@ -94,6 +84,22 @@ final commandPool = [
         path: '',
         name: '', 
         value: 123, 
+        status: DsStatus.ok, 
+        timestamp: DsTimeStamp.now(),
+      ),
+    ]
+].expand((commands) => commands).toList();
+
+/// Commands with all DsDataClass-DsDataType combinations
+final invalidCommandsPool = [
+  for (final dataClass in DsDataClass.values)
+    [
+      DsCommand(
+        dsClass: dataClass,
+        type: DsDataType.real, 
+        path: '', 
+        name: '', 
+        value: 12345.123, 
         status: DsStatus.ok, 
         timestamp: DsTimeStamp.now(),
       ),

@@ -23,6 +23,14 @@ List<DsDataPoint> decodeDataPoints(Uint8List bytes) {
     .toList();
 }
 
+List<DsCommand> decodeCommands(Uint8List bytes) {
+  return JdsLine.chunks(bytes, Jds.endOfTransmission)
+    .map((chunk) => String.fromCharCodes(chunk))
+    .where((rawCommand) => rawCommand.isNotEmpty)
+    .map((rawCommand) => DsCommand.fromJson(rawCommand))
+    .toList();
+}
+
 Uint8List encodeDataPoints(List<DsDataPoint> dataPoints) {
   return Uint8List.fromList(
     dataPoints.map(
