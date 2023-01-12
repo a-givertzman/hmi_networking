@@ -35,16 +35,32 @@ class JdsLine implements CustomProtocolLine {
   static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
     // log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
     try {
-      return DsDataPoint(
-        type: DsDataType.fromString(json['type'] as String),
-        path: json['path'] as String,
-        name: json['name'] as String,
-        value: json['value'],
-        status: DsStatus.fromValue(json['status']  as int),
-        history: json['history'] as int? ?? 0,
-        alarm: json['alarm'] as int? ?? 0,
-        timestamp: json['timestamp'] as String,
-      );
+      final dType = DsDataType.fromString(json['type'] as String);
+      if (dType == DsDataType.bool) {
+        return DsDataPoint<bool>(
+          type: DsDataType.fromString(json['type'] as String),
+          path: json['path'] as String,
+          name: json['name'] as String,
+          value: int.parse(json['value']) > 0,
+          status: DsStatus.fromValue(json['status']  as int),
+          history: json['history'] as int? ?? 0,
+          alarm: json['alarm'] as int? ?? 0,
+          timestamp: json['timestamp'] as String,
+        );
+      } else if (dType == DsDataType.integer) {
+        return DsDataPoint<int>(
+          type: DsDataType.fromString(json['type'] as String),
+          path: json['path'] as String,
+          name: json['name'] as String,
+          value: int.parse(json['value']),
+          status: DsStatus.fromValue(json['status']  as int),
+          history: json['history'] as int? ?? 0,
+          alarm: json['alarm'] as int? ?? 0,
+          timestamp: json['timestamp'] as String,
+        );
+      } else {
+        _throwNotImplementedFailure(dType);
+      }
     } catch (error) {
       // log(true, '[$DsDataPoint.fromRow] error: $error\nrow: $row');
       // log(ug, '[$DataPoint.fromJson] dataPoint: $dataPoint');
@@ -53,6 +69,13 @@ class JdsLine implements CustomProtocolLine {
         stackTrace: StackTrace.current,
       );
     }
+  }
+  ///
+  static Never _throwNotImplementedFailure(DsDataType dataType) {
+    throw Failure(
+      message: 'Convertion for type "$dataType" is not implemented yet', 
+      stackTrace: StackTrace.current,
+    );
   }
   ///
   /// parse input list of int (from socket)
