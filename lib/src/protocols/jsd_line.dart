@@ -30,6 +30,8 @@ class JdsLine implements CustomProtocolLine {
     required LineSocket lineSocket,
   }) : _lineSocket = lineSocket;
   ///
+  /// Parse incoming json string into DsDataPoint
+  /// depending on type stored in the json['type'] field
   static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
     // log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
     try {
