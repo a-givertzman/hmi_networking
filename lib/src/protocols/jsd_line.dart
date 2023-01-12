@@ -253,12 +253,5 @@ class JdsLine implements CustomProtocolLine {
       );
     }
     // print('event: $decoded');
-  }
-  ///
-  static Never _throwNotImplementedFailure(DsDataType dataType) {
-    throw Failure(
-      message: 'Convertion for type "$dataType" is not implemented yet', 
-      stackTrace: StackTrace.current,
-    );
-  }    
+  } 
 }
