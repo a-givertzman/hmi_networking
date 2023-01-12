@@ -159,4 +159,106 @@ class JdsLine implements CustomProtocolLine {
       timestamp: DsTimeStamp.now(),
     ));
   }
+  ///
+  /// converts json string into DsCommand 
+  /// dipending on the type stored in the json['type']
+  static DsCommand _dsCommandFromJson(String json) {
+    // log(true, '[$DataPoint.fromJson] json: $json');
+    try {
+      final decoded = const JsonCodec().decode(json) as Map;
+      final dataType = DsDataType.fromString('${decoded['type']}');
+      if (dataType == DsDataType.bool) {
+        return DsCommand<bool>(
+          dsClass: DsDataClass.fromString('${decoded['class']}'),
+          type: DsDataType.fromString('${decoded['type']}'),
+          path: '${decoded['path']}',
+          name: '${decoded['name']}',
+          value: (int.parse('${decoded['value']}') > 0),
+          status: DsStatus.fromString('${decoded['status']}'),
+          timestamp: DsTimeStamp.parse('${decoded['timestamp']}'),
+        );
+      } else if (dataType == DsDataType.integer) {
+        return DsCommand<int>(
+          dsClass: DsDataClass.fromString('${decoded['class']}'),
+          type: DsDataType.fromString('${decoded['type']}'),
+          path: '${decoded['path']}',
+          name: '${decoded['name']}',
+          value: int.parse('${decoded['value']}'),
+          status: DsStatus.fromString('${decoded['status']}'),
+          timestamp: DsTimeStamp.parse('${decoded['timestamp']}'),
+        );
+      } else if (dataType == DsDataType.uInt) {
+        return DsCommand<int>(
+          dsClass: DsDataClass.fromString('${decoded['class']}'),
+          type: DsDataType.fromString('${decoded['type']}'),
+          path: '${decoded['path']}',
+          name: '${decoded['name']}',
+          value: int.parse('${decoded['value']}'),
+          status: DsStatus.fromString('${decoded['status']}'),
+          timestamp: DsTimeStamp.parse('${decoded['timestamp']}'),
+        );
+      } else if (dataType == DsDataType.dInt) {
+        return DsCommand<int>(
+          dsClass: DsDataClass.fromString('${decoded['class']}'),
+          type: DsDataType.fromString('${decoded['type']}'),
+          path: '${decoded['path']}',
+          name: '${decoded['name']}',
+          value: int.parse('${decoded['value']}'),
+          status: DsStatus.fromString('${decoded['status']}'),
+          timestamp: DsTimeStamp.parse('${decoded['timestamp']}'),
+        );
+      } else if (dataType == DsDataType.word) {
+        return DsCommand<int>(
+          dsClass: DsDataClass.fromString('${decoded['class']}'),
+          type: DsDataType.fromString('${decoded['type']}'),
+          path: '${decoded['path']}',
+          name: '${decoded['name']}',
+          value: int.parse('${decoded['value']}'),
+          status: DsStatus.fromString('${decoded['status']}'),
+          timestamp: DsTimeStamp.parse('${decoded['timestamp']}'),
+        );
+      } else if (dataType == DsDataType.lInt) {
+        return DsCommand<int>(
+          dsClass: DsDataClass.fromString('${decoded['class']}'),
+          type: DsDataType.fromString('${decoded['type']}'),
+          path: '${decoded['path']}',
+          name: '${decoded['name']}',
+          value: int.parse('${decoded['value']}'),
+          status: DsStatus.fromString('${decoded['status']}'),
+          timestamp: DsTimeStamp.parse('${decoded['timestamp']}'),
+        );
+      } else if (dataType == DsDataType.real) {
+        return DsCommand<double>(
+          dsClass: DsDataClass.fromString('${decoded['class']}'),
+          type: DsDataType.fromString('${decoded['type']}'),
+          path: '${decoded['path']}',
+          name: '${decoded['name']}',
+          value: double.parse('${decoded['value']}'),
+          status: DsStatus.fromString('${decoded['status']}'),
+          timestamp: DsTimeStamp.parse('${decoded['timestamp']}'),
+        );
+      } else if (dataType == DsDataType.time) {
+        _throwNotImplementedFailure(dataType);
+      } else if (dataType == DsDataType.dateAndTime) {
+        _throwNotImplementedFailure(dataType);
+      } else {
+        _throwNotImplementedFailure(dataType);
+      }
+    } catch (error) {
+      log(true, '[$DsCommand.fromJson] error: $error\njson: $json');
+      // log(ug, '[$DsCommand.fromJson] dataPoint: $dataPoint');
+      throw Failure.convertion(
+        message: 'Ошибка в методе $DsCommand.fromJson() $error',
+        stackTrace: StackTrace.current,
+      );
+    }
+    // print('event: $decoded');
+  }
+  ///
+  static Never _throwNotImplementedFailure(DsDataType dataType) {
+    throw Failure(
+      message: 'Convertion for type "$dataType" is not implemented yet', 
+      stackTrace: StackTrace.current,
+    );
+  }    
 }
