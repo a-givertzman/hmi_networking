@@ -33,7 +33,7 @@ class JdsLine implements CustomProtocolLine {
   /// Parse incoming json string into DsDataPoint
   /// depending on type stored in the json['type'] field
   static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
-    // log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
+    log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
     try {
       final dType = DsDataType.fromString(json['type'] as String);
       if (dType == DsDataType.bool) {
@@ -41,7 +41,7 @@ class JdsLine implements CustomProtocolLine {
           type: dType,
           path: json['path'] as String,
           name: json['name'] as String,
-          value: int.parse(json['value']) > 0,
+          value: int.parse('${json['value']}') > 0,
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
           alarm: json['alarm'] as int? ?? 0,
@@ -56,7 +56,7 @@ class JdsLine implements CustomProtocolLine {
           type: dType,
           path: json['path'] as String,
           name: json['name'] as String,
-          value: int.parse(json['value']),
+          value: int.parse('${json['value']}'),
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
           alarm: json['alarm'] as int? ?? 0,
@@ -67,7 +67,7 @@ class JdsLine implements CustomProtocolLine {
           type: dType,
           path: json['path'] as String,
           name: json['name'] as String,
-          value: double.parse(json['value']),
+          value: double.parse('${json['value']}'),
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
           alarm: json['alarm'] as int? ?? 0,
