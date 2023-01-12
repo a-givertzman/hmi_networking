@@ -53,6 +53,9 @@ class JdsLine implements CustomProtocolLine {
     }
   }
   ///
+  /// parse input list of int (from socket)
+  ///  - split list by separator (end of message)
+  ///  - returns stream of list of int, each list is single message
   static Iterable<List<int>> chunks(List<int> data, int separator) sync* {
     int start = 0;
     final length = data.length;
