@@ -30,52 +30,19 @@ class JdsLine implements CustomProtocolLine {
     required LineSocket lineSocket,
   }) : _lineSocket = lineSocket;
   ///
-  /// Parse incoming json string into DsDataPoint
-  /// depending on type stored in the json['type'] field
   static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
     // log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
     try {
-      final dType = DsDataType.fromString(json['type'] as String);
-      if (dType == DsDataType.bool) {
-        return DsDataPoint<bool>(
-          type: dType,
-          path: json['path'] as String,
-          name: json['name'] as String,
-          value: int.parse(json['value']) > 0,
-          status: DsStatus.fromValue(json['status']  as int),
-          history: json['history'] as int? ?? 0,
-          alarm: json['alarm'] as int? ?? 0,
-          timestamp: json['timestamp'] as String,
-        );
-      } else if (dType == DsDataType.integer 
-              || dType == DsDataType.uInt 
-              || dType == DsDataType.dInt 
-              || dType == DsDataType.word 
-              || dType == DsDataType.lInt) {
-        return DsDataPoint<int>(
-          type: dType,
-          path: json['path'] as String,
-          name: json['name'] as String,
-          value: int.parse(json['value']),
-          status: DsStatus.fromValue(json['status']  as int),
-          history: json['history'] as int? ?? 0,
-          alarm: json['alarm'] as int? ?? 0,
-          timestamp: json['timestamp'] as String,
-        );
-      } else if (dType == DsDataType.real) {
-        return DsDataPoint<double>(
-          type: dType,
-          path: json['path'] as String,
-          name: json['name'] as String,
-          value: double.parse(json['value']),
-          status: DsStatus.fromValue(json['status']  as int),
-          history: json['history'] as int? ?? 0,
-          alarm: json['alarm'] as int? ?? 0,
-          timestamp: json['timestamp'] as String,
-        );
-      } else {
-        _throwNotImplementedFailure(dType);
-      }
+      return DsDataPoint(
+        type: DsDataType.fromString(json['type'] as String),
+        path: json['path'] as String,
+        name: json['name'] as String,
+        value: json['value'],
+        status: DsStatus.fromValue(json['status']  as int),
+        history: json['history'] as int? ?? 0,
+        alarm: json['alarm'] as int? ?? 0,
+        timestamp: json['timestamp'] as String,
+      );
     } catch (error) {
       // log(true, '[$DsDataPoint.fromRow] error: $error\nrow: $row');
       // log(ug, '[$DataPoint.fromJson] dataPoint: $dataPoint');
@@ -86,16 +53,6 @@ class JdsLine implements CustomProtocolLine {
     }
   }
   ///
-  static Never _throwNotImplementedFailure(DsDataType dataType) {
-    throw Failure(
-      message: 'Convertion for type "$dataType" is not implemented yet', 
-      stackTrace: StackTrace.current,
-    );
-  }
-  ///
-  /// parse input list of int (from socket)
-  ///  - split list by separator (end of message)
-  ///  - returns stream of list of int, each list is single message
   static Iterable<List<int>> chunks(List<int> data, int separator) sync* {
     int start = 0;
     final length = data.length;
@@ -139,6 +96,7 @@ class JdsLine implements CustomProtocolLine {
     List<int> bytes = utf8.encode(dsCommand.toJson());
     return _lineSocket.send([...bytes]..add(Jds.endOfTransmission));
   }
+
   //  
   @override
   Future close() => _lineSocket.close();
