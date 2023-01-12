@@ -99,7 +99,6 @@ class JdsLine implements CustomProtocolLine {
     List<int> bytes = utf8.encode(dsCommand.toJson());
     return _lineSocket.send([...bytes]..add(Jds.endOfTransmission));
   }
-
   //  
   @override
   Future close() => _lineSocket.close();
