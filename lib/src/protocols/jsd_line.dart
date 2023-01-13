@@ -33,7 +33,7 @@ class JdsLine implements CustomProtocolLine {
   /// Parse incoming json string into DsDataPoint
   /// depending on type stored in the json['type'] field
   static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
-    log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
+    // log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
     try {
       final dType = DsDataType.fromString(json['type'] as String);
       if (dType == DsDataType.bool) {
