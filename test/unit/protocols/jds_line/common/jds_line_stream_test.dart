@@ -15,7 +15,7 @@ void main() {
           stream: Stream.fromFuture(
             Future.delayed(
               const Duration(milliseconds: 100), 
-              () => encodeDataPoints(testDataPoints),
+              () => encodeDataPoints(sourceDataPoints),
             ),
           ),
           isConnected: true,
@@ -27,6 +27,6 @@ void main() {
 
         await Future.delayed(const Duration(milliseconds: 100));
         
-        expect(compareDataPointCollections(receivedEvents, testDataPoints), true);
+        expect(compareDataPointCollections(receivedEvents, targetDataPoints), true);
       });
 }
