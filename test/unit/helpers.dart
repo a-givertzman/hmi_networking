@@ -31,10 +31,10 @@ List<DsCommand> decodeCommands(Uint8List bytes) {
     .toList();
 }
 
-Uint8List encodeDataPoints(List<DsDataPoint> dataPoints) {
+Uint8List encodeDataPoints(List<String> dataPoints) {
   return Uint8List.fromList(
     dataPoints.map(
-      (dataPoint) => utf8.encode(dataPoint.toJson())
+      (dataPoint) => utf8.encode(dataPoint)
         .toList()
         ..add(Jds.endOfTransmission),
     )
