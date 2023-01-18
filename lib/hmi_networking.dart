@@ -9,6 +9,7 @@ export 'src/core/stream_mearged.dart';
 export 'src/core/stream_mearged_or.dart';
 export 'src/core/ds_data_stream_extract.dart';
 export 'src/core/ds_data_point_extracted.dart';
-export 'src/core/double_container.dart';
+export 'src/core/entities/double_container.dart';
+export 'src/core/entities/network_operation_state.dart';
 export 'src/protocols/custom_protocol_line.dart';
 export 'src/protocols/jsd_line.dart';
