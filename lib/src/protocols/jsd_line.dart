@@ -136,7 +136,7 @@ class JdsLine implements CustomProtocolLine {
     DsCommand dsCommand,
   ) {
     log(_debug, '[$JdsLine.send] dsCommand: $dsCommand');
-    List<int> bytes = utf8.encode(dsCommand.toJson());
+    List<int> bytes = utf8.encode(dsCommandToJson(dsCommand));
     return _lineSocket.send([...bytes]..add(Jds.endOfTransmission));
   }
   //  
@@ -253,5 +253,32 @@ class JdsLine implements CustomProtocolLine {
       );
     }
     // print('event: $decoded');
-  } 
+  }
+  ///
+  /// Converts DsCommand to String in json format.
+  /// The `value` should always be numeric, so this method casts bool to int.
+  static String dsCommandToJson(DsCommand dsCommand) {
+    final value = dsCommand.value;
+    if (!(value is bool) && !(value is num)) {
+      throw Failure.convertion(
+        message: 'Ошибка в методе $JdsLine.dsCommandToJson() Некорректный тип поля value',
+        stackTrace: StackTrace.current,
+      );
+    }
+    final dynamic castedValue;
+    if (dsCommand.type == DsDataType.bool && value is bool) {
+      castedValue = value ? 1 : 0;
+    } else {
+      castedValue = value;
+    }
+    return json.encode({
+      'class': dsCommand.dsClass.value,
+      'type': dsCommand.type.value,
+      'path': dsCommand.path,
+      'name': dsCommand.name,
+      'value': castedValue,
+      'status': dsCommand.status.value,
+      'timestamp': dsCommand.timestamp.toString(),
+    });
+  }
 }
