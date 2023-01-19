@@ -45,12 +45,12 @@ void main() {
     expect(events.length, 2);
     // Status after successful connection
     expect(
-      events[0].name == 'Local.System.Connection' && events[0].value == 1,
+      events[0].name == 'Local.System.Connection' && events[0].value == true,
       true,
     );
     // Status by requestAll()
     expect(
-      events[1].name == 'Local.System.Connection' && events[1].value == 1,
+      events[1].name == 'Local.System.Connection' && events[1].value == true,
       true,
     );
 
@@ -62,7 +62,7 @@ void main() {
         && requestCommand.path == ''
         && requestCommand.status == DsStatus.ok
         && requestCommand.type == DsDataType.bool
-        && requestCommand.value == 1,
+        && requestCommand.value == true,
       true,
     );
   });
@@ -83,17 +83,17 @@ void main() {
     expect(events.length, 3);
     // Status after successful connection
     expect(
-      events[0].name == 'Local.System.Connection' && events[0].value == 1,
+      events[0].name == 'Local.System.Connection' && events[0].value == true,
       true,
     );
     // Status after connection loss
     expect(
-      events[1].name == 'Local.System.Connection' && events[1].value == 0,
+      events[1].name == 'Local.System.Connection' && events[1].value == false,
       true,
     );
     // Status by requestAll()
     expect(
-      events[2].name == 'Local.System.Connection' && events[2].value == 0,
+      events[2].name == 'Local.System.Connection' && events[2].value == false,
       true,
     );
     // Command sent to server

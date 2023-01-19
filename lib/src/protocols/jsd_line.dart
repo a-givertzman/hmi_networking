@@ -32,7 +32,7 @@ class JdsLine implements CustomProtocolLine {
   ///
   /// Parse incoming json string into DsDataPoint
   /// depending on type stored in the json['type'] field
-  static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
+  static DsDataPoint dataPointFromJson(Map<String, dynamic> json) {
     // log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
     try {
       final dType = DsDataType.fromString(json['type'] as String);
@@ -121,7 +121,7 @@ class JdsLine implements CustomProtocolLine {
         final rawPoint = String.fromCharCodes(chunck);
         if(rawPoint.isNotEmpty) {
           final jsonPoint = const JsonCodec().decode(rawPoint) as Map<String, dynamic>;
-          final point = _dataPointFromJson(jsonPoint);
+          final point = dataPointFromJson(jsonPoint);
           sink.add(point);
         }
       }
@@ -162,7 +162,7 @@ class JdsLine implements CustomProtocolLine {
   ///
   /// converts json string into DsCommand 
   /// dipending on the type stored in the json['type']
-  static DsCommand _dsCommandFromJson(String json) {
+  static DsCommand dsCommandFromJson(String json) {
     // log(true, '[$DataPoint.fromJson] json: $json');
     try {
       final decoded = const JsonCodec().decode(json) as Map;

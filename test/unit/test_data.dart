@@ -20,7 +20,7 @@ final validCommandsPool = [
         type: DsDataType.bool, 
         path: '', 
         name: '', 
-        value: 0, 
+        value: false, 
         status: DsStatus.ok, 
         timestamp: DsTimeStamp.now(),
       ),
@@ -71,6 +71,22 @@ final validCommandsPool = [
       ),
       DsCommand(
         dsClass: dataClass,
+        type: DsDataType.real, 
+        path: '', 
+        name: '', 
+        value: 12345.123, 
+        status: DsStatus.ok, 
+        timestamp: DsTimeStamp.now(),
+      ),
+    ]
+].expand((commands) => commands).toList();
+
+/// Commands with all DsDataClass-DsDataType combinations
+final invalidCommandsPool = [
+  for (final dataClass in DsDataClass.values)
+    [
+      DsCommand(
+        dsClass: dataClass,
         type: DsDataType.time, 
         path: '',
         name: '', 
@@ -84,22 +100,6 @@ final validCommandsPool = [
         path: '',
         name: '', 
         value: 123, 
-        status: DsStatus.ok, 
-        timestamp: DsTimeStamp.now(),
-      ),
-    ]
-].expand((commands) => commands).toList();
-
-/// Commands with all DsDataClass-DsDataType combinations
-final invalidCommandsPool = [
-  for (final dataClass in DsDataClass.values)
-    [
-      DsCommand(
-        dsClass: dataClass,
-        type: DsDataType.real, 
-        path: '', 
-        name: '', 
-        value: 12345.123, 
         status: DsStatus.ok, 
         timestamp: DsTimeStamp.now(),
       ),
@@ -130,8 +130,8 @@ final sourceDataPoints = <String>[
 ];
 
 final targetDataPoints = <DsDataPoint>[
-  DsDataPoint(type: DsDataType.bool, path: '/server/line1/ied13/db905_visual_data_hast', name: 'HPA.PistonMaxLimit', value: 0, status: DsStatus.invalid, history: 0, alarm: 0, timestamp: '2023-01-12 19:33:23.098078'),
-  DsDataPoint(type: DsDataType.bool, path: '/server/line1/ied13/db905_visual_data_hast', name: 'Winch.Hydromotor2Active', value: 1, status: DsStatus.ok, history: 1, alarm: 0, timestamp: '2023-01-12 19:33:23.098078'),
+  DsDataPoint(type: DsDataType.bool, path: '/server/line1/ied13/db905_visual_data_hast', name: 'HPA.PistonMaxLimit', value: false, status: DsStatus.invalid, history: 0, alarm: 0, timestamp: '2023-01-12 19:33:23.098078'),
+  DsDataPoint(type: DsDataType.bool, path: '/server/line1/ied13/db905_visual_data_hast', name: 'Winch.Hydromotor2Active', value: true, status: DsStatus.ok, history: 1, alarm: 0, timestamp: '2023-01-12 19:33:23.098078'),
   DsDataPoint(type: DsDataType.integer, path: '/server/line1/ied14/db906_visual_data', name: 'system.db906_visual_data.status', value: -32768, status: DsStatus.ok, history: 0, alarm: 0, timestamp: '2023-01-12 19:33:22.149702'),
   DsDataPoint(type: DsDataType.integer, path: '/server/line1/ied14/db906_visual_data', name: 'system.db906_visual_data.status', value: 0, status: DsStatus.ok, history: 0, alarm: 0, timestamp: '2023-01-12 19:33:22.149702'),
   DsDataPoint(type: DsDataType.integer, path: '/server/line1/ied14/db906_visual_data', name: 'system.db906_visual_data.status', value: 32767, status: DsStatus.ok, history: 0, alarm: 0, timestamp: '2023-01-12 19:33:22.149702'),
