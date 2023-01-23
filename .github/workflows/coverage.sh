@@ -39,12 +39,12 @@ do
     if [[ $line == 'end_of_record' ]]; then
         currentCov=$(printf %.2f\\n "$((10000 *   $currentLH/$currentLF))e-2")
         if compare $currentCov '>' $coverageFactor; then
-            message=$(echo -e "${GREEN}$currentCov\t|\t$currentFile${NC}")
-            echo "::notice::coverage level: ok\t$currentCov\t|\t$currentFile$"
+            message=$(echo -e "${GREEN}$currentCov\\t|\\t$currentFile${NC}")
+            echo "::notice::coverage level: ok\\t$currentCov\\t|\\t$currentFile"
         else
-            message=$(echo -e "${RED}$currentCov\t|\t$currentFile${NC}\t<<< coverage mas be more then $coverageFactor%")
-            echo "::warning::coverage level: low\t$currentCov\t|\t$currentFile$"
-            # echo "::notice::Test coverage level:low\t$message"
+            message=$(echo -e "${RED}$currentCov\\t|\\t$currentFile${NC}\t<<< coverage mas be more then $coverageFactor%")
+            # echo "::warning::coverage level: low\t$currentCov\t|\t$currentFile"
+            echo "::error::coverage level: low\\t$currentCov\\t|\\t$currentFile"
         fi
         coverageResults+=( $message )
         echo $message
