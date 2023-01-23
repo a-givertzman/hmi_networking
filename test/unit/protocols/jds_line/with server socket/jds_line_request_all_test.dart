@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -13,6 +14,12 @@ void main() {
   late JdsLine line;
   StreamSubscription<DsDataPoint>? lineSubscription;
   Socket? clientSocket;
+
+  // Points that should have been received after request all command sent
+    final targetDataPoints = {
+      'Local.System.Connection established': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: true, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'Local.System.Connection lost': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+    };
 
   setUp(() async {
     socketServer = await ServerSocket.bind(ip, 0);
@@ -31,75 +38,92 @@ void main() {
   });
 
   test('JdsLine with ServerSocket requestAll when isConnected == true', () async {
-    final events = <DsDataPoint>[];
-    final receivedCommands = <DsCommand>[];
-    line.stream.listen((event) { events.add(event); });
+    final receivedDataPoints = <DsDataPoint>[];
+    final receivedCommands = <String>[];
+    const targetCommandsStartings = [
+      // Command sent to server
+      '{"class":"requestAll","type":"bool","path":"","name":"","value":1,"status":0,"timestamp":"'
+    ];
+    line.stream.listen((event) { 
+      receivedDataPoints.add(event); 
+    });
 
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
     clientSocket!.listen(
-      (event) => receivedCommands.addAll(decodeCommands(event)));
+      (event) => receivedCommands.addAll(
+        splitList(event.toList(), Jds.endOfTransmission)
+          .map((encodedEvent) => utf8.decode(encodedEvent)),
+      ),
+    );
 
     await Future.delayed(const Duration(milliseconds: 100));
     await line.requestAll();
-    expect(events.length, 2);
-    // Status after successful connection
-    expect(
-      events[0].name == 'Local.System.Connection' && events[0].value == true,
-      true,
-    );
-    // Status by requestAll()
-    expect(
-      events[1].name == 'Local.System.Connection' && events[1].value == true,
-      true,
-    );
 
-    // Command sent to server
-    final requestCommand = receivedCommands[0];
-    expect(
-      requestCommand.dsClass == DsDataClass.requestAll 
-        && requestCommand.name == '' 
-        && requestCommand.path == ''
-        && requestCommand.status == DsStatus.ok
-        && requestCommand.type == DsDataType.bool
-        && requestCommand.value == true,
-      true,
-    );
+    expect(receivedDataPoints.length, 2, reason: 'From JdsLine receaved wrong count of satatus data points');
+    for (int i = 0; i < targetDataPoints.length; i++) {
+      expect(
+        compareWithoutTimestamp(receivedDataPoints[i], targetDataPoints['Local.System.Connection established']!),
+        true,
+        reason: 'Line generated wrong status data points',
+      );
+    }
+
+    expect(receivedCommands.length, targetCommandsStartings.length);
+    for (int i = 0; i < targetCommandsStartings.length; i++) {
+      expect(
+        receivedCommands[i].startsWith(targetCommandsStartings[i]),
+        true,
+        reason: 'Sent command doesn`t match json template',
+      );
+    }
   });
 
   test('JdsLine with ServerSocket requestAll when isConnected == false', () async {
-    final events = <DsDataPoint>[];
-    final receivedCommands = <DsCommand>[];
-    line.stream.listen((event) { events.add(event); });
+    final receivedDataPoints = <DsDataPoint>[];
+    final receivedCommands = <String>[];
+    const targetCommands = <String>[
+      // Command sent to server right after successful connection
+      '{"class":"requestAll","type":"bool","path":"","name":"","value":1,"status":0,"timestamp":"'
+    ];
+    line.stream.listen((event) { 
+      receivedDataPoints.add(event);
+    });
 
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
-    await Future.delayed(const Duration(milliseconds: 100));
-    await clientSocket!.close(); 
-    await Future.delayed(const Duration(milliseconds: 100));
+    clientSocket!.listen(
+      (event) => receivedCommands.addAll(
+        splitList(event.toList(), Jds.endOfTransmission)
+          .map((encodedEvent) => utf8.decode(encodedEvent)),
+      ),
+    );
+    await clientSocket!.close();
+    await socketServer.close();
 
+    await Future.delayed(const Duration(milliseconds: 100)); 
     await line.requestAll();
 
-    expect(events.length, 3);
-    // Status after successful connection
+    expect(receivedDataPoints.length, 3);
     expect(
-      events[0].name == 'Local.System.Connection' && events[0].value == true,
-      true,
+        compareWithoutTimestamp(receivedDataPoints[0], targetDataPoints['Local.System.Connection established']!),
+        true,
+        reason: 'Line generated wrong status data points: Connection established status is not found',
     );
-    // Status after connection loss
-    expect(
-      events[1].name == 'Local.System.Connection' && events[1].value == false,
-      true,
-    );
-    // Status by requestAll()
-    expect(
-      events[2].name == 'Local.System.Connection' && events[2].value == false,
-      true,
-    );
-    // Command sent to server
-    expect(
-      receivedCommands,
-      []
-    );
+    for (int i = 1; i < targetDataPoints.length; i++) {
+      expect(
+        compareWithoutTimestamp(receivedDataPoints[i], targetDataPoints['Local.System.Connection lost']!),
+        true,
+        reason: 'Line generated wrong status data points: Connection lost status is not found',
+      );
+    }
+    expect(receivedCommands.length, targetCommands.length);
+    for (int i = 0; i < targetCommands.length; i++) {
+      expect(
+        receivedCommands[i].startsWith(targetCommands[i]), 
+        true,
+        reason: 'Sent command doesn`t match json template',
+      );
+    }
   });
 }

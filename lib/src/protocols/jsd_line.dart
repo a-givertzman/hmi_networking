@@ -32,7 +32,7 @@ class JdsLine implements CustomProtocolLine {
   ///
   /// Parse incoming json string into DsDataPoint
   /// depending on type stored in the json['type'] field
-  static DsDataPoint dataPointFromJson(Map<String, dynamic> json) {
+  static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
     // log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
     try {
       final dType = DsDataType.fromString(json['type'] as String);
@@ -96,7 +96,7 @@ class JdsLine implements CustomProtocolLine {
   /// parse input list of int (from socket)
   ///  - split list by separator (end of message)
   ///  - returns stream of list of int, each list is single message
-  static Iterable<List<int>> chunks(List<int> data, int separator) sync* {
+  static Iterable<List<int>> _chunks(List<int> data, int separator) sync* {
     int start = 0;
     final length = data.length;
     for (int i = 0; i < length; i++) {
@@ -117,11 +117,11 @@ class JdsLine implements CustomProtocolLine {
   static final _dataPointTransformer = StreamTransformer<Uint8List, DsDataPoint>.fromHandlers(
     handleData: (data, sink) {
       // log(_debug, '[$JdsLine._dataPointTransformer] data: $data');
-      for (final chunck in chunks(data, Jds.endOfTransmission)) {
+      for (final chunck in _chunks(data, Jds.endOfTransmission)) {
         final rawPoint = String.fromCharCodes(chunck);
         if(rawPoint.isNotEmpty) {
           final jsonPoint = const JsonCodec().decode(rawPoint) as Map<String, dynamic>;
-          final point = dataPointFromJson(jsonPoint);
+          final point = _dataPointFromJson(jsonPoint);
           sink.add(point);
         }
       }
@@ -136,7 +136,7 @@ class JdsLine implements CustomProtocolLine {
     DsCommand dsCommand,
   ) {
     log(_debug, '[$JdsLine.send] dsCommand: $dsCommand');
-    List<int> bytes = utf8.encode(dsCommandToJson(dsCommand));
+    List<int> bytes = utf8.encode(_dsCommandToJson(dsCommand));
     return _lineSocket.send([...bytes]..add(Jds.endOfTransmission));
   }
   //  
@@ -162,7 +162,7 @@ class JdsLine implements CustomProtocolLine {
   ///
   /// converts json string into DsCommand 
   /// dipending on the type stored in the json['type']
-  static DsCommand dsCommandFromJson(String json) {
+  static DsCommand _dsCommandFromJson(String json) {
     // log(true, '[$DataPoint.fromJson] json: $json');
     try {
       final decoded = const JsonCodec().decode(json) as Map;
@@ -245,10 +245,10 @@ class JdsLine implements CustomProtocolLine {
         _throwNotImplementedFailure(dataType);
       }
     } catch (error) {
-      log(true, '[$DsCommand.fromJson] error: $error\njson: $json');
+      log(true, '[$JdsLine._dsCommandFromJson] error: $error\njson: $json');
       // log(ug, '[$DsCommand.fromJson] dataPoint: $dataPoint');
       throw Failure.convertion(
-        message: 'Ошибка в методе $DsCommand.fromJson() $error',
+        message: 'Ошибка в методе $JdsLine._dsCommandFromJson() $error',
         stackTrace: StackTrace.current,
       );
     }
@@ -257,11 +257,11 @@ class JdsLine implements CustomProtocolLine {
   ///
   /// Converts DsCommand to String in json format.
   /// The `value` should always be numeric, so this method casts bool to int.
-  static String dsCommandToJson(DsCommand dsCommand) {
+  static String _dsCommandToJson(DsCommand dsCommand) {
     final value = dsCommand.value;
     if (!(value is bool) && !(value is num)) {
       throw Failure.convertion(
-        message: 'Ошибка в методе $JdsLine.dsCommandToJson() Некорректный тип поля value',
+        message: 'Ошибка в методе $JdsLine._dsCommandToJson() Некорректный тип поля value',
         stackTrace: StackTrace.current,
       );
     }

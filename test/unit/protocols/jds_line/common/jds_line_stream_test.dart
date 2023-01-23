@@ -3,7 +3,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 import '../../../helpers.dart';
-import '../../../test_data.dart';
+import 'test_points_data.dart';
 import 'fake_line_socket.dart';
 
 void main() {
@@ -27,6 +27,6 @@ void main() {
 
         await Future.delayed(const Duration(milliseconds: 100));
         
-        expect(compareDataPointCollections(receivedEvents, targetDataPoints), true);
+        expect(receivedEvents, targetDataPoints);
       });
 }
