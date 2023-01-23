@@ -32,12 +32,6 @@ Uint8List encodeDataPoints(List<String> dataPoints) {
   );
 }
 
-Completer<T> wrapInCompleter<T>(Future<T> future) {
-  final completer = Completer<T>();
-  future.then(completer.complete).catchError(completer.completeError);
-  return completer;
-}
-
 bool compareWithoutTimestamp(DsDataPoint first, DsDataPoint second) =>
     first.type == second.type
     && first.path == second.path
