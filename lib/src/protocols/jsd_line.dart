@@ -266,8 +266,12 @@ class JdsLine implements CustomProtocolLine {
       );
     }
     final dynamic castedValue;
-    if (dsCommand.type == DsDataType.bool && value is bool) {
-      castedValue = value ? 1 : 0;
+    if (dsCommand.type == DsDataType.bool) {
+      if (value is bool) {
+        castedValue = value ? 1 : 0;
+      } else {
+        castedValue = (value > 0) ? 1 : 0;
+      }
     } else {
       castedValue = value;
     }
