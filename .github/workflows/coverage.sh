@@ -42,7 +42,7 @@ do
             message=$(echo -e "${GREEN}$currentCov\\t|\\t$currentFile${NC}")
             echo "::notice::coverage level: ok\\t$currentCov\\t|\\t$currentFile"
         else
-            message=$(echo -e "${RED}$currentCov\\t|\\t$currentFile${NC}\t<<< coverage mas be more then $coverageFactor%")
+            message=$(echo -e "${RED}$currentCov    |\\t$currentFile${NC}\t<<< coverage mas be more then $coverageFactor%")
             # echo "::warning::coverage level: low\t$currentCov\t|\t$currentFile"
             echo "::error::coverage level: low\\t$currentCov\\t|\\t$currentFile"
         fi
