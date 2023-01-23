@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 import '../../helpers.dart';
@@ -26,54 +26,53 @@ void main() {
       });
 
       test('requestAll when isConnected == true', () async {
-        final events = <DsDataPoint>[];
+        final receivedEvents = <String>[];
+        const targetEventsStartings = [
+          // Status after successful connection
+          '{"type":"bool","path":"/Local/","name":"Local.System.Connection","value":1,"status":0,"history":0,"alarm":0,"timestamp":"',
+          // Status by requestAll()
+          '{"type":"bool","path":"/Local/","name":"Local.System.Connection","value":1,"status":0,"history":0,"alarm":0,"timestamp":"',
+        ];
         lineSocketSubscription = lineSocket.stream.listen((event) {
-          events.addAll(decodeDataPoints(event));
+          receivedEvents.addAll(
+            splitList(event.toList(), Jds.endOfTransmission)
+              .map((encodedEvent) => utf8.decode(encodedEvent)),
+          );
         });
         await Future.delayed(const Duration(milliseconds: 100));
         lineSocket.requestAll();
         await Future.delayed(const Duration(milliseconds: 100));
-
-        expect(events.length, 2);
-        // Status after successful connection
-        expect(
-          events[0].name == 'Local.System.Connection' && events[0].value == 1,
-          true,
-        );
-        // Status by requestAll()
-        expect(
-          events[1].name == 'Local.System.Connection' && events[1].value == 1,
-          true,
-        );
+        expect(receivedEvents.length, targetEventsStartings.length);
+        for (int i = 0; i < targetEventsStartings.length; i++) {
+          expect(receivedEvents[i].startsWith(targetEventsStartings[i]), true);
+        }
       });
 
       test('requestAll when isConnected == false', () async {
-        final events = <DsDataPoint>[];
+        final receivedEvents = <String>[];
+        const targetEventsStartings = [
+          // Status after successful connection
+          '{"type":"bool","path":"/Local/","name":"Local.System.Connection","value":1,"status":0,"history":0,"alarm":0,"timestamp":"',
+          // Status after connection loss
+          '{"type":"bool","path":"/Local/","name":"Local.System.Connection","value":0,"status":0,"history":0,"alarm":0,"timestamp":"',
+          // Status by requestAll()
+          '{"type":"bool","path":"/Local/","name":"Local.System.Connection","value":0,"status":0,"history":0,"alarm":0,"timestamp":"',
+        ];
         lineSocketSubscription = lineSocket.stream.listen((event) {
-          events.addAll(decodeDataPoints(event));
+          receivedEvents.addAll(
+            splitList(event.toList(), Jds.endOfTransmission)
+              .map((encodedEvent) => utf8.decode(encodedEvent)),
+          );
         });
         final clientSocket = await socketServer.first;
         await clientSocket.close();
         await Future.delayed(const Duration(milliseconds: 100));
         lineSocket.requestAll();
         await Future.delayed(const Duration(milliseconds: 100));
-
-        expect(events.length, 3);
-        // Status after successful connection
-        expect(
-          events[0].name == 'Local.System.Connection' && events[0].value == 1,
-          true,
-        );
-        // Status after connection loss
-        expect(
-          events[1].name == 'Local.System.Connection' && events[1].value == 0,
-          true,
-        );
-        // Status by requestAll()
-        expect(
-          events[2].name == 'Local.System.Connection' && events[2].value == 0,
-          true,
-        );
+        expect(receivedEvents.length, targetEventsStartings.length);
+        for (int i = 0; i < targetEventsStartings.length; i++) {
+          expect(receivedEvents[i].startsWith(targetEventsStartings[i]), true);
+        }
       });
     },
   );
