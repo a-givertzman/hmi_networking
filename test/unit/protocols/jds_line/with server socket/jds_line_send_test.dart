@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 import '../../../helpers.dart';
-import '../../../test_data.dart';
+import '../test_commands_data.dart';
 
 void main() {
   final ip = InternetAddress.loopbackIPv4;
@@ -32,28 +34,32 @@ void main() {
   });
 
   test('JdsLine with ServerSocket send valid commands', () async {
-    final receivedCommands = <DsCommand>[];
-    final targetCommands = <DsCommand>[];
+    final receivedCommands = <String>[];
+    final targetCommands = <String>[];
     lineSubscription = line.stream.listen((event) { print(event); });
     
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
     
     clientSocket!.listen((event) {
-      receivedCommands.addAll(decodeCommands(event));
+      receivedCommands.addAll(
+        splitList(event.toList(), Jds.endOfTransmission)
+          .map((encodedEvent) => utf8.decode(encodedEvent)),
+      );
     });
     await Future.delayed(const Duration(milliseconds: 100));
 
-    for (final command in validCommandsPool) {
-      line.send(command);
-      targetCommands.add(command);
+    for (final pair in validCommandsPool) {
+      line.send(pair.a);
+      targetCommands.add(pair.b);
     }
     await Future.delayed(const Duration(milliseconds: 100));
-    expect(receivedCommands, targetCommands);
+
+    expect(receivedCommands, targetCommands, reason: 'Sent command doesn`t match json tamplate');
   });
 
   test('JdsLine with ServerSocket send invalid commads', () async {
-    final receivedCommands = <DsCommand>[];
+    final receivedCommands = <Uint8List>[];
     int errorsThrownActual = 0;
     lineSubscription = line.stream.listen((event) { print(event); });
     
@@ -61,22 +67,21 @@ void main() {
     clientSocket = await socketServer.first;
     
     clientSocket!.listen((event) {
-      try {
-        receivedCommands.addAll(decodeCommands(event));
-      } catch(_) {
-        errorsThrownActual += 1;
-      }
-      
+      receivedCommands.add(event);
     });
     await Future.delayed(const Duration(milliseconds: 100));
 
     int errorsThrownTarget = 0;
     for (final command in invalidCommandsPool) {
-      await line.send(command);
+      try {
+        await line.send(command);
+      } catch(_) {
+        errorsThrownActual += 1;
+      }
       errorsThrownTarget += 1;
     }
     
-    expect(errorsThrownActual, errorsThrownTarget);
-    expect(receivedCommands, []);
+    expect(errorsThrownActual, errorsThrownTarget, reason: 'Wrong command doesn`t recognised');
+    expect(receivedCommands, [], reason: 'Nothing should be sent, all commands was wrong');
   });
 }

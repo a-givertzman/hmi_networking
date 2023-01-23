@@ -2,7 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
-import '../../../test_data.dart';
+import '../test_commands_data.dart';
+import 'empty_stream.dart';
 import 'fake_line_socket.dart';
 
 void main() {

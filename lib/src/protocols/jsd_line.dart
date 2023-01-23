@@ -96,7 +96,7 @@ class JdsLine implements CustomProtocolLine {
   /// parse input list of int (from socket)
   ///  - split list by separator (end of message)
   ///  - returns stream of list of int, each list is single message
-  static Iterable<List<int>> chunks(List<int> data, int separator) sync* {
+  static Iterable<List<int>> _chunks(List<int> data, int separator) sync* {
     int start = 0;
     final length = data.length;
     for (int i = 0; i < length; i++) {
@@ -117,7 +117,7 @@ class JdsLine implements CustomProtocolLine {
   static final _dataPointTransformer = StreamTransformer<Uint8List, DsDataPoint>.fromHandlers(
     handleData: (data, sink) {
       // log(_debug, '[$JdsLine._dataPointTransformer] data: $data');
-      for (final chunck in chunks(data, Jds.endOfTransmission)) {
+      for (final chunck in _chunks(data, Jds.endOfTransmission)) {
         final rawPoint = String.fromCharCodes(chunck);
         if(rawPoint.isNotEmpty) {
           final jsonPoint = const JsonCodec().decode(rawPoint) as Map<String, dynamic>;
@@ -136,7 +136,7 @@ class JdsLine implements CustomProtocolLine {
     DsCommand dsCommand,
   ) {
     log(_debug, '[$JdsLine.send] dsCommand: $dsCommand');
-    List<int> bytes = utf8.encode(dsCommand.toJson());
+    List<int> bytes = utf8.encode(_dsCommandToJson(dsCommand));
     return _lineSocket.send([...bytes]..add(Jds.endOfTransmission));
   }
   //  
@@ -245,13 +245,44 @@ class JdsLine implements CustomProtocolLine {
         _throwNotImplementedFailure(dataType);
       }
     } catch (error) {
-      log(true, '[$DsCommand.fromJson] error: $error\njson: $json');
+      log(true, '[$JdsLine._dsCommandFromJson] error: $error\njson: $json');
       // log(ug, '[$DsCommand.fromJson] dataPoint: $dataPoint');
       throw Failure.convertion(
-        message: 'Ошибка в методе $DsCommand.fromJson() $error',
+        message: 'Ошибка в методе $JdsLine._dsCommandFromJson() $error',
         stackTrace: StackTrace.current,
       );
     }
     // print('event: $decoded');
-  } 
+  }
+  ///
+  /// Converts DsCommand to String in json format.
+  /// The `value` should always be numeric, so this method casts bool to int.
+  static String _dsCommandToJson(DsCommand dsCommand) {
+    final value = dsCommand.value;
+    if (!(value is bool) && !(value is num)) {
+      throw Failure.convertion(
+        message: 'Ошибка в методе $JdsLine._dsCommandToJson() Некорректный тип поля value',
+        stackTrace: StackTrace.current,
+      );
+    }
+    final dynamic castedValue;
+    if (dsCommand.type == DsDataType.bool) {
+      if (value is bool) {
+        castedValue = value ? 1 : 0;
+      } else {
+        castedValue = (value > 0) ? 1 : 0;
+      }
+    } else {
+      castedValue = value;
+    }
+    return json.encode({
+      'class': dsCommand.dsClass.value,
+      'type': dsCommand.type.value,
+      'path': dsCommand.path,
+      'name': dsCommand.name,
+      'value': castedValue,
+      'status': dsCommand.status.value,
+      'timestamp': dsCommand.timestamp.toString(),
+    });
+  }
 }
