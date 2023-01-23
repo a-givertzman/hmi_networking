@@ -55,7 +55,7 @@ void main() {
     }
     await Future.delayed(const Duration(milliseconds: 100));
 
-    expect(receivedCommands, targetCommands);
+    expect(receivedCommands, targetCommands, reason: 'Sent command doesn`t match json tamplate');
   });
 
   test('JdsLine with ServerSocket send invalid commads', () async {
@@ -81,7 +81,7 @@ void main() {
       errorsThrownTarget += 1;
     }
     
-    expect(errorsThrownActual, errorsThrownTarget);
-    expect(receivedCommands, []);
+    expect(errorsThrownActual, errorsThrownTarget, reason: 'Wrong command doesn`t recognised');
+    expect(receivedCommands, [], reason: 'Nothing should be sent, all commands was wrong');
   });
 }
