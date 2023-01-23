@@ -16,10 +16,10 @@ void main() {
   Socket? clientSocket;
 
   // Points that should have been received after request all command sent
-    final targetDataPoints = {
-      'Local.System.Connection established': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: true, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-      'Local.System.Connection lost': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    };
+  final targetDataPoints = {
+    'Local.System.Connection established': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: true, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+    'Local.System.Connection lost': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+  };
 
   setUp(() async {
     socketServer = await ServerSocket.bind(ip, 0);
@@ -37,16 +37,35 @@ void main() {
     await socketServer.close();
   });
 
-  test('JdsLine with ServerSocket requestAll when isConnected == true', () async {
+  test('JdsLine with ServerSocket requestAll when isConnected == true | Check received status data point', () async {
     final receivedDataPoints = <DsDataPoint>[];
+    line.stream.listen((event) { 
+      receivedDataPoints.add(event); 
+    });
+
+    // Do not remove! `Connection reset by peer` error will be thrown on group run.
+    clientSocket = await socketServer.first;
+
+    await Future.delayed(const Duration(milliseconds: 100));
+    await line.requestAll();
+
+    expect(receivedDataPoints.length, 2, reason: 'From JdsLine receaved wrong count of satatus data points');
+    for (int i = 0; i < targetDataPoints.length; i++) {
+      expect(
+        compareWithoutTimestamp(receivedDataPoints[i], targetDataPoints['Local.System.Connection established']!),
+        true,
+        reason: 'Line generated wrong status data points',
+      );
+    }
+  });
+  
+  test('JdsLine with ServerSocket requestAll when isConnected == true | Check sent commands', () async {
     final receivedCommands = <String>[];
     const targetCommandsStartings = [
       // Command sent to server
       '{"class":"requestAll","type":"bool","path":"","name":"","value":1,"status":0,"timestamp":"'
     ];
-    line.stream.listen((event) { 
-      receivedDataPoints.add(event); 
-    });
+    line.stream.listen((event) { });
 
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
@@ -60,15 +79,6 @@ void main() {
     await Future.delayed(const Duration(milliseconds: 100));
     await line.requestAll();
 
-    expect(receivedDataPoints.length, 2, reason: 'From JdsLine receaved wrong count of satatus data points');
-    for (int i = 0; i < targetDataPoints.length; i++) {
-      expect(
-        compareWithoutTimestamp(receivedDataPoints[i], targetDataPoints['Local.System.Connection established']!),
-        true,
-        reason: 'Line generated wrong status data points',
-      );
-    }
-
     expect(receivedCommands.length, targetCommandsStartings.length);
     for (int i = 0; i < targetCommandsStartings.length; i++) {
       expect(
@@ -79,25 +89,14 @@ void main() {
     }
   });
 
-  test('JdsLine with ServerSocket requestAll when isConnected == false', () async {
+  test('JdsLine with ServerSocket requestAll when isConnected == false | Check received status data point', () async {
     final receivedDataPoints = <DsDataPoint>[];
-    final receivedCommands = <String>[];
-    const targetCommands = <String>[
-      // Command sent to server right after successful connection
-      '{"class":"requestAll","type":"bool","path":"","name":"","value":1,"status":0,"timestamp":"'
-    ];
     line.stream.listen((event) { 
       receivedDataPoints.add(event);
     });
 
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
-    clientSocket!.listen(
-      (event) => receivedCommands.addAll(
-        splitList(event.toList(), Jds.endOfTransmission)
-          .map((encodedEvent) => utf8.decode(encodedEvent)),
-      ),
-    );
     await clientSocket!.close();
     await socketServer.close();
 
@@ -117,6 +116,30 @@ void main() {
         reason: 'Line generated wrong status data points: Connection lost status is not found',
       );
     }
+  });
+  
+  test('JdsLine with ServerSocket requestAll when isConnected == false | Check sent commands', () async {
+    final receivedCommands = <String>[];
+    const targetCommands = <String>[
+      // Command sent to server right after successful connection
+      '{"class":"requestAll","type":"bool","path":"","name":"","value":1,"status":0,"timestamp":"'
+    ];
+    line.stream.listen((_) {});
+
+    // Do not remove! `Connection reset by peer` error will be thrown on group run.
+    clientSocket = await socketServer.first;
+    clientSocket!.listen(
+      (event) => receivedCommands.addAll(
+        splitList(event.toList(), Jds.endOfTransmission)
+          .map((encodedEvent) => utf8.decode(encodedEvent)),
+      ),
+    );
+    await clientSocket!.close();
+    await socketServer.close();
+
+    await Future.delayed(const Duration(milliseconds: 100)); 
+    await line.requestAll();
+
     expect(receivedCommands.length, targetCommands.length);
     for (int i = 0; i < targetCommands.length; i++) {
       expect(
