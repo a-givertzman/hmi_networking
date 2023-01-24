@@ -52,6 +52,6 @@ do
         echo $message
     fi
 done < "$path"
-echo "results=$coverageResults" >> $GITHUB_OUTPUT
+# echo "results=$coverageResults" >> $GITHUB_OUTPUT
 
 # exit $coverageExitStatus
