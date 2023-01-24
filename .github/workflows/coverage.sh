@@ -44,7 +44,7 @@ do
             message=$(echo -e "${GREEN}$currentCov\t|\t$currentFile${NC}")
             echo "::notice file=$currentFile,title=Good coverage level::$currentCov%"
         else
-            message=$(echo -e "${RED}$currentCov\t|\t$currentFile${NC}\t <<< coverage mas be more then $coverageFactor%")
+            message=$(echo -e "${RED}$currentCov\t|\t$currentFile${NC}")
             echo "::error file=$currentFile,title=Low coverage level::$currentCov% < $coverageFactor%"
             ((coverageExitStatus=coverageExitStatus+1))
         fi
@@ -53,5 +53,7 @@ do
     fi
 done < "$path"
 # echo "results=$coverageResults" >> $GITHUB_OUTPUT
-
+if [[ !coverageExitStatus != 0 ]]; then 
+    echo "### Some files are not enough covered by unit tests! Please check details on your local machine using command: ```flutter test --coverage```" >> $GITHUB_STEP_SUMMARY
+fi
 exit $coverageExitStatus
