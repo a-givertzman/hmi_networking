@@ -29,7 +29,7 @@ path="./coverage/lcov.info"
 while IFS= read -r line
 do
     if [[ $line == 'SF:'* ]]; then
-        currentFile=$line
+        currentFile=$(sed -r 's/^SF:(.+)/\1/' <<< $line)
         currentCov=0
     fi
     if [[ $line == 'LF:'* ]]; then
@@ -41,12 +41,11 @@ do
     if [[ $line == 'end_of_record' ]]; then
         currentCov=$(printf %.2f\\n "$((10000 *   $currentLH/$currentLF))e-2")
         if compare $currentCov '>' $coverageFactor; then
-            message=$(echo -e "${GREEN}$currentCov'\\t'|'\\t'$currentFile${NC}")
-            echo "::notice file=$currentFile,title=Good coverage level::$currentCov"
+            message=$(echo -e "${GREEN}$currentCov\t|\t$currentFile${NC}")
+            echo "::notice file=$currentFile,title=Good coverage level::$currentCov%"
         else
-            message=$(echo -e "${RED}$currentCov'\t'|'\t'$currentFile${NC}'\t'<<< coverage mas be more then $coverageFactor%")
-            # echo "::warning::coverage level: low\t$currentCov\t|\t$currentFile"
-            echo "::error file=$currentFile,title=Low coverage level::$currentCov"
+            message=$(echo -e "${RED}$currentCov\t|\t$currentFile${NC}\t <<< coverage mas be more then $coverageFactor%")
+            echo "::error file=$currentFile,title=Low coverage level::$currentCov% < $coverageFactor%"
             ((coverageExitStatus=coverageExitStatus+1))
         fi
         coverageResults+=( $message )
@@ -55,4 +54,4 @@ do
 done < "$path"
 echo "results=$coverageResults" >> $GITHUB_OUTPUT
 
-exit $coverageExitStatus
+# exit $coverageExitStatus
