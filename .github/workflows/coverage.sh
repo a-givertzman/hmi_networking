@@ -6,6 +6,8 @@ GREEN='\033[0;32m'        # Green
 coverageFactor=30 # minimum percentage of unit tests coverage for each file
 coverageResults=()
 
+coverageExitStatus=0
+
 flutter test --coverage
 
 # Get version of GNU tool
@@ -39,15 +41,18 @@ do
     if [[ $line == 'end_of_record' ]]; then
         currentCov=$(printf %.2f\\n "$((10000 *   $currentLH/$currentLF))e-2")
         if compare $currentCov '>' $coverageFactor; then
-            message=$(echo -e "${GREEN}$currentCov\\t|\\t$currentFile${NC}")
-            echo "::notice::coverage level: ok\\t$currentCov\\t|\\t$currentFile"
+            message=$(echo -e "${GREEN}$currentCov'\\t'|'\\t'$currentFile${NC}")
+            echo "::notice::coverage level: ok'\\t'$currentCov'\\t'|'\\t'$currentFile"
         else
-            message=$(echo -e "${RED}$currentCov    |\\t$currentFile${NC}\t<<< coverage mas be more then $coverageFactor%")
+            message=$(echo -e "${RED}$currentCov'\t'|'\t'$currentFile${NC}'\t'<<< coverage mas be more then $coverageFactor%")
             # echo "::warning::coverage level: low\t$currentCov\t|\t$currentFile"
             echo "::error::coverage level: low\\t$currentCov\\t|\\t$currentFile"
+            $coverageExitStatus++
         fi
         coverageResults+=( $message )
         echo $message
     fi
 done < "$path"
 echo "results=$coverageResults" >> $GITHUB_OUTPUT
+
+exit $coverageExitStatus
