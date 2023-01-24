@@ -54,4 +54,4 @@ do
 done < "$path"
 # echo "results=$coverageResults" >> $GITHUB_OUTPUT
 
-# exit $coverageExitStatus
+exit $coverageExitStatus
