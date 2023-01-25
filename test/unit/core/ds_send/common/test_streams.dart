@@ -1,8 +1,29 @@
+import 'dart:async';
+
 import 'package:hmi_core/hmi_core.dart';
 
 import 'test_point_paths.dart';
 
+StreamController<DsDataPoint<int>> buildController({required int timeout}) {
+  final controller1 = StreamController<DsDataPoint<int>>();
+  controller1.onListen = () {
+    Future.delayed(Duration(seconds: timeout), (() {
+      controller1.add(DsDataPoint(
+          type: DsDataType.integer,
+          path: '',
+          name: '',
+          value: 121,
+          status: DsStatus.ok,
+          timestamp: DsTimeStamp.now().toString(),
+        ));      
+    }));
+  };
+  return controller1;
+}
+
 final testStreams = {
+  'stream_int_valid_timeout': buildController(timeout: 5).stream,
+  'stream_int_exceeded_timeout': buildController(timeout: 11).stream,
   'stream_int': Stream<DsDataPoint<int>>.periodic(
     const Duration(milliseconds: 10),
     (_) => DsDataPoint(
