@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
@@ -12,22 +14,26 @@ class DsSend<T> {
   final DsClient _dsClient;
   final DsPointPath _pointPath;
   final String? _response;
+  final int _responseTimeout;
   ///
   /// [path] - path identifies DataServer Point
   /// [name] - name identifies DataServer Point
   /// [response] - name identifies DataServer Point to read written value
   /// if [response] not set then [name] will be used to read response
+  /// [responseTimeout] - int, timeout in seconds to wait response
   DsSend({
     required DsClient dsClient,
     required DsPointPath pointPath,
     String? response,
+    int responseTimeout = 10,
   }) : 
     assert(_types.containsKey(T)),
     _dsClient = dsClient,
     _pointPath = pointPath,
-    _response = response;
+    _response = response,
+    _responseTimeout = responseTimeout;
   ///
-  Future<DsDataPoint<T>> exec(T value) {
+  Future<Result<DsDataPoint<T>>> exec(T value) {
     _dsClient.send(DsCommand(
       dsClass: DsDataClass.commonCmd,
       type: _types[T], 
@@ -38,10 +44,17 @@ class DsSend<T> {
       timestamp: DsTimeStamp.now(),
     ));
     final response = _response;
-    if (response != null) {
-      return _dsClient.stream<T>(response).first;
-    } else {
-      return _dsClient.stream<T>(_pointPath.name).first;
-    }
+    return _dsClient.stream<T>((response != null) ? response : _pointPath.name)
+      .first
+      .then((value) => Result(data: value))
+      .timeout(
+        Duration(seconds: _responseTimeout), 
+        onTimeout: () => Result<DsDataPoint<T>>(
+          error: Failure(
+            message: 'Timeout exceeded ($_responseTimeout)', 
+            stackTrace: StackTrace.current,
+          ),
+        ),
+      );
   }
 }
