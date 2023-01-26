@@ -51,7 +51,7 @@ class DsSend<T> {
         Duration(seconds: _responseTimeout), 
         onTimeout: () => Result<DsDataPoint<T>>(
           error: Failure(
-            message: 'Timeout exceeded ($_responseTimeout)', 
+            message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout)', 
             stackTrace: StackTrace.current,
           ),
         ),
