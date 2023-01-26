@@ -44,14 +44,14 @@ class DsSend<T> {
       timestamp: DsTimeStamp.now(),
     ));
     final response = _response;
-    return _dsClient.stream<T>((response != null) ? response : _pointPath.name)
+    return _dsClient.stream<T>(response ?? _pointPath.name)
       .first
       .then((value) => Result(data: value))
       .timeout(
         Duration(seconds: _responseTimeout), 
         onTimeout: () => Result<DsDataPoint<T>>(
           error: Failure(
-            message: 'Timeout exceeded ($_responseTimeout)', 
+            message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${response ?? _pointPath.name})', 
             stackTrace: StackTrace.current,
           ),
         ),

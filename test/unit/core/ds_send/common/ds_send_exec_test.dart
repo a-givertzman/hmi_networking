@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/ds_send.dart';
@@ -19,15 +17,15 @@ void main() {
         pointPath: pointPaths[int]!,
         response: 'stream_int_valid_timeout',
       ).exec(123);
-      final timer = Timer(Duration(seconds: timeout), (() {
-        expect(false, true, reason: 'Response timeout ($timeout sec) exceeded!');
-      }));
-      await sendIntResult.then((responsePoint) {
-        timer.cancel();
-        log(_debug, 'responsePoint: $responsePoint');
-        expect(responsePoint.hasData, true, reason: 'Result should contains data');
-        expect(responsePoint.data.value, 121, reason: 'Result data should be 121');
-      });
+      await sendIntResult
+        .then((responsePoint) {
+          log(_debug, 'responsePoint: $responsePoint');
+          expect(responsePoint.hasData, true, reason: 'Result should contains data');
+          expect(responsePoint.data.value, 121, reason: 'Result data should be 121');
+        })
+        .timeout(Duration(seconds: timeout), onTimeout: () {
+          expect(false, true, reason: 'Response timeout ($timeout sec) exceeded!');
+        });
     });
 
     test('with response and exceeded timeout', () async {
@@ -37,14 +35,14 @@ void main() {
         pointPath: pointPaths[int]!,
         response: 'stream_int_exceeded_timeout',
       ).exec(123);
-      final timer = Timer(Duration(seconds: timeout), (() {
-        expect(false, true, reason: 'Response timeout ($timeout sec) exceeded!');
-      }));
-      await sendIntResult.then((responsePoint) {
-        timer.cancel();
-        expect(responsePoint.hasData, false, reason: 'Result should contains data');
-        expect(responsePoint.hasError, true, reason: 'Result should contains Error');
-      });
+      await sendIntResult
+        .then((responsePoint) {
+          expect(responsePoint.hasData, false, reason: 'Result should contains data');
+          expect(responsePoint.hasError, true, reason: 'Result should contains Error');
+        })
+        .timeout(Duration(seconds: timeout), onTimeout: () {
+          expect(false, true, reason: 'Response timeout ($timeout sec) exceeded!');
+        });
     });
 
     test('with response executes all supported types', () async {
