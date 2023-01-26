@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/ds_send.dart';
