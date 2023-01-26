@@ -44,7 +44,7 @@ class DsSend<T> {
       timestamp: DsTimeStamp.now(),
     ));
     final response = _response;
-    return _dsClient.stream<T>((response != null) ? response : _pointPath.name)
+    return _dsClient.stream<T>(response ?? _pointPath.name)
       .first
       .then((value) => Result(data: value))
       .timeout(
