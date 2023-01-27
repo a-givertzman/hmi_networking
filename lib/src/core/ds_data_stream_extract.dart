@@ -4,36 +4,18 @@ import 'package:hmi_core/hmi_core.dart';
 import 'ds_data_point_extracted.dart';
 ///
 ///
-class StatusColors {
-  final Color on;
-  final Color off;
-  final Color error;
-  final Color obsolete;
-  final Color invalid;
-  final Color timeInvalid;
-
-  const StatusColors({
-    required this.on, 
-    required this.off, 
-    required this.error, 
-    required this.obsolete, 
-    required this.invalid, 
-    required this.timeInvalid,
-  });
-}
-///
 class DsDataStreamExtract<T> {
   final List<StreamController<DsDataPointExtracted<T>>> _controllers = [];
   final Stream<DsDataPoint<T>>? _stream;
-  final StatusColors _statusColors;
+  final StateColors _stateColors;
   bool _isActive = false;
   ///
   DsDataStreamExtract({
     required Stream<DsDataPoint<T>>? stream,
-    required StatusColors statusColors,
+    required StateColors stateColors,
   }) : 
     _stream = stream,
-    _statusColors = statusColors;
+    _stateColors = stateColors;
   ///
   void _onListen() {
     if (!_isActive) {
@@ -59,7 +41,6 @@ class DsDataStreamExtract<T> {
   ///
   Stream<DsDataPointExtracted<T>> get stream {
     final controller = StreamController<DsDataPointExtracted<T>>();
-    _controllers.add(controller);
     controller.onListen = () {
       _controllers.add(controller);
       _onListen();
@@ -73,24 +54,24 @@ class DsDataStreamExtract<T> {
   ///
   /// расчитывает текущий цвет в зависимости от point.status и point.value
   Color _buildColor(DsDataPoint<T> point) {
-    Color clr = _statusColors.invalid;
+    Color clr = _stateColors.invalid;
     if (point.status == DsStatus.ok) {
       clr = point.value == DsDps.off.value
-        ? _statusColors.off
+        ? _stateColors.off
         : point.value == DsDps.on.value
-          ? _statusColors.on
+          ? _stateColors.on
           : point.value == DsDps.transient.value
-            ? _statusColors.error
+            ? _stateColors.error
             : clr;
     }
     if (point.status == DsStatus.obsolete) {
-      clr = _statusColors.obsolete;
+      clr = _stateColors.obsolete;
     }
     if (point.status == DsStatus.invalid) {
-      clr = _statusColors.invalid;
+      clr = _stateColors.invalid;
     }
     if (point.status == DsStatus.timeInvalid) {
-      clr = _statusColors.timeInvalid;
+      clr = _stateColors.timeInvalid;
     }
     return clr;
   }  
