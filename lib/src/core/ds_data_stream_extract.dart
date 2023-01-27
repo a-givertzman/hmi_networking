@@ -41,7 +41,6 @@ class DsDataStreamExtract<T> {
   ///
   Stream<DsDataPointExtracted<T>> get stream {
     final controller = StreamController<DsDataPointExtracted<T>>();
-    _controllers.add(controller);
     controller.onListen = () {
       _controllers.add(controller);
       _onListen();
