@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
@@ -16,36 +18,77 @@ void main() {
     off: Color(0x000009), 
     on: Color(0x000010),
   );
-  final sourceDataPoints = [
-    DsDataPoint(type: DsDataType.integer, path: '', name: '', value: DsDps.off.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    DsDataPoint(type: DsDataType.integer, path: '', name: '', value: DsDps.on.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    DsDataPoint(type: DsDataType.integer, path: '', name: '', value: DsDps.transient.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    DsDataPoint(type: DsDataType.integer, path: '', name: '', value: DsDps.undefined, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    DsDataPoint(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    DsDataPoint(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.obsolete, timestamp: DsTimeStamp.now().toString()),
-    DsDataPoint(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString()),
-    DsDataPoint(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.timeInvalid, timestamp: DsTimeStamp.now().toString()),
-  ];
-  final targetColors = [
-    stateColors.off,
-    stateColors.on,
-    stateColors.error,
-    stateColors.invalid,
-    stateColors.invalid,
-    stateColors.obsolete,
-    stateColors.invalid,
-    stateColors.timeInvalid,
+  final pointsData = [
+    {
+      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: DsDps.off.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'color': stateColors.off,
+    },
+    {
+      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: DsDps.on.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'color': stateColors.on,
+    },
+    {
+      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: DsDps.transient.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'color': stateColors.error,
+    },
+    {
+      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: DsDps.undefined.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'color': stateColors.invalid,
+    },
+    {
+      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'color': stateColors.invalid,
+    },
+    {
+      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.obsolete, timestamp: DsTimeStamp.now().toString()),
+      'color': stateColors.obsolete,
+    },
+    {
+      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString()),
+      'color': stateColors.invalid,
+    },
+    {
+      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.timeInvalid, timestamp: DsTimeStamp.now().toString()),
+      'color': stateColors.timeInvalid,
+    },
   ];
   test('DsDataStreamExtract buildColors', () async {
-    final dsDataStreamExtract = DsDataStreamExtract(
-      stream: Stream.fromIterable(sourceDataPoints),
+    final controller = StreamController<DsDataPoint<int>>();
+    final dsDataStreamExtract = DsDataStreamExtract<int>(
+      stream: controller.stream,
       stateColors: stateColors,
     );
-    final receivedColors = <Color>[];
-    dsDataStreamExtract.stream.listen((event) {
-      receivedColors.add(event.color);
-    });
-    await Future.delayed(Duration(milliseconds: 10));
-    expect(receivedColors, targetColors);
+    for (final item in pointsData) {
+      final point = item['point'] as DsDataPoint<int>;
+      controller.add(point);
+      final receivedExtractedPoint = await dsDataStreamExtract.stream.first;
+      expect(receivedExtractedPoint.color, item['color'] as Color, reason: 'Wrong color for point:\n\t$point!\n\tExpected ${item['color']}, but received ${receivedExtractedPoint.color}');
+      expect(receivedExtractedPoint.value, point.value, reason: 'Wrong value! Was changed from ${receivedExtractedPoint.value} to ${point.value}');
+      expect(receivedExtractedPoint.status, point.status, reason: 'Wrong status! Was changed from ${receivedExtractedPoint.status} to ${point.status}');
+    }
+  });
+  test('DsDataStreamExtract single stream ordering & consistensy', () async {
+    final dsDataStreamExtract = DsDataStreamExtract(
+      stream: Stream.fromIterable(
+        pointsData.map(
+          (entry) => entry['point'] as DsDataPoint,
+        ),
+      ),
+      stateColors: stateColors,
+    );
+    final receivedExtractedPoints = await dsDataStreamExtract.stream
+      .timeout(
+        const Duration(milliseconds: 10),
+        onTimeout: (sink) => sink.close(),
+      )
+      .toList();
+    for (int i = 0; i < pointsData.length; i++) {
+      final pointData = pointsData[i];
+      final point = pointData['point'] as DsDataPoint;
+      final color = pointData['color'] as Color;
+      expect(receivedExtractedPoints[i].color, color, reason: 'Wrong color for point:\n\t$point!\n\tExpected ${color}, but received ${receivedExtractedPoints[i].color}');
+      expect(receivedExtractedPoints[i].value, point.value, reason: 'Wrong value! Was changed from ${receivedExtractedPoints[i].value} to ${point.value}');
+      expect(receivedExtractedPoints[i].status, point.status, reason: 'Wrong status! Was changed from ${receivedExtractedPoints[i].status} to ${point.status}');
+    }
   });
 }
