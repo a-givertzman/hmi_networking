@@ -14,7 +14,7 @@ dependencies:
   hmi_core:
       git:
         url: https://github.com/a-givertzman/hmi_core.git
-        ref: State-color-dependency-issue # master # branch name
+        ref: master # branch name
 
 dev_dependencies:
   flutter_test:
