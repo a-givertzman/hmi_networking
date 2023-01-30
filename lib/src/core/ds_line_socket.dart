@@ -11,7 +11,7 @@ class DsLineSocket implements LineSocket{
   bool _isActive = false;
   bool _isConnected = false;
   bool _cancel = false;
-  Socket? _socket = null;
+  Socket? _socket;
   final String _ip;
   final int _port;
   final _controller = StreamController<Uint8List>();

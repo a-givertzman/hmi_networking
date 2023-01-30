@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,7 +11,7 @@ void main() {
   final ip = InternetAddress.loopbackIPv4;
   late ServerSocket socketServer;
   late JdsLine line;
-  StreamSubscription<DsDataPoint>? lineSubscription;
+  // StreamSubscription<DsDataPoint>? lineSubscription;
   Socket? clientSocket;
 
   // Points that should have been received after request all command sent
@@ -32,7 +31,7 @@ void main() {
   });
 
   tearDown(() async {
-    await lineSubscription?.cancel();
+    // await lineSubscription?.cancel();
     await clientSocket?.close();
     await socketServer.close();
   });
