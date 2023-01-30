@@ -30,7 +30,7 @@ Future<void> main() async {
     await Future.delayed(const Duration(milliseconds: 100));
     
     const sendRepetitions = 3;
-    final testMessage = 'test';
+    const testMessage = 'test';
 
     for(var i = 0; i < sendRepetitions; i++) {
       clientSocket.write(testMessage);

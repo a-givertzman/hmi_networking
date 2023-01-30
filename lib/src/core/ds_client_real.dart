@@ -117,7 +117,6 @@ class DsClientReal implements DsClient {
         }
         return DsDataPoint<bool>(
           type: DsDataType.bool,
-          path: event.path,
           name: event.name,
           value: value,
           status: status,
@@ -141,7 +140,6 @@ class DsClientReal implements DsClient {
         }
         return DsDataPoint<int>(
           type: DsDataType.integer,
-          path: event.path,
           name: event.name,
           value: value,
           status: status,
@@ -170,7 +168,6 @@ class DsClientReal implements DsClient {
         }
         return DsDataPoint<double>(
           type: DsDataType.real,
-          path: event.path,
           name: event.name,
           value: value,
           status: status,
@@ -223,7 +220,7 @@ class DsClientReal implements DsClient {
     log(_debug, '[$DsClientReal]');
     _line.stream.listen((dataPoint) {
       // log(_debug, '[$DsClientReal.dataPoint] : $dataPoint');
-      if (_receivers.keys.contains(dataPoint.name)) {
+      if (_receivers.containsKey(dataPoint.name)) {
         // log(_debug, '[$DsClientReal._run] dataPint: $dataPint');
         final receiver = _receivers[dataPoint.name];
         if (receiver != null && !receiver.isClosed) {

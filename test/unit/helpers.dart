@@ -33,7 +33,6 @@ Uint8List encodeDataPoints(List<String> dataPoints) {
 
 bool compareWithoutTimestamp(DsDataPoint first, DsDataPoint second) =>
     first.type == second.type
-    && first.path == second.path
     && first.name == second.name
     && first.value == second.value
     && first.status == second.status

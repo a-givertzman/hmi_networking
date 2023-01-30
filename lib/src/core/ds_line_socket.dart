@@ -90,8 +90,7 @@ class DsLineSocket implements LineSocket{
       utf8.encode(
         DsDataPoint(
           type: DsDataType.bool, 
-          path: '/Local/', 
-          name: 'Local.System.Connection', 
+          name: DsPointName(fullPath: '/Local/Local.System.Connection'), 
           value: isConnected ? 1 : 0, 
           status: DsStatus.ok, 
           timestamp: DsTimeStamp.now().toString(),
@@ -104,7 +103,7 @@ class DsLineSocket implements LineSocket{
     _controller.add(
       _buildConnectionStatus(_isConnected),
     );
-    return Result(data: true);
+    return const Result(data: true);
   }
   ///
   @override
@@ -127,7 +126,7 @@ class DsLineSocket implements LineSocket{
       try {
         socket.add(data);
         await Future.delayed(const Duration(milliseconds: 100));
-        return Future.value(Result(data: true));          
+        return Future.value(const Result(data: true));          
       } catch (error) {
         log(_debug, '[$DsLineSocket.send] error: $error');
         await Future.delayed(const Duration(milliseconds: 100));

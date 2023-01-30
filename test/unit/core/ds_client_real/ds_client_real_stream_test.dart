@@ -39,8 +39,8 @@ void main() {
     final dsClient = DsClientReal(
       line: line,
     );     
-    final repetitionsCount = 10;
-    final subscriptionsCount = 30;
+    const repetitionsCount = 10;
+    const subscriptionsCount = 30;
     final streams = List.generate(
       subscriptionsCount, 
       (index) => const Stream<DsDataPoint<int>>.empty(),

@@ -12,24 +12,24 @@ class DsSend<T> {
     double: DsDataType.real,
   };
   final DsClient _dsClient;
-  final DsPointPath _pointPath;
+  final DsPointName _pointName;
   final String? _response;
   final int _responseTimeout;
   ///
-  /// [path] - path identifies DataServer Point
-  /// [name] - name identifies DataServer Point
+  /// [dsClient] - instance if DsClient 
+  /// [pointName] - full name identifies DataServer Point
   /// [response] - name identifies DataServer Point to read written value
   /// if [response] not set then [name] will be used to read response
   /// [responseTimeout] - int, timeout in seconds to wait response
   DsSend({
     required DsClient dsClient,
-    required DsPointPath pointPath,
+    required DsPointName pointName,
     String? response,
     int responseTimeout = 10,
   }) : 
     assert(_types.containsKey(T)),
     _dsClient = dsClient,
-    _pointPath = pointPath,
+    _pointName = pointName,
     _response = response,
     _responseTimeout = responseTimeout;
   ///
@@ -37,21 +37,21 @@ class DsSend<T> {
     _dsClient.send(DsCommand(
       dsClass: DsDataClass.commonCmd,
       type: _types[T], 
-      path: _pointPath.path, 
-      name: _pointPath.name, 
+      path: _pointName.path, 
+      name: _pointName.name, 
       value: value, 
       status: DsStatus.ok,
       timestamp: DsTimeStamp.now(),
     ));
     final response = _response;
-    return _dsClient.stream<T>(response ?? _pointPath.name)
+    return _dsClient.stream<T>(response ?? _pointName.name)
       .first
       .then((value) => Result(data: value))
       .timeout(
         Duration(seconds: _responseTimeout), 
         onTimeout: () => Result<DsDataPoint<T>>(
           error: Failure(
-            message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${response ?? _pointPath.name})', 
+            message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${response ?? _pointName.name})', 
             stackTrace: StackTrace.current,
           ),
         ),

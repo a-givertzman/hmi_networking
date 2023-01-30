@@ -17,8 +17,8 @@ void main() {
 
   // Points that should have been received after request all command sent
   final targetDataPoints = {
-    'Local.System.Connection established': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: true, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    'Local.System.Connection lost': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+    'Local.System.Connection established': DsDataPoint(type: DsDataType.bool, name: DsPointName(fullPath: "/Local/Local.System.Connection"), value: true, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+    'Local.System.Connection lost': DsDataPoint(type: DsDataType.bool, name: DsPointName(fullPath: "/Local/Local.System.Connection"), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
   };
 
   setUp(() async {

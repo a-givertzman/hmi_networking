@@ -13,7 +13,7 @@ class FakeDsClient implements DsClient {
   //
   @override
   Future<Result<bool>> send(DsCommand dsCommand) {
-    return Future.value(Result(data: true));
+    return Future.value(const Result(data: true));
   }
   //
   @override

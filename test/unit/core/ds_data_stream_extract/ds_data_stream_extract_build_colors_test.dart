@@ -7,48 +7,48 @@ import 'package:hmi_networking/hmi_networking.dart';
 
 void main() {
   final stateColors = StateColors(
-    error: Color(0x000001), 
-    obsolete: Color(0x000002), 
-    invalid: Color(0x000003), 
-    timeInvalid: Color(0x000004), 
-    lowLevel: Color(0x000005), 
-    alarmLowLevel: Color(0x000006), 
-    highLevel: Color(0x000007),
-    alarmHighLevel: Color(0x000008),
-    off: Color(0x000009), 
-    on: Color(0x000010),
+    error: const Color(0x00000001), 
+    obsolete: const Color(0x00000002), 
+    invalid: const Color(0x00000003), 
+    timeInvalid: const Color(0x00000004), 
+    lowLevel: const Color(0x00000005), 
+    alarmLowLevel: const Color(0x00000006), 
+    highLevel: const Color(0x00000007),
+    alarmHighLevel: const Color(0x00000008),
+    off: const Color(0x00000009), 
+    on: const Color(0x00000010),
   );
   final pointsData = [
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: DsDps.off.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: DsDps.off.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.off,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: DsDps.on.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: DsDps.on.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.on,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: DsDps.transient.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: DsDps.transient.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.error,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: DsDps.undefined.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: DsDps.undefined.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.invalid,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: 32767, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.invalid,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.obsolete, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: 32767, status: DsStatus.obsolete, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.obsolete,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: 32767, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.invalid,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, path: '', name: '', value: 32767, status: DsStatus.timeInvalid, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: 32767, status: DsStatus.timeInvalid, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.timeInvalid,
     },
   ];
@@ -86,7 +86,7 @@ void main() {
       final pointData = pointsData[i];
       final point = pointData['point'] as DsDataPoint;
       final color = pointData['color'] as Color;
-      expect(receivedExtractedPoints[i].color, color, reason: 'Wrong color for point:\n\t$point!\n\tExpected ${color}, but received ${receivedExtractedPoints[i].color}');
+      expect(receivedExtractedPoints[i].color, color, reason: 'Wrong color for point:\n\t$point!\n\tExpected $color, but received ${receivedExtractedPoints[i].color}');
       expect(receivedExtractedPoints[i].value, point.value, reason: 'Wrong value! Was changed from ${receivedExtractedPoints[i].value} to ${point.value}');
       expect(receivedExtractedPoints[i].status, point.status, reason: 'Wrong status! Was changed from ${receivedExtractedPoints[i].status} to ${point.status}');
     }
