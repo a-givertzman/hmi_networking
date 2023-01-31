@@ -39,7 +39,7 @@ class JdsLine implements CustomProtocolLine {
       if (dType == DsDataType.bool) {
         return DsDataPoint<bool>(
           type: dType,
-          name: DsPointName(fullPath: json['name']),
+          name: DsPointName(fullPath: '${json['name']}'),
           value: int.parse('${json['value']}') > 0,
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
@@ -53,7 +53,7 @@ class JdsLine implements CustomProtocolLine {
               || dType == DsDataType.lInt) {
         return DsDataPoint<int>(
           type: dType,
-          name: DsPointName(fullPath: json['name']),
+          name: DsPointName(fullPath: '${json['name']}'),
           value: int.parse('${json['value']}'),
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
@@ -63,7 +63,7 @@ class JdsLine implements CustomProtocolLine {
       } else if (dType == DsDataType.real) {
         return DsDataPoint<double>(
           type: dType,
-          name: DsPointName(fullPath: json['name']),
+          name: DsPointName(fullPath: '${json['name']}'),
           value: double.parse('${json['value']}'),
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
