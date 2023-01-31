@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,13 +11,13 @@ void main() {
   final ip = InternetAddress.loopbackIPv4;
   late ServerSocket socketServer;
   late JdsLine line;
-  StreamSubscription<DsDataPoint>? lineSubscription;
+  // StreamSubscription<DsDataPoint>? lineSubscription;
   Socket? clientSocket;
 
   // Points that should have been received after request all command sent
   final targetDataPoints = {
-    'Local.System.Connection established': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: true, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    'Local.System.Connection lost': DsDataPoint(type: DsDataType.bool, path: "/Local/", name: "Local.System.Connection", value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+    'Local.System.Connection established': DsDataPoint(type: DsDataType.bool, name: DsPointName(fullPath: "/Local/Local.System.Connection"), value: true, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+    'Local.System.Connection lost': DsDataPoint(type: DsDataType.bool, name: DsPointName(fullPath: "/Local/Local.System.Connection"), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
   };
 
   setUp(() async {
@@ -32,7 +31,7 @@ void main() {
   });
 
   tearDown(() async {
-    await lineSubscription?.cancel();
+    // await lineSubscription?.cancel();
     await clientSocket?.close();
     await socketServer.close();
   });

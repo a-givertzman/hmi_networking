@@ -11,6 +11,8 @@ import '../../../helpers.dart';
 import '../test_commands_data.dart';
 
 void main() {
+  // ignore: no_leading_underscores_for_local_identifiers
+  const _debug = true;
   final ip = InternetAddress.loopbackIPv4;
   late ServerSocket socketServer;
   late JdsLine line;
@@ -36,7 +38,7 @@ void main() {
   test('JdsLine with ServerSocket send valid commands', () async {
     final receivedCommands = <String>[];
     final targetCommands = <String>[];
-    lineSubscription = line.stream.listen((event) { print(event); });
+    lineSubscription = line.stream.listen((event) { log(_debug, event); });
     
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
@@ -61,7 +63,7 @@ void main() {
   test('JdsLine with ServerSocket send invalid commads', () async {
     final receivedCommands = <Uint8List>[];
     int errorsThrownActual = 0;
-    lineSubscription = line.stream.listen((event) { print(event); });
+    lineSubscription = line.stream.listen((event) { log(_debug, event); });
     
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;

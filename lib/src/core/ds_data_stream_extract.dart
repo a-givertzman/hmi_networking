@@ -23,7 +23,7 @@ class DsDataStreamExtract<T> {
       final stream = _stream;
       if (stream != null) {
         stream.listen((point) {
-          _controllers.forEach((controller) {    
+          for (var controller in _controllers) {    
             if (!controller.isClosed) {
               controller.add(
                 DsDataPointExtracted(
@@ -33,7 +33,7 @@ class DsDataStreamExtract<T> {
                 ),
               );
             }
-          });
+          }
         });        
       }
     }

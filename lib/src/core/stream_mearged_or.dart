@@ -30,8 +30,8 @@ class StreamMergedOr {
         (event) {
           // log(_debug, 'event.value: ', event.value);
           // log(_debug, 'event.status: ', event.status);
-          _values[event.name] = event.value;
-          _statuses[event.name] = event.status;
+          _values[event.name.toString()] = event.value;
+          _statuses[event.name.toString()] = event.status;
           // log(_debug, 'values: ', _values);
           bool resultValue = false;
           for (final value in _values.values) {
@@ -40,7 +40,6 @@ class StreamMergedOr {
           _streamController.add(
             DsDataPoint(
               type: DsDataType.bool,
-              path: event.path,
               name: event.name,
               value: resultValue,
               status: _resultStatus(),

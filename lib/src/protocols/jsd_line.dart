@@ -39,8 +39,7 @@ class JdsLine implements CustomProtocolLine {
       if (dType == DsDataType.bool) {
         return DsDataPoint<bool>(
           type: dType,
-          path: json['path'] as String,
-          name: json['name'] as String,
+          name: DsPointName(fullPath: json['name']),
           value: int.parse('${json['value']}') > 0,
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
@@ -54,8 +53,7 @@ class JdsLine implements CustomProtocolLine {
               || dType == DsDataType.lInt) {
         return DsDataPoint<int>(
           type: dType,
-          path: json['path'] as String,
-          name: json['name'] as String,
+          name: DsPointName(fullPath: json['name']),
           value: int.parse('${json['value']}'),
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
@@ -65,8 +63,7 @@ class JdsLine implements CustomProtocolLine {
       } else if (dType == DsDataType.real) {
         return DsDataPoint<double>(
           type: dType,
-          path: json['path'] as String,
-          name: json['name'] as String,
+          name: DsPointName(fullPath: json['name']),
           value: double.parse('${json['value']}'),
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
@@ -137,7 +134,7 @@ class JdsLine implements CustomProtocolLine {
   ) {
     log(_debug, '[$JdsLine.send] dsCommand: $dsCommand');
     List<int> bytes = utf8.encode(_dsCommandToJson(dsCommand));
-    return _lineSocket.send([...bytes]..add(Jds.endOfTransmission));
+    return _lineSocket.send([...bytes, Jds.endOfTransmission]);
   }
   //  
   @override
@@ -259,7 +256,7 @@ class JdsLine implements CustomProtocolLine {
   /// The `value` should always be numeric, so this method casts bool to int.
   static String _dsCommandToJson(DsCommand dsCommand) {
     final value = dsCommand.value;
-    if (!(value is bool) && !(value is num)) {
+    if (value is! bool && value is! num) {
       throw Failure.convertion(
         message: 'Ошибка в методе $JdsLine._dsCommandToJson() Некорректный тип поля value',
         stackTrace: StackTrace.current,

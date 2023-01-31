@@ -10,8 +10,7 @@ StreamController<DsDataPoint<int>> buildController({required int timeout}) {
     Future.delayed(Duration(seconds: timeout), (() {
       controller1.add(DsDataPoint(
           type: DsDataType.integer,
-          path: '',
-          name: '',
+          name: DsPointName(fullPath: '/'),
           value: 121,
           status: DsStatus.ok,
           timestamp: DsTimeStamp.now().toString(),
@@ -21,15 +20,14 @@ StreamController<DsDataPoint<int>> buildController({required int timeout}) {
   return controller1;
 }
 
-final testStreams = {
+final testStreams = <String, Stream<DsDataPoint<dynamic>>>{
   'stream_int_valid_timeout': buildController(timeout: 5).stream,
   'stream_int_exceeded_timeout': buildController(timeout: 11).stream,
   'stream_int': Stream<DsDataPoint<int>>.periodic(
     const Duration(milliseconds: 10),
     (_) => DsDataPoint(
       type: DsDataType.integer,
-      path: '',
-      name: '',
+      name: DsPointName(fullPath: '/'),
       value: 1,
       status: DsStatus.ok,
       timestamp: DsTimeStamp.now().toString(),
@@ -39,8 +37,7 @@ final testStreams = {
     const Duration(milliseconds: 10),
     (_) => DsDataPoint(
       type: DsDataType.bool,
-      path: '',
-      name: '',
+      name: DsPointName(fullPath: '/'),
       value: true,
       status: DsStatus.ok,
       timestamp: DsTimeStamp.now().toString(),
@@ -50,8 +47,7 @@ final testStreams = {
     const Duration(milliseconds: 10),
     (_) => DsDataPoint(
       type: DsDataType.real,
-      path: '',
-      name: '',
+      name: DsPointName(fullPath: '/'),
       value: 1.234,
       status: DsStatus.ok,
       timestamp: DsTimeStamp.now().toString(),
@@ -61,8 +57,7 @@ final testStreams = {
     const Duration(milliseconds: 10),
     (_) => DsDataPoint(
       type: DsDataType.integer,
-      path: '',
-      name: '',
+      name: DsPointName(fullPath: '/'),
       value: 2,
       status: DsStatus.ok,
       timestamp: DsTimeStamp.now().toString(),
@@ -72,8 +67,7 @@ final testStreams = {
     const Duration(milliseconds: 10),
     (_) => DsDataPoint(
       type: DsDataType.bool,
-      path: '',
-      name: '',
+      name: DsPointName(fullPath: '/'),
       value: false,
       status: DsStatus.ok,
       timestamp: DsTimeStamp.now().toString(),
@@ -83,8 +77,7 @@ final testStreams = {
     const Duration(milliseconds: 10),
     (_) => DsDataPoint(
       type: DsDataType.real,
-      path: '',
-      name: '',
+      name: DsPointName(fullPath: '/'),
       value: 2.345,
       status: DsStatus.ok,
       timestamp: DsTimeStamp.now().toString(),
