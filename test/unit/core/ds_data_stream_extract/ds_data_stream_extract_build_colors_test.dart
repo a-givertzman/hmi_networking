@@ -6,17 +6,17 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 void main() {
-  final stateColors = StateColors(
-    error: const Color(0x00000001), 
-    obsolete: const Color(0x00000002), 
-    invalid: const Color(0x00000003), 
-    timeInvalid: const Color(0x00000004), 
-    lowLevel: const Color(0x00000005), 
-    alarmLowLevel: const Color(0x00000006), 
-    highLevel: const Color(0x00000007),
-    alarmHighLevel: const Color(0x00000008),
-    off: const Color(0x00000009), 
-    on: const Color(0x00000010),
+  const stateColors = StateColors(
+    error: Color(0x00000001), 
+    obsolete: Color(0x00000002), 
+    invalid: Color(0x00000003), 
+    timeInvalid: Color(0x00000004), 
+    lowLevel: Color(0x00000005), 
+    alarmLowLevel: Color(0x00000006), 
+    highLevel: Color(0x00000007),
+    alarmHighLevel: Color(0x00000008),
+    off: Color(0x00000009), 
+    on: Color(0x00000010),
   );
   final pointsData = [
     {
