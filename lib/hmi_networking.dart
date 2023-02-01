@@ -23,5 +23,6 @@ export 'src/api/json_to.dart';
 export 'src/auth/auth_result.dart';
 export 'src/auth/user/app_user.dart';
 export 'src/auth/user/app_user_single.dart';
+export 'src/auth/user/app_user_stacked.dart';
 export 'src/auth/user_group/user_group.dart';
 export 'src/auth/user_group/app_user_group.dart';
