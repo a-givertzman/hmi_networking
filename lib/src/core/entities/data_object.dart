@@ -121,8 +121,8 @@ class DataObject implements IDataObject {
     // ignore: no_runtimetype_tostring
     String str = '$runtimeType($DataObject) {';
     _map.forEach((key, value) {
-      final _value = value.toString().isEmpty ? 'empty' : value;
-      str += '\n\t$key: $_value,';
+      final mapValue = value.toString().isEmpty ? 'empty' : value;
+      str += '\n\t$key: $mapValue,';
     });
     return '$str}';
   }
