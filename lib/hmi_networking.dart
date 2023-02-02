@@ -27,3 +27,5 @@ export 'src/auth/user/app_user_stacked.dart';
 export 'src/auth/user_group/user_group.dart';
 export 'src/auth/user_group/app_user_group.dart';
 export 'src/auth/authenticate.dart';
+export 'src/datasource/data_set.dart';
+export 'src/datasource/data_source.dart';
