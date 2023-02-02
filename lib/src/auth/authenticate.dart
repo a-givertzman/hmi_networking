@@ -2,51 +2,21 @@ import 'package:hmi_core/hmi_core.dart';
 import 'auth_result.dart';
 import 'user/app_user_single.dart';
 ///
-class AuthMessages {
-  final String authToContinue;
-  final String checkNetwork;
-  final String toDatabase;
-  final String ok;
-  final String userNotFound;
-  final String guest;
-  final String authenticatedSuccessfully;
-  final String user;
-  final String notFound;
-  final String wrongLoginOrPassword;
-  final String authError;
-  final String loggedOut;
-
-  AuthMessages({
-    required this.authToContinue, 
-    required this.checkNetwork,
-    required this.toDatabase, 
-    required this.ok,
-    required this.userNotFound, 
-    required this.guest, 
-    required this.authenticatedSuccessfully, 
-    required this.user, 
-    required this.notFound, 
-    required this.wrongLoginOrPassword, 
-    required this.authError, 
-    required this.loggedOut,
-  });
-}
-///
 class Authenticate {
   static const _debug = true;
   final _storeKey = 'spwd';
   final String _passwordKey;
-  final AuthMessages _authMessages;
+  final Localizations _localizations;
   AppUserSingle _user;
   ///
   Authenticate({
     required AppUserSingle user,
     required String passwordKey,
-    required AuthMessages authMessages,
+    required Localizations localizations,
   }) :
     _user = user,
     _passwordKey = passwordKey,
-    _authMessages = authMessages;
+    _localizations = localizations;
   ///
   AppUserSingle getUser() {
     return _user;
@@ -65,7 +35,7 @@ class Authenticate {
     } else {
       return AuthResult(
         authenticated: false, 
-        message: _authMessages.authToContinue,
+        message: _localizations.tr('Please authenticate to continue...'),
         user: _user,
       );
       // return Future.value(
@@ -83,14 +53,14 @@ class Authenticate {
           log(_debug, '[$Authenticate.fetchByLogin] error: ', response.errorMessage);
           return AuthResult(
             authenticated: false, 
-            message: '${response.errorMessage}\n\n${_authMessages.checkNetwork} ${_authMessages.toDatabase}.\n', 
+            message: '${response.errorMessage}\n\n${_localizations.tr('Try to check network connection')} ${_localizations.tr('to the database')}.\n', 
             user: _user,
           );
         } else {
           final exists = _user.exists();
           return AuthResult(
             authenticated: exists, 
-            message: exists ? _authMessages.ok : _authMessages.userNotFound, 
+            message: exists ? _localizations.tr('Ok') : _localizations.tr('User not found'), 
             user: _user,
           );        
         }
@@ -101,7 +71,7 @@ class Authenticate {
     _user = AppUserSingle.guest();
     return AuthResult(
       authenticated: true, 
-      message: 'Authenticated as: ${_authMessages.guest}',
+      message: 'Authenticated as: ${_localizations.tr('Guest')}',
       user: _user,
     );
   }
@@ -117,7 +87,7 @@ class Authenticate {
         if (response.hasError) {
           return AuthResult(
             authenticated: false, 
-            message: '${response.errorMessage}\n\n${_authMessages.checkNetwork} ${_authMessages.toDatabase}.\n',
+            message: '${response.errorMessage}\n\n${_localizations.tr('Try to check network connection')} ${_localizations.tr('to the database')}.\n',
             user: _user,
           );
         }
@@ -126,15 +96,15 @@ class Authenticate {
           localStore.writeStringEncoded(_storeKey, login);
           return AuthResult(
             authenticated: true, 
-            message: _authMessages.authenticatedSuccessfully,
+            message: _localizations.tr('Authenticated successfully'),
             user: _user,
           );
         } else {
           final message = !_user.exists()
-            ? '${_authMessages.user} $login ${_authMessages.notFound}.'
+            ? '${_localizations.tr('User')} $login ${_localizations.tr('is not found')}.'
             : !passIsValid
-              ? _authMessages.wrongLoginOrPassword
-              : _authMessages.authError;
+              ? _localizations.tr('Wrong login or password')
+              : _localizations.tr('Authentication error');
           return AuthResult(
             authenticated: false, 
             message: message,
@@ -145,7 +115,7 @@ class Authenticate {
       .catchError((error) {
         return AuthResult(
           authenticated: false, 
-          message:  '${_authMessages.authError}:\n${error.toString()}',
+          message:  '${_localizations.tr('Authentication error')}:\n${error.toString()}',
           user: _user,
           error: error as Exception,
         );
@@ -162,13 +132,13 @@ class Authenticate {
         localStore.writeStringEncoded(_storeKey, phoneNumber);
         return AuthResult(
           authenticated: true, 
-          message: _authMessages.authenticatedSuccessfully,
+          message: _localizations.tr('Authenticated successfully'),
           user: _user,
         );
       } else {
         return AuthResult(
           authenticated: false, 
-          message: '${_authMessages.user} $phoneNumber ${_authMessages.notFound}.',
+          message: '${_localizations.tr('User')} $phoneNumber ${_localizations.tr('is not found')}.',
           user: _user,
         );
       }
@@ -176,7 +146,7 @@ class Authenticate {
     .catchError((error) {
       return AuthResult(
         authenticated: false, 
-        message: '${_authMessages.authError}:\n${error.toString()}',
+        message: '${_localizations.tr('Authentication error')}:\n${error.toString()}',
         user: _user,
       );
     });
@@ -188,7 +158,7 @@ class Authenticate {
     _user = _user.clear();
     return AuthResult(
       authenticated: false, 
-      message: _authMessages.loggedOut, 
+      message: _localizations.tr('Logged out'), 
       user: _user,
     );
   }
