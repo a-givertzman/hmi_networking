@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
-// import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 void main() {
@@ -38,14 +37,19 @@ void main() {
           return dataSource;
         },
         isInstanceOf<DataSource>(),
-        reason: 'DataSource constructor didn`t work with valid input',
+        reason: 'DataSource can`t be constructed with valid input',
       );
     });
     test('Get instance', () {
       expect(
-        dataSource,
-        isInstanceOf<DataSource>(),
-        reason: 'DataSource constructor didn`t work with valid input',
+        DataSource() == dataSource,
+        true,
+        reason: 'DataSource singleton constructor returns wrong instance',
+      );
+      expect(
+        identical(DataSource(), dataSource),
+        true,
+        reason: 'DataSource singleton constructor returns wrong instance',
       );
     });    
     test('get datasets by valid name', () {
@@ -54,10 +58,20 @@ void main() {
         isInstanceOf<DataSet>(),
         reason: 'DataSource doesn`t returns data set by valid name',
       );
+      expect(
+        DataSource().dataSet(validDataSetName),
+        isInstanceOf<DataSet>(),
+        reason: 'DataSource doesn`t returns data set by valid name',
+      );
     });
     test('get datasets by invalid name', () {
       expect(
         () => dataSource.dataSet(invalidDataSetName),
+        throwsA(isA<Failure>()),
+        reason: 'DataSource doesn`t fails on invalid dataset name',
+      );
+      expect(
+        () => DataSource().dataSet(invalidDataSetName),
         throwsA(isA<Failure>()),
         reason: 'DataSource doesn`t fails on invalid dataset name',
       );
