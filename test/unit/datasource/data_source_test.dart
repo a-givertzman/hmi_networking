@@ -30,24 +30,25 @@ void main() {
       ),
     ),
   };
+  final dataSource = DataSource(dataSets);
   group('DataSource test', () {
     test('create with valid datasets', () {
       expect(
-        DataSource(dataSets),
+        dataSource,
         isInstanceOf<DataSource>(),
         reason: 'DataSource constructor didn`t work with valid input',
       );
     });
     test('get datasets by valid name', () {
       expect(
-        DataSource(dataSets).dataSet(validDataSetName),
+        dataSource.dataSet(validDataSetName),
         isInstanceOf<DataSet>(),
         reason: 'DataSource doesn`t returns data set by valid name',
       );
     });
     test('get datasets by invalid name', () {
       expect(
-        () => DataSource(dataSets).dataSet(invalidDataSetName),
+        () => dataSource.dataSet(invalidDataSetName),
         throwsA(isA<Failure>()),
         reason: 'DataSource doesn`t fails on invalid dataset name',
       );
