@@ -30,15 +30,24 @@ void main() {
       ),
     ),
   };
-  final dataSource = DataSource(dataSets);
+  late DataSource dataSource = DataSource.initialize(dataSets);
   group('DataSource test', () {
-    test('create with valid datasets', () {
+    test('initialize with valid datasets', () {
+      expect(() {
+          dataSource = DataSource.initialize(dataSets);
+          return dataSource;
+        },
+        isInstanceOf<DataSource>(),
+        reason: 'DataSource constructor didn`t work with valid input',
+      );
+    });
+    test('Get instance', () {
       expect(
         dataSource,
         isInstanceOf<DataSource>(),
         reason: 'DataSource constructor didn`t work with valid input',
       );
-    });
+    });    
     test('get datasets by valid name', () {
       expect(
         dataSource.dataSet(validDataSetName),

@@ -5,8 +5,11 @@ class DataSource {
   static final DataSource _singleton = DataSource._internal();
   late Map<String, DataSet> _dataSets;
   ///
-  factory DataSource(Map<String, DataSet> dataSets) {
+  factory DataSource.initialize(Map<String, DataSet> dataSets) {
     _singleton._dataSets = dataSets;
+    return _singleton;
+  }
+  factory DataSource() {
     return _singleton;
   }
   ///
