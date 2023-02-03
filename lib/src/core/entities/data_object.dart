@@ -34,7 +34,7 @@ class DataObject implements IDataObject {
   Map<String, ValueObject> asMap() => _map;
   ///
   @override
-  DataSet get remote => _remote;
+  DataSet<Map<String, String>> get remote => _remote;
   ///
   @override
   ValueObject operator [](String key) {

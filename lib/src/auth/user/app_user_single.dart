@@ -4,23 +4,23 @@ import 'package:hmi_networking/src/core/entities/data_object.dart';
 import 'package:hmi_networking/src/core/entities/response.dart';
 import 'package:hmi_networking/src/datasource/data_set.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_networking/src/datasource/data_source.dart';
 import 'app_user.dart';
 
 ///
 class AppUserSingle extends DataObject implements AppUser {
-  final DataSet<Map<String, String>> _remote;
   ///
+  /// - remote - optional parameter, 
+  /// - by default will be used DataSource().dataSet('app-user'))
   AppUserSingle({
-    required DataSet<Map<String, String>> remote,// = _dataSource.dataSet('app-user'), 
+    DataSet<Map<String, String>>? remote, 
   }) :
-    _remote = remote,
-    super(remote: remote) {
+    super(remote: remote ?? DataSource.dataSet('app-user')) {
     _init();
   }
   /// Создание гостевого пользователя.
   /// Используется при отсутствии связи или других прав доступа у пользователя
   AppUserSingle.guest({String name = 'Guest'}) :
-    _remote = const DataSet.empty(),
     super(remote:const DataSet.empty())
   {
     _init();
@@ -36,8 +36,9 @@ class AppUserSingle extends DataObject implements AppUser {
   /// с прежним remote, но без данных
   @override
   AppUserSingle clear() {
-    return AppUserSingle(remote: _remote);
+    return AppUserSingle(remote: remote);
   }
+  ///
   void _init() {
     this['id'] = const ValueString('');
     this['group'] = const ValueString('');

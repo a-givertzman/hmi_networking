@@ -2,26 +2,24 @@ import 'package:hmi_core/hmi_core.dart';
 import 'data_set.dart';
 ///
 class DataSource {
-  static final DataSource _singleton = DataSource._internal();
-  late Map<String, DataSet> _dataSets;
+  // static const DataSource _singleton = DataSource._internal();
+  static final Map<String, DataSet> _dataSets = {};
   ///
-  factory DataSource.initialize(Map<String, DataSet> dataSets) {
-    _singleton._dataSets = dataSets;
-    return _singleton;
-  }
-  factory DataSource() {
-    return _singleton;
+  static void initialize(Map<String, DataSet> dataSets) {
+    _dataSets.clear();
+    _dataSets.addAll(dataSets);
+    // return const DataSource();
   }
   ///
-  DataSource._internal();
+  // const DataSource();
   ///
-  DataSet<T> dataSet<T>(String name) {
+  static DataSet<T> dataSet<T>(String name) {
     if (_dataSets.containsKey(name)) {
       final dataSet = _dataSets[name];
         return dataSet! as DataSet<T>;
     }
     throw Failure.dataSource(
-      message: 'Ошибка в методе $runtimeType.dataSet(): $name - несуществующий DataSet',
+      message: 'Ошибка в методе $DataSource.dataSet(): $name - несуществующий DataSet',
       stackTrace: StackTrace.current,
     );
   }
