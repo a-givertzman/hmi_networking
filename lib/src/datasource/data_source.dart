@@ -8,11 +8,9 @@ class DataSource {
   static void initialize(Map<String, DataSet> dataSets) {
     _dataSets.clear();
     _dataSets.addAll(dataSets);
-    // return const DataSource();
   }
   ///
-  // const DataSource();
-  ///
+  /// Returns dataset entry by name
   static DataSet<T> dataSet<T>(String name) {
     if (_dataSets.containsKey(name)) {
       final dataSet = _dataSets[name];
