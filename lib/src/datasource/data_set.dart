@@ -10,7 +10,7 @@ class DataSet<T> {
   final ApiRequest _apiRequest;
   final ApiParams _params;
   final bool empty;
-  DataSet({
+  const DataSet({
     required ApiRequest apiRequest,
     required ApiParams params,
   }):

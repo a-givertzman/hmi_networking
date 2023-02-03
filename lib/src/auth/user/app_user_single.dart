@@ -11,7 +11,7 @@ class AppUserSingle extends DataObject implements AppUser {
   final DataSet<Map<String, String>> _remote;
   ///
   AppUserSingle({
-    required DataSet<Map<String, String>> remote, 
+    required DataSet<Map<String, String>> remote,// = _dataSource.dataSet('app-user'), 
   }) :
     _remote = remote,
     super(remote: remote) {
