@@ -32,7 +32,7 @@ class Authenticate {
     } else {
       return AuthResult(
         authenticated: false, 
-        message: const Localized('Please authenticate to continue...').toString(),
+        message: const Localized('Please authenticate to continue...').v,
         user: _user,
       );
       // return Future.value(
@@ -57,7 +57,7 @@ class Authenticate {
           final exists = _user.exists();
           return AuthResult(
             authenticated: exists, 
-            message: exists ? const Localized('Ok').toString() : const Localized('User not found').toString(), 
+            message: exists ? const Localized('Ok').v : const Localized('User not found').v, 
             user: _user,
           );        
         }
@@ -93,15 +93,15 @@ class Authenticate {
           localStore.writeStringEncoded(_storeKey, login);
           return AuthResult(
             authenticated: true, 
-            message: const Localized('Authenticated successfully').toString(),
+            message: const Localized('Authenticated successfully').v,
             user: _user,
           );
         } else {
           final message = !_user.exists()
             ? '${const Localized('User')} $login ${const Localized('is not found')}.'
             : !passIsValid
-              ? const Localized('Wrong login or password').toString()
-              : const Localized('Authentication error').toString();
+              ? const Localized('Wrong login or password').v
+              : const Localized('Authentication error').v;
           return AuthResult(
             authenticated: false, 
             message: message,
@@ -112,7 +112,7 @@ class Authenticate {
       .catchError((error) {
         return AuthResult(
           authenticated: false, 
-          message:  '${const Localized('Authentication error')}:\n${error.toString()}',
+          message:  '${const Localized('Authentication error')}:\n$error',
           user: _user,
           error: error as Exception,
         );
@@ -129,7 +129,7 @@ class Authenticate {
         localStore.writeStringEncoded(_storeKey, phoneNumber);
         return AuthResult(
           authenticated: true, 
-          message: const Localized('Authenticated successfully').toString(),
+          message: const Localized('Authenticated successfully').v,
           user: _user,
         );
       } else {
@@ -143,7 +143,7 @@ class Authenticate {
     .catchError((error) {
       return AuthResult(
         authenticated: false, 
-        message: '${const Localized('Authentication error')}:\n${error.toString()}',
+        message: '${const Localized('Authentication error')}:\n$error',
         user: _user,
       );
     });
@@ -155,7 +155,7 @@ class Authenticate {
     _user = _user.clear();
     return AuthResult(
       authenticated: false, 
-      message: const Localized('Logged out').toString(), 
+      message: const Localized('Logged out').v, 
       user: _user,
     );
   }
