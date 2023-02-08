@@ -14,12 +14,9 @@ void main() {
       stream: getDelayedEmptyStream(),
     );
     line = JdsLine(lineSocket: socket);
-
     final receivedEvents = <DsDataPoint>[];
     line.stream.listen((event) { receivedEvents.add(event); });
-
     final result = await line.close();
-
     expect(result, true);
   });
 }
