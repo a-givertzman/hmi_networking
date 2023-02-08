@@ -5,15 +5,12 @@ import 'user/app_user_single.dart';
 class Authenticate {
   static const _debug = true;
   final _storeKey = 'spwd';
-  final String _passwordKey;
   AppUserSingle _user;
   ///
   Authenticate({
     required AppUserSingle user,
-    required String passwordKey,
   }) :
-    _user = user,
-    _passwordKey = passwordKey;
+    _user = user;
   ///
   AppUserSingle getUser() {
     return _user;
@@ -80,7 +77,7 @@ class Authenticate {
       .then((response) {
         log(_debug, '[$Authenticate.authenticateByLoginAndPass] user: $_user');
         final passLoaded = '${_user['pass']}';
-        final passIsValid = UserPassword(value: pass, key: _passwordKey).encrypted() == passLoaded;
+        final passIsValid = UserPassword(value: pass).encrypted() == passLoaded;
         if (response.hasError) {
           return AuthResult(
             authenticated: false, 
