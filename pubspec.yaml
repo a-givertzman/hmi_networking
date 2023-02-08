@@ -14,7 +14,7 @@ dependencies:
   hmi_core:
       git:
         url: https://github.com/a-givertzman/hmi_core.git
-        ref: Localized-refactoring # branch name
+        ref: master # branch name
 
 dev_dependencies:
   flutter_test:
