@@ -17,6 +17,8 @@ class FakeLine extends Fake implements CustomProtocolLine {
 }
 
 void main() {
+  Log.initialize();
+  // const log = Log('JdsLine send test');
   final ip = InternetAddress.loopbackIPv4;
   late ServerSocket socketServer;
   late JdsLine line;
@@ -54,7 +56,7 @@ void main() {
         await subscription.cancel();
       }
     }
-    // remains subscription for 'Local.System.Connection' only
+    // remains subscription for '/Local/Local.System.Connection' only
     expect(dsClient.subscriptionsCount, 1);
   });
 }

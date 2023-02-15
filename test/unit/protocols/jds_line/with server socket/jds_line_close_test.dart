@@ -6,6 +6,8 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 void main() {
+  Log.initialize();
+  const log = Log('JdsLine send test');
   final ip = InternetAddress.loopbackIPv4;
   late ServerSocket socketServer;
   late JdsLine line;
@@ -29,7 +31,7 @@ void main() {
   });
 
   test('JdsLine with ServerSocket close', () async {
-    lineSubscription = line.stream.listen((event) { log(true, 'received: ', event); });
+    lineSubscription = line.stream.listen((event) { log.debug('received: $event'); });
     clientSocket = await socketServer.first;
 
     await Future.delayed(const Duration(milliseconds: 100));

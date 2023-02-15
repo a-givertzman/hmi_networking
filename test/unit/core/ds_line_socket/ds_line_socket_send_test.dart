@@ -9,8 +9,8 @@ import 'package:hmi_networking/hmi_networking.dart';
 
 
 void main() {
-  // ignore: no_leading_underscores_for_local_identifiers
-  const _debug = true;
+  Log.initialize();
+  const log = Log('JdsLine send test');
   group('DsLineSocket with ServerSocket', () {
     final ip = InternetAddress.loopbackIPv4;
     late ServerSocket socketServer;
@@ -54,21 +54,21 @@ void main() {
           await lineSocket.send(event);
         }
         await Future.delayed(const Duration(milliseconds: 1500));
-        log(_debug, 'received: $received');
+        log.debug('received: $received');
         expect(received, sending);
         received = '';
         sending = '';
 
         for (final entry in sendableData.entries) {
           sending += utf8.decode(entry.value);
-          log(_debug, 'sending: ${utf8.decode(entry.value)}');
+          log.debug('sending: ${utf8.decode(entry.value)}');
           final result = await lineSocket.send(entry.value);
-          log(_debug, 'result: $result');
+          log.debug('result: $result');
           expect(result.hasData, true);
           await Future.delayed(Duration(milliseconds: entry.key));
         }
         await Future.delayed(const Duration(milliseconds: 1000));
-        log(_debug, 'received: $received');
+        log.debug('received: $received');
         expect(received, sending);
       });
     },
