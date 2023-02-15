@@ -7,7 +7,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/line_socket.dart';
 
 class DsLineSocket implements LineSocket{
-  static const _debug = true;
+  static final _log = const Log('DsLineSocket')..level = LogLevel.debug;
   bool _isActive = false;
   bool _isConnected = false;
   bool _cancel = false;
@@ -44,14 +44,14 @@ class DsLineSocket implements LineSocket{
   }
   ///
   void _listenSocket() async {
-    log(_debug, '[$DsLineSocket._listenSocket] activated.');
+    _log.debug('[$DsLineSocket._listenSocket] activated.');
     while (!_cancel) {
       if (!_isConnected) {
         await Socket.connect(_ip, _port, timeout: const Duration(seconds: 3))
         .then((socket) async {
           _socket = socket;
           _isConnected = true;
-          log(_debug, '[$DsLineSocket._listenSocket] connected socket addr: ', socket.address, '\tport', socket.port);
+          _log.debug('[$DsLineSocket._listenSocket] connected socket addr: ${socket.address} \tport ${socket.port}');
           _controller.add(
             _buildConnectionStatus(_isConnected),
           );
@@ -60,32 +60,34 @@ class DsLineSocket implements LineSocket{
               _controller.add(event);
             }
           } catch (error) {
-            log(_debug, '[$DsLineSocket._listenSocket] stream error: $error');
+            _log.debug('[$DsLineSocket._listenSocket] stream error: $error');
             _controller.addError(error);
           }
-          log(_debug, '[$DsLineSocket._listenSocket] stream done');
+          _log.debug('[$DsLineSocket._listenSocket] stream done');
           _isConnected = false;
           _controller.add(
             _buildConnectionStatus(_isConnected),
           );
         })
         .onError((error, stackTrace) {
-          log(_debug, '[$DsLineSocket._listenSocket] error: $error');
-          // log(_debug, '[$DsLineSocket._listenSocket] stackTrace: $stackTrace');
+          _log.debug('[$DsLineSocket._listenSocket] error: $error');
+          // _log.debug('[$DsLineSocket._listenSocket] stackTrace: $stackTrace');
           _isConnected = false;
           _buildConnectionStatus(_isConnected);
         });
       }
-      log(_debug, '[$DsLineSocket._listenSocket] cancel: $_cancel');
+      _log.debug('[$DsLineSocket._listenSocket] cancel: $_cancel');
       if (!_cancel) {
-        log(_debug, '[$DsLineSocket._listenSocket] waiting...');
+        _log.debug('[$DsLineSocket._listenSocket] waiting...');
         await Future.delayed(const Duration(seconds: 20));
       }
     }
-    log(_debug, '[$DsLineSocket._listenSocket] exit.');
+    _log.debug('[$DsLineSocket._listenSocket] exit.');
   }
   ///
   Uint8List _buildConnectionStatus(bool isConnected) {
+    
+    _log.debug('[$DsLineSocket._buildConnectionStatus] isConnected: $isConnected');
     return Uint8List.fromList(
       utf8.encode(
         DsDataPoint(
@@ -111,7 +113,7 @@ class DsLineSocket implements LineSocket{
     final socket = _socket;
     // TODO Better implementation of this feature to be released
     if(socket == null) {
-      log(_debug, '[$DsLineSocket.send] failed, socket was: $socket');
+      _log.debug('[$DsLineSocket.send] failed, socket was: $socket');
       await Future.delayed(const Duration(milliseconds: 100));
       return Future.value(
         Result(
@@ -122,13 +124,13 @@ class DsLineSocket implements LineSocket{
         ),
       );
     } else {
-      log(_debug, '[$DsLineSocket.send] event: $data');
+      _log.debug('[$DsLineSocket.send] event: $data');
       try {
         socket.add(data);
         await Future.delayed(const Duration(milliseconds: 100));
         return Future.value(const Result(data: true));          
       } catch (error) {
-        log(_debug, '[$DsLineSocket.send] error: $error');
+        _log.debug('[$DsLineSocket.send] error: $error');
         await Future.delayed(const Duration(milliseconds: 100));
         return Future.value(
           Result(

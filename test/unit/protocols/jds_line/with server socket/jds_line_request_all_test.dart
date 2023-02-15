@@ -8,6 +8,7 @@ import 'package:hmi_networking/hmi_networking.dart';
 import '../../../helpers.dart';
 
 void main() {
+  Log.initialize();
   final ip = InternetAddress.loopbackIPv4;
   late ServerSocket socketServer;
   late JdsLine line;

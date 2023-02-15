@@ -65,6 +65,7 @@ class DsClientReal implements DsClient {
               _stream<bool>('Local.System.Connection'),
               isConnected: _line.isConnected,
               onConnectionChanged: () {
+                log(_debug, '[$DsClientReal._setupStreamController] wait 3000 before _line.requestAll');
                 Future.delayed(
                   const Duration(milliseconds: 3000),
                   _line.requestAll,
@@ -219,10 +220,12 @@ class DsClientReal implements DsClient {
   void _listenLine() {
     log(_debug, '[$DsClientReal]');
     _line.stream.listen((dataPoint) {
+      final name = dataPoint.name.name;
       // log(_debug, '[$DsClientReal.dataPoint] : $dataPoint');
-      if (_receivers.containsKey(dataPoint.name)) {
+      // log(_debug, '[$DsClientReal._listenLine] point name: ${dataPoint.name}');
+      if (_receivers.containsKey(name)) {
         // log(_debug, '[$DsClientReal._run] dataPint: $dataPint');
-        final receiver = _receivers[dataPoint.name];
+        final receiver = _receivers[name];
         if (receiver != null && !receiver.isClosed) {
             // log(_debug, '[$DsClientReal._run] receiver: ${receiver}');
             receiver.add(dataPoint);

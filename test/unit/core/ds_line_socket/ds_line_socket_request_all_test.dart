@@ -4,11 +4,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 import '../../helpers.dart';
 
 void main() {
+  Log.initialize();
+  // const log = Log('JdsLine send test');
   group('DsLineSocket with ServerSocket', () {
     final ip = InternetAddress.loopbackIPv4;
     late ServerSocket socketServer;
