@@ -27,7 +27,7 @@ void main() {
       receivedEvents.every(
         (event) => event.type == DsDataType.bool 
           && event.value == 1
-          && event.name.toString() == '/Local/Local.System.Connection',
+          && event.name.toString() == 'Local.System.Connection',
         ),
       true,
     );

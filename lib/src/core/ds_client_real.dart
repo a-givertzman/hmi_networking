@@ -62,7 +62,7 @@ class DsClientReal implements DsClient {
             _isActive = true;
             log(_debug, '[$DsClientReal._setupStreamController] before _run');
             _dsClientConnectionListener = DsClientConnectionListener(
-              _stream<bool>('/Local/Local.System.Connection'),
+              _stream<bool>('Local.System.Connection'),
               isConnected: _line.isConnected,
               onConnectionChanged: () {
                 log(_debug, '[$DsClientReal._setupStreamController] wait 3000 before _line.requestAll');
