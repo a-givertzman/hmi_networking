@@ -38,7 +38,7 @@ class DsSend<T> {
       dsClass: DsDataClass.commonCmd,
       type: _types[T], 
       path: _pointName.path, 
-      name: _pointName.name, 
+      name: _pointName.toString(), 
       value: value, 
       status: DsStatus.ok,
       timestamp: DsTimeStamp.now(),
