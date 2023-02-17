@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 import 'package:hmi_networking/src/core/ds_send.dart';
-
 import 'fake_ds_client.dart';
 
 void main() {

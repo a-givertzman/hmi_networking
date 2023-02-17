@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/line_socket.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
-
+///
 class Jds {
   static const endOfTransmission = 4;
 }
-
+///
 class JdsLine implements CustomProtocolLine {
-  static const _debug = true;
+  static final _log = const Log('JdsLine')..level = LogLevel.debug;
   final LineSocket _lineSocket;
   ///
   /// Реализация протокола связи с сервером DataServer
@@ -33,7 +32,7 @@ class JdsLine implements CustomProtocolLine {
   /// Parse incoming json string into DsDataPoint
   /// depending on type stored in the json['type'] field
   static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
-    // log(_debug, '[$JdsLine._dataPointFromJson] json: $json');
+    _log.debug('[$JdsLine._dataPointFromJson] json: $json');
     try {
       final dType = DsDataType.fromString(json['type'] as String);
       if (dType == DsDataType.bool) {
@@ -74,8 +73,7 @@ class JdsLine implements CustomProtocolLine {
         _throwNotImplementedFailure(dType);
       }
     } catch (error) {
-      // log(true, '[$DsDataPoint.fromRow] error: $error\nrow: $row');
-      // log(ug, '[$DataPoint.fromJson] dataPoint: $dataPoint');
+      _log.debug('[$JdsLine.fromJson] error: $error');
       throw Failure.convertion(
         message: 'Ошибка в методе $JdsLine._dataPointFromJson() $error',
         stackTrace: StackTrace.current,
@@ -101,7 +99,7 @@ class JdsLine implements CustomProtocolLine {
         // log(_debug, '[$JdsLine._dataPointTransformer] data[$i]: ${data[i]}');
         final chunk = data.sublist(start, i);
         // log(_debug, '[$JdsLine._dataPointTransformer] chunk: $chunk');
-        // log(_debug, '[$JdsLine._dataPointTransformer] chunk: ${String.fromCharCodes(chunk)}');
+        _log.debug('[$JdsLine._dataPointTransformer] chunk: ${String.fromCharCodes(chunk)}');
         yield chunk;
         start = i + 1;
       }
@@ -113,7 +111,7 @@ class JdsLine implements CustomProtocolLine {
   ///
   static final _dataPointTransformer = StreamTransformer<Uint8List, DsDataPoint>.fromHandlers(
     handleData: (data, sink) {
-      // log(_debug, '[$JdsLine._dataPointTransformer] data: $data');
+      _log.debug('[$JdsLine._dataPointTransformer] data: $data');
       for (final chunck in _chunks(data, Jds.endOfTransmission)) {
         final rawPoint = String.fromCharCodes(chunck);
         if(rawPoint.isNotEmpty) {
@@ -132,7 +130,7 @@ class JdsLine implements CustomProtocolLine {
   Future<Result<bool>> send(
     DsCommand dsCommand,
   ) {
-    log(_debug, '[$JdsLine.send] dsCommand: $dsCommand');
+    _log.debug('[$JdsLine.send] dsCommand: $dsCommand');
     List<int> bytes = utf8.encode(_dsCommandToJson(dsCommand));
     return _lineSocket.send([...bytes, Jds.endOfTransmission]);
   }

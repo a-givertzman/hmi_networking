@@ -11,7 +11,6 @@ void main() {
   group('DsSend exec', () {
     const timeout = 10;
     final dsClient = FakeDsClient(streams: testStreams);
-
     test('with response and valid timeout', () async {
       final sendIntResult = DsSend<int>(
         dsClient: dsClient,
@@ -28,7 +27,6 @@ void main() {
           expect(false, true, reason: 'Response timeout ($timeout sec) exceeded!');
         });
     });
-
     test('with response and exceeded timeout', () async {
       log(_debug, 'time out will be exceeded...');
       final sendIntResult = DsSend<int>(
@@ -45,7 +43,6 @@ void main() {
           expect(false, true, reason: 'Response timeout ($timeout sec) exceeded!');
         });
     });
-
     test('with response executes all supported types', () async {
       final sendIntResult = DsSend<int>(
         dsClient: dsClient,
@@ -55,14 +52,12 @@ void main() {
       await sendIntResult.then((responsePoint) {
         expect(responsePoint.data.value, 1);
       });
-      //
       final sendBoolResult = await DsSend<bool>(
         dsClient: dsClient,
         pointName: pointPaths[bool]!,
         response: 'stream_bool',
       ).exec(true);
       expect(sendBoolResult.data.value, true);
-      //
       final sendRealResult = await DsSend<double>(
         dsClient: dsClient,
         pointName: pointPaths[double]!,
@@ -70,20 +65,17 @@ void main() {
       ).exec(0.5);
       expect(sendRealResult.data.value, 1.234);
     });
-    //
     test('without response executes all supported types', () async {
       final sendIntResult = await DsSend<int>(
         dsClient: dsClient,
         pointName: pointPaths[int]!,
       ).exec(123);
       expect(sendIntResult.data.value, 2);
-      //
       final sendBoolResult = await DsSend<bool>(
         dsClient: dsClient,
         pointName: pointPaths[bool]!,
       ).exec(true);
       expect(sendBoolResult.data.value, false);
-      //
       final sendRealResult = await DsSend<double>(
         dsClient: dsClient,
         pointName: pointPaths[double]!,

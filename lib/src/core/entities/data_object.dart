@@ -11,7 +11,8 @@ abstract class IDataObject {
   void operator []=(String key, ValueObject value);
   IDataObject fromRow(Map<String, String> row);
 }
-
+///
+///
 class DataObject implements IDataObject {
   static const _debug = true;
   final Map<String, ValueObject> _map = {};

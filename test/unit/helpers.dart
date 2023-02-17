@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
-
+///
 Iterable<List<int>> splitList(List<int> data, int separator) sync* {
   int start = 0;
   final length = data.length;
@@ -18,7 +17,7 @@ Iterable<List<int>> splitList(List<int> data, int separator) sync* {
     yield data.sublist(start, length);        
   }
 }
-
+///
 Uint8List encodeDataPoints(List<String> dataPoints) {
   return Uint8List.fromList(
     dataPoints.map(
@@ -30,7 +29,7 @@ Uint8List encodeDataPoints(List<String> dataPoints) {
     .toList(),
   );
 }
-
+///
 bool compareWithoutTimestamp(DsDataPoint first, DsDataPoint second) =>
     first.type == second.type
     && first.name == second.name

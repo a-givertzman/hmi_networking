@@ -1,9 +1,9 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/entities/response.dart';
-
 import 'api_params.dart';
 import 'json_to.dart';
 
+///
 class ApiHandleError<T> {
   static const _debug = true;
   final JsonTo<Map<String, dynamic>> _json;

@@ -304,11 +304,8 @@ class DsClientReal implements DsClient {
       stackTrace: StackTrace.current,
     );
   }
-
   ///
-
   /// поток данных отфильтрованный по массиву имен точек данных DsDataPoint
-
   @override
   StreamMerged<DsDataPoint> streamMergedEmulated(List<String> names) {
     throw Failure.unexpected(
@@ -343,7 +340,7 @@ class DsClientReal implements DsClient {
       stackTrace: StackTrace.current,
     );
   }
-  
+  //
   @override
   Stream<DsDataPoint<bool>> streamBoolEmulated(String filterByValue, {int delay = 100}) {
     throw Failure.unexpected(
@@ -351,7 +348,7 @@ class DsClientReal implements DsClient {
       stackTrace: StackTrace.current,
     );
   }
-  
+  //
   @override
   Stream<DsDataPoint<double>> streamRequestedEmulated(String filterByValue, {int delay = 500, double min = 0, double max = 100}) {
     throw Failure.unexpected(
@@ -359,7 +356,7 @@ class DsClientReal implements DsClient {
       stackTrace: StackTrace.current,
     );
   }
-  
+  //
   @override
   Stream<DsDataPoint<int>> streamEmulatedInt(String filterByValue, {int delay = 100, double min = 0, double max = 100, int firstEventDelay = 0}) {
     throw Failure.unexpected(

@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:hmi_core/hmi_core.dart';
-
 import 'test_point_paths.dart';
-
+///
 StreamController<DsDataPoint<int>> buildController({required int timeout}) {
   final controller1 = StreamController<DsDataPoint<int>>();
   controller1.onListen = () {
@@ -19,7 +17,7 @@ StreamController<DsDataPoint<int>> buildController({required int timeout}) {
   };
   return controller1;
 }
-
+///
 final testStreams = <String, Stream<DsDataPoint<dynamic>>>{
   'stream_int_valid_timeout': buildController(timeout: 5).stream,
   'stream_int_exceeded_timeout': buildController(timeout: 11).stream,

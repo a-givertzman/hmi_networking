@@ -1,11 +1,11 @@
 import 'package:hmi_core/hmi_core.dart';
-
+///
 class Pair<T1, T2> {
   final T1 a;
   final T2 b;
   Pair(this.a, this.b);
 }
-
+///
 final testDsCommand = DsCommand(
   dsClass: DsDataClass.commonCmd, 
   type: DsDataType.bool, 
@@ -14,7 +14,7 @@ final testDsCommand = DsCommand(
   status: DsStatus.ok, 
   timestamp: DsTimeStamp.parse('2023-01-23T12:22:18.919520'),
 );
-
+///
 final validCommandsPool = [
   Pair<DsCommand, String>(
     DsCommand(
@@ -182,7 +182,7 @@ final validCommandsPool = [
   //   '{"class":"commonCmd","type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.dateAndTime","value":1,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
   // ),
 ];
-
+/// 
 /// Commands with all DsDataClass-DsDataType combinations
 final invalidCommandsPool = [
   for (final dataType in DsDataType.values)
