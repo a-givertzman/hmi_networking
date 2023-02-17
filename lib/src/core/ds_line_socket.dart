@@ -92,7 +92,7 @@ class DsLineSocket implements LineSocket{
       utf8.encode(
         DsDataPoint(
           type: DsDataType.bool, 
-          name: DsPointName(fullPath: '/Local/Local.System.Connection'), 
+          name: DsPointName('/Local/Local.System.Connection'), 
           value: isConnected ? 1 : 0, 
           status: DsStatus.ok, 
           timestamp: DsTimeStamp.now().toString(),

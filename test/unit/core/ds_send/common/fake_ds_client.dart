@@ -1,6 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/ds_client.dart';
-import 'package:hmi_networking/src/core/stream_mearged.dart';
 //
 class FakeDsClient implements DsClient {
   final Map<String, Stream<DsDataPoint>>? streams;

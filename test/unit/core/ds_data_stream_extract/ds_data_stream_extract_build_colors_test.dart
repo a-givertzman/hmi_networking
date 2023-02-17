@@ -20,35 +20,35 @@ void main() {
   );
   final pointsData = [
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: DsDps.off.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test'), value: DsDps.off.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.off,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: DsDps.on.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test'), value: DsDps.on.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.on,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: DsDps.transient.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test'), value: DsDps.transient.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.error,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: DsDps.undefined.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test'), value: DsDps.undefined.value, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.invalid,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: 32767, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test'), value: 32767, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.invalid,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: 32767, status: DsStatus.obsolete, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test'), value: 32767, status: DsStatus.obsolete, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.obsolete,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: 32767, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test'), value: 32767, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.invalid,
     },
     {
-      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName(fullPath: '/test'), value: 32767, status: DsStatus.timeInvalid, timestamp: DsTimeStamp.now().toString()),
+      'point': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test'), value: 32767, status: DsStatus.timeInvalid, timestamp: DsTimeStamp.now().toString()),
       'color': stateColors.timeInvalid,
     },
   ];
