@@ -8,22 +8,22 @@ void main() {
   group('Authenticate', () {
   DataSource.initialize(dataSets);
     const debug = true;
-    final users = [
-      {'exists': true, 'login': 'anton.lobanov', 'pass': '123qwe'},
-      {'exists': false, 'login': 'anton_.lobanov', 'pass': '123qwe'},
-      {'exists': true, 'login': 'anton.lobanov1', 'pass': '123qwe'},
-      {'exists': false, 'login': 'anton_.lobanov1', 'pass': '123qwe'},
-      {'exists': true, 'login': 'anton.lobanov2', 'pass': '123qwe'},
-      {'exists': false, 'login': 'anton_.lobanov2', 'pass': '123qwe'},
-      {'exists': true, 'login': 'anton.lobanov3', 'pass': '123qwe'},
-      {'exists': false, 'login': 'anton_.lobanov3', 'pass': '123qwe'},
-      {'exists': true, 'login': 'anton.lobanov4', 'pass': '123qwe'},
-      {'exists': false, 'login': 'anton_.lobanov4', 'pass': '123qwe'},
-      {'exists': true, 'login': 'anton.lobanov5', 'pass': '123qwe'},
-      {'exists': false, 'login': 'anton_.lobanov5', 'pass': '123qwe'},
-      {'exists': true, 'login': 'anton.lobanov6', 'pass': '123qwe'},
-      {'exists': false, 'login': 'anton_.lobanov6', 'pass': '123qwe'},
-    ];
+    // final users = [
+    //   {'exists': true, 'login': 'anton.lobanov', 'pass': '123qwe'},
+    //   {'exists': false, 'login': 'anton_.lobanov', 'pass': '123qwe'},
+    //   {'exists': true, 'login': 'anton.lobanov1', 'pass': '123qwe'},
+    //   {'exists': false, 'login': 'anton_.lobanov1', 'pass': '123qwe'},
+    //   {'exists': true, 'login': 'anton.lobanov2', 'pass': '123qwe'},
+    //   {'exists': false, 'login': 'anton_.lobanov2', 'pass': '123qwe'},
+    //   {'exists': true, 'login': 'anton.lobanov3', 'pass': '123qwe'},
+    //   {'exists': false, 'login': 'anton_.lobanov3', 'pass': '123qwe'},
+    //   {'exists': true, 'login': 'anton.lobanov4', 'pass': '123qwe'},
+    //   {'exists': false, 'login': 'anton_.lobanov4', 'pass': '123qwe'},
+    //   {'exists': true, 'login': 'anton.lobanov5', 'pass': '123qwe'},
+    //   {'exists': false, 'login': 'anton_.lobanov5', 'pass': '123qwe'},
+    //   {'exists': true, 'login': 'anton.lobanov6', 'pass': '123qwe'},
+    //   {'exists': false, 'login': 'anton_.lobanov6', 'pass': '123qwe'},
+    // ];
 //     setUp(() async {
 //       // return 0;
 //       WidgetsFlutterBinding.ensureInitialized();
