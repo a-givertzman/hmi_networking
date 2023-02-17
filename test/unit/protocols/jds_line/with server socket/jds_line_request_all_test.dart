@@ -14,13 +14,12 @@ void main() {
   late JdsLine line;
   // StreamSubscription<DsDataPoint>? lineSubscription;
   Socket? clientSocket;
-
+  //
   // Points that should have been received after request all command sent
   final targetDataPoints = {
     'Local.System.Connection established': DsDataPoint(type: DsDataType.bool, name: DsPointName(fullPath: "/Local/Local.System.Connection"), value: true, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
     'Local.System.Connection lost': DsDataPoint(type: DsDataType.bool, name: DsPointName(fullPath: "/Local/Local.System.Connection"), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
   };
-
   setUp(() async {
     socketServer = await ServerSocket.bind(ip, 0);
     line = JdsLine(
@@ -30,25 +29,23 @@ void main() {
       ),
     );
   });
-
   tearDown(() async {
     // await lineSubscription?.cancel();
     await clientSocket?.close();
     await socketServer.close();
   });
-
   test('JdsLine with ServerSocket requestAll when isConnected == true | Check received status data point', () async {
     final receivedDataPoints = <DsDataPoint>[];
     line.stream.listen((event) { 
       receivedDataPoints.add(event); 
     });
-
+    //
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
-
+    //
     await Future.delayed(const Duration(milliseconds: 100));
     await line.requestAll();
-
+    //
     expect(receivedDataPoints.length, 2, reason: 'From JdsLine receaved wrong count of satatus data points');
     for (int i = 0; i < targetDataPoints.length; i++) {
       expect(
@@ -63,10 +60,10 @@ void main() {
     final receivedCommands = <String>[];
     const targetCommandsStartings = [
       // Command sent to server
-      '{"class":"requestAll","type":"bool","path":"","name":"","value":1,"status":0,"timestamp":"'
+      '{"class":"requestAll","type":"bool","name":"","value":1,"status":0,"timestamp":"'
     ];
-    line.stream.listen((event) { });
-
+    line.stream.listen((_) {});
+    //
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
     clientSocket!.listen(
@@ -75,10 +72,10 @@ void main() {
           .map((encodedEvent) => utf8.decode(encodedEvent)),
       ),
     );
-
+    //
     await Future.delayed(const Duration(milliseconds: 100));
     await line.requestAll();
-
+    //
     expect(receivedCommands.length, targetCommandsStartings.length);
     for (int i = 0; i < targetCommandsStartings.length; i++) {
       expect(
@@ -94,15 +91,15 @@ void main() {
     line.stream.listen((event) { 
       receivedDataPoints.add(event);
     });
-
+    //
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
     await clientSocket!.close();
     await socketServer.close();
-
+    //
     await Future.delayed(const Duration(milliseconds: 100)); 
     await line.requestAll();
-
+    // 
     expect(receivedDataPoints.length, 3);
     expect(
         compareWithoutTimestamp(receivedDataPoints[0], targetDataPoints['Local.System.Connection established']!),
@@ -122,10 +119,10 @@ void main() {
     final receivedCommands = <String>[];
     const targetCommands = <String>[
       // Command sent to server right after successful connection
-      '{"class":"requestAll","type":"bool","path":"","name":"","value":1,"status":0,"timestamp":"'
+      '{"class":"requestAll","type":"bool","name":"","value":1,"status":0,"timestamp":"'
     ];
     line.stream.listen((_) {});
-
+    // 
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
     clientSocket!.listen(
@@ -136,10 +133,9 @@ void main() {
     );
     await clientSocket!.close();
     await socketServer.close();
-
+    //
     await Future.delayed(const Duration(milliseconds: 100)); 
     await line.requestAll();
-
     expect(receivedCommands.length, targetCommands.length);
     for (int i = 0; i < targetCommands.length; i++) {
       expect(

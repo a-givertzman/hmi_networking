@@ -149,7 +149,6 @@ class JdsLine implements CustomProtocolLine {
     return send(DsCommand(
       dsClass: DsDataClass.requestAll,
       type: DsDataType.bool,
-      path: '',
       name: '',
       value: 1,
       status: DsStatus.ok,
@@ -275,7 +274,6 @@ class JdsLine implements CustomProtocolLine {
     return json.encode({
       'class': dsCommand.dsClass.value,
       'type': dsCommand.type.value,
-      'path': dsCommand.path,
       'name': dsCommand.name,
       'value': castedValue,
       'status': dsCommand.status.value,

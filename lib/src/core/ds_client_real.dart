@@ -272,7 +272,6 @@ class DsClientReal implements DsClient {
     return send(DsCommand(
       dsClass: DsDataClass.requestList,
       type: DsDataType.bool,
-      path: '',
       name: '',
       value: names,
       status: DsStatus.ok,
