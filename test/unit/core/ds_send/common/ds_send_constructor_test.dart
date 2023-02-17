@@ -11,7 +11,7 @@ void main() {
       expect(
         () => DsSend<String>(
           dsClient: FakeDsClient(),
-          pointName: DsPointName(fullPath: '/'),
+          pointName: DsPointName('/'),
         ), 
         throwsA(isA<AssertionError>()),
         reason: 'DsSend constructor didn`t assert on unsupported type',
@@ -19,7 +19,7 @@ void main() {
       expect(
         () => DsSend<DateTime>(
           dsClient: FakeDsClient(),
-          pointName: DsPointName(fullPath: '/'),
+          pointName: DsPointName('/'),
         ), 
         throwsA(isA<AssertionError>()),
         reason: 'DsSend constructor didnt`t assert on unsupported type',
@@ -29,7 +29,7 @@ void main() {
       expect(
         () => DsSend<bool>(
           dsClient: FakeDsClient(),
-          pointName: DsPointName(fullPath: '/'),
+          pointName: DsPointName('/'),
         ), 
         returnsNormally,
         reason: 'DsSend constructor asserted on supported type',
@@ -37,7 +37,7 @@ void main() {
       expect(
         () => DsSend<int>(
           dsClient: FakeDsClient(),
-          pointName: DsPointName(fullPath: '/'),
+          pointName: DsPointName('/'),
         ), 
         returnsNormally,
         reason: 'DsSend constructor asserted on supported type',
@@ -45,7 +45,7 @@ void main() {
       expect(
         () => DsSend<double>(
           dsClient: FakeDsClient(),
-          pointName: DsPointName(fullPath: '/'),
+          pointName: DsPointName('/'),
         ), 
         returnsNormally,
         reason: 'DsSend constructor asserted on supported type',

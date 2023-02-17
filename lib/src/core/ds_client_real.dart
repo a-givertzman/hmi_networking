@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/ds_client.dart';
 import 'package:hmi_networking/src/core/ds_client_connection_listener.dart';
-import 'package:hmi_networking/src/core/stream_mearged.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
 
 ///
@@ -272,7 +271,6 @@ class DsClientReal implements DsClient {
     return send(DsCommand(
       dsClass: DsDataClass.requestList,
       type: DsDataType.bool,
-      path: '',
       name: '',
       value: names,
       status: DsStatus.ok,
