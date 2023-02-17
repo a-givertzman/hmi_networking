@@ -12,10 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   hmi_core:
-    path: /home/lobanov/developer/flutter-proj/hmi_core
-      # git:
-      #   url: https://github.com/a-givertzman/hmi_core.git
-      #   ref: master # branch name
+      git:
+        url: https://github.com/a-givertzman/hmi_core.git
+        ref: master # branch name
   shared_preferences: ^2.0.17
 
 dev_dependencies:
