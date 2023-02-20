@@ -92,9 +92,4 @@ class AppUserSingle extends DataObject implements AppUser {
       ],
     },);
   }
-  //
-  @override
-  Future<Response<Map<String, dynamic>>> fetch({Map<String, dynamic> params = const {}}) {
-    return super.fetch(params: params);
-  }
 }
