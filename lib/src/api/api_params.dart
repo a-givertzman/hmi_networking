@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+///
 class ApiParams {
   final Map<String, dynamic> _map;
   ApiParams(Map<String, dynamic> params)

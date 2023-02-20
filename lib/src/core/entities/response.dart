@@ -1,7 +1,9 @@
+///
 class Response<T> {
   final int _errCount;
   final String _errDump;
   final T? _data;
+  ///
   const Response({
     int errCount = 0,
     String errDump = '',
@@ -20,7 +22,7 @@ class Response<T> {
   int get errorCount => _errCount;
   ///
   T? get data => _data;
-  ///
+  //
   @override
   String toString() {
     return 'data: $_data\nerrCount: $_errCount\nerrDump: "$_errDump"';

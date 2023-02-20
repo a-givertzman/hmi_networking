@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:hmi_core/hmi_core.dart';
-
+///
 abstract class CustomProtocolLine {
   /// 
   bool get isConnected;

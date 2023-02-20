@@ -1,6 +1,6 @@
 import 'package:hmi_core/hmi_core.dart';
 
-
+///
 abstract class DsClient {
   ///
   /// текущее состояние подключения к серверу

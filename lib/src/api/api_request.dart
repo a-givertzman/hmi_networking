@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:hmi_core/hmi_core.dart';
-
 import 'api_params.dart';
 
 /// Класс реализует http запрос на url
@@ -25,7 +24,7 @@ class ApiRequest {
     log(_debug, '[ApiRequest.fetch]');
     return _fetchJsonFromUrl(_url, _port, _api, params);
   }
-
+  ///
   Future<String> _fetchJsonFromUrl(String url, int port, String api, ApiParams params) async {
     log(_debug, '[ApiRequest._fetchJsonFromUrl] ip: $url:$port$api');
     return Socket
@@ -66,6 +65,7 @@ class ApiRequest {
         return __connectionFailure(error, stackTrace);
       });
   }
+  ///
   Never __connectionFailure(Object? error, StackTrace stackTrace) {
     throw Failure.connection(
       message: 'Ошибка в методе $runtimeType._fetchFromUrl: $error',

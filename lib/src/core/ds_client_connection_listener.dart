@@ -1,5 +1,6 @@
 import 'package:hmi_core/hmi_core.dart';
 
+///
 class DsClientConnectionListener {
   bool _isConnected;
   final Stream<DsDataPoint<bool>> _stream;

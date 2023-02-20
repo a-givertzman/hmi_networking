@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/line_socket.dart';
 
+///
 class DsLineSocket implements LineSocket{
   static final _log = const Log('DsLineSocket')..level = LogLevel.debug;
   bool _isActive = false;
@@ -15,7 +15,6 @@ class DsLineSocket implements LineSocket{
   final String _ip;
   final int _port;
   final _controller = StreamController<Uint8List>();
-
   ///
   DsLineSocket({
     required String ip, 
@@ -26,8 +25,10 @@ class DsLineSocket implements LineSocket{
   //
   @override
   bool get isConnected => _isConnected;
+  //
   @override
   bool get isActive => !_cancel;
+  //
   @override
   Stream<Uint8List> get stream => _stream();
   ///
@@ -86,7 +87,6 @@ class DsLineSocket implements LineSocket{
   }
   ///
   Uint8List _buildConnectionStatus(bool isConnected) {
-    
     _log.debug('[$DsLineSocket._buildConnectionStatus] isConnected: $isConnected');
     return Uint8List.fromList(
       utf8.encode(
@@ -100,6 +100,7 @@ class DsLineSocket implements LineSocket{
       ),
     );
   }
+  //
   @override
   Result<bool> requestAll() {
     _controller.add(
@@ -107,7 +108,7 @@ class DsLineSocket implements LineSocket{
     );
     return const Result(data: true);
   }
-  ///
+  //
   @override
   Future<Result<bool>> send(List<int> data) async {
     final socket = _socket;
@@ -143,7 +144,7 @@ class DsLineSocket implements LineSocket{
       }
     }
   }
-  ///
+  //
   @override
   Future close() async {
     _cancel = true;

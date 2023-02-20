@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 

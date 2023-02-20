@@ -15,9 +15,10 @@ abstract class LineSocket {
   Stream<Uint8List> get stream;
   ///
   Result<bool> requestAll();
-  /// Sending data to the socket, not bloking, buffered
+  /// Sending data to the socket, not blocking, buffered
   Future<Result<bool>> send(List<int> data);
-  /// Just close the socket
+  /// Just closes the socket
+  /// 
   /// NOTE: Writes may be buffered, and may not be flushed by a call to close(). To flush all buffered writes, call flush() before calling close().
   Future close();
 }

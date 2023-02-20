@@ -5,6 +5,7 @@ class DsDataPointExtracted<T> {
   final T value;
   final DsStatus status;
   final Color color;
+  ///
   const DsDataPointExtracted({
     required this.value,
     required this.status,
