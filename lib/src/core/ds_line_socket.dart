@@ -7,7 +7,7 @@ import 'package:hmi_networking/src/core/line_socket.dart';
 
 ///
 class DsLineSocket implements LineSocket{
-  static final _log = const Log('DsLineSocket')..level = LogLevel.debug;
+  static final _log = const Log('DsLineSocket')..level = LogLevel.info;
   bool _isActive = false;
   bool _isConnected = false;
   bool _cancel = false;

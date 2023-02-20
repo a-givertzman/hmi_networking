@@ -10,7 +10,7 @@ class Jds {
 }
 ///
 class JdsLine implements CustomProtocolLine {
-  static final _log = const Log('JdsLine')..level = LogLevel.debug;
+  static final _log = const Log('JdsLine')..level = LogLevel.info;
   final LineSocket _lineSocket;
   ///
   /// Реализация протокола связи с сервером DataServer
