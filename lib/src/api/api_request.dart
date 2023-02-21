@@ -61,7 +61,7 @@ class ApiRequest {
         );
         return complete.future;
       })
-      .onError((error, stackTrace) {
+      .catchError((error, stackTrace) {
         return __connectionFailure(error, stackTrace);
       });
   }

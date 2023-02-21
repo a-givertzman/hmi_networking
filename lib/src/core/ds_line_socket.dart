@@ -45,14 +45,14 @@ class DsLineSocket implements LineSocket{
   }
   ///
   void _listenSocket() async {
-    _log.debug('[$DsLineSocket._listenSocket] activated.');
+    _log.debug('[._listenSocket] activated.');
     while (!_cancel) {
       if (!_isConnected) {
         await Socket.connect(_ip, _port, timeout: const Duration(seconds: 3))
         .then((socket) async {
           _socket = socket;
           _isConnected = true;
-          _log.debug('[$DsLineSocket._listenSocket] connected socket addr: ${socket.address} \tport ${socket.port}');
+          _log.info('[._listenSocket] connected socket addr: ${socket.address} \tport ${socket.port}');
           _controller.add(
             _buildConnectionStatus(_isConnected),
           );
@@ -61,33 +61,36 @@ class DsLineSocket implements LineSocket{
               _controller.add(event);
             }
           } catch (error) {
-            _log.debug('[$DsLineSocket._listenSocket] stream error: $error');
+            _log.debug('[._listenSocket] stream error: $error');
+            await _closeSocket(socket);
             _controller.addError(error);
           }
-          _log.debug('[$DsLineSocket._listenSocket] stream done');
+          _log.debug('[._listenSocket] stream done');
           _isConnected = false;
           _controller.add(
             _buildConnectionStatus(_isConnected),
           );
         })
-        .onError((error, stackTrace) {
-          _log.debug('[$DsLineSocket._listenSocket] error: $error');
-          // _log.debug('[$DsLineSocket._listenSocket] stackTrace: $stackTrace');
+        .catchError((error, stackTrace) {
+          _log.info('[._listenSocket] error: $error');
+          // _log.debug('[._listenSocket] stackTrace: $stackTrace');
           _isConnected = false;
-          _buildConnectionStatus(_isConnected);
+          _controller.add(
+            _buildConnectionStatus(_isConnected),
+          );
         });
       }
-      _log.debug('[$DsLineSocket._listenSocket] cancel: $_cancel');
+      _log.debug('[._listenSocket] cancel: $_cancel');
       if (!_cancel) {
-        _log.debug('[$DsLineSocket._listenSocket] waiting...');
-        await Future.delayed(const Duration(seconds: 20));
+        _log.debug('[._listenSocket] waiting...');
+        await Future.delayed(const Duration(seconds: 3));
       }
     }
-    _log.debug('[$DsLineSocket._listenSocket] exit.');
+    _log.debug('[._listenSocket] exit.');
   }
   ///
   Uint8List _buildConnectionStatus(bool isConnected) {
-    _log.debug('[$DsLineSocket._buildConnectionStatus] isConnected: $isConnected');
+    _log.debug('[._buildConnectionStatus] isConnected: $isConnected');
     return Uint8List.fromList(
       utf8.encode(
         DsDataPoint(
@@ -114,7 +117,7 @@ class DsLineSocket implements LineSocket{
     final socket = _socket;
     // TODO Better implementation of this feature to be released
     if(socket == null) {
-      _log.debug('[$DsLineSocket.send] failed, socket was: $socket');
+      _log.debug('[.send] failed, socket was: $socket');
       await Future.delayed(const Duration(milliseconds: 100));
       return Future.value(
         Result(
@@ -125,14 +128,21 @@ class DsLineSocket implements LineSocket{
         ),
       );
     } else {
-      _log.debug('[$DsLineSocket.send] event: $data');
+      _log.debug('[.send] event: $data');
       try {
-        socket.add(data);
-        await Future.delayed(const Duration(milliseconds: 100));
-        return Future.value(const Result(data: true));          
+        if (_isConnected) {
+          socket.add(data);
+          return Future.value(const Result(data: true));
+        }
+        return Future.value(
+          Result(error: Failure(
+            message: 'Ошибка в методе $runtimeType.send: socket is not connected',
+            stackTrace: StackTrace.current
+          ))
+        );
       } catch (error) {
-        _log.debug('[$DsLineSocket.send] error: $error');
-        await Future.delayed(const Duration(milliseconds: 100));
+        _log.debug('[.send] error: $error');
+        await _closeSocket(socket);
         return Future.value(
           Result(
             error: Failure.connection(
@@ -144,12 +154,20 @@ class DsLineSocket implements LineSocket{
       }
     }
   }
+  ///
+  Future<void> _closeSocket(Socket? socket) async {
+    try {
+      await _socket?.close();
+      _socket?.destroy();
+    } catch (error) {
+      _log.warning('[.close] error: $error');
+    }
+  }
   //
   @override
   Future close() async {
     _cancel = true;
-    await _socket?.close();
-    _socket?.destroy();
+    await _closeSocket(_socket);
     await _controller.close();
     _isActive = false;
   }

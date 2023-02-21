@@ -43,7 +43,7 @@ class ApiHandleError<T> {
 
         }
       })
-      .onError((error, stackTrace) {
+      .catchError((error, stackTrace) {
         return Response<T>(
           errCount: 1, 
           errDump: 'Ошибка в методе $runtimeType.fetch() $error', 
