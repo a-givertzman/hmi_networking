@@ -40,6 +40,7 @@ void main() {
     clientSocket = await socketServer.first;
     await Future.delayed(const Duration(milliseconds: 100));
     await line.requestAll();
+    await Future.delayed(const Duration(milliseconds: 100)); 
     expect(receivedDataPoints.length, 2, reason: 'From JdsLine receaved wrong count of satatus data points');
     for (int i = 0; i < targetDataPoints.length; i++) {
       expect(
@@ -66,6 +67,7 @@ void main() {
     );
     await Future.delayed(const Duration(milliseconds: 100));
     await line.requestAll();
+    await Future.delayed(const Duration(milliseconds: 100)); 
     expect(receivedCommands.length, targetCommandsStartings.length);
     for (int i = 0; i < targetCommandsStartings.length; i++) {
       expect(
@@ -86,6 +88,7 @@ void main() {
     await socketServer.close();
     await Future.delayed(const Duration(milliseconds: 100)); 
     await line.requestAll();
+    await Future.delayed(const Duration(milliseconds: 100)); 
     expect(receivedDataPoints.length, 3);
     expect(
         compareWithoutTimestamp(receivedDataPoints[0], targetDataPoints['Local.System.Connection established']!),
@@ -102,10 +105,6 @@ void main() {
   });
   test('JdsLine with ServerSocket requestAll when isConnected == false | Check sent commands', () async {
     final receivedCommands = <String>[];
-    const targetCommands = <String>[
-      // Command sent to server right after successful connection
-      '{"class":"requestAll","type":"bool","name":"","value":1,"status":0,"timestamp":"'
-    ];
     line.stream.listen((_) {});
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
@@ -115,17 +114,12 @@ void main() {
           .map((encodedEvent) => utf8.decode(encodedEvent)),
       ),
     );
+    await Future.delayed(const Duration(milliseconds: 100)); 
     await clientSocket!.close();
     await socketServer.close();
     await Future.delayed(const Duration(milliseconds: 100)); 
     await line.requestAll();
-    expect(receivedCommands.length, targetCommands.length);
-    for (int i = 0; i < targetCommands.length; i++) {
-      expect(
-        receivedCommands[i].startsWith(targetCommands[i]), 
-        true,
-        reason: 'Sent command doesn`t match json template',
-      );
-    }
+    await Future.delayed(const Duration(milliseconds: 100));
+    expect(receivedCommands.length, 0);
   });
 }

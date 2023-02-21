@@ -63,12 +63,11 @@ class DsClientReal implements DsClient {
             _dsClientConnectionListener = DsClientConnectionListener(
               _stream<bool>('Local.System.Connection'),
               isConnected: _line.isConnected,
-              onConnectionChanged: () {
-                log(_debug, '[$DsClientReal._setupStreamController] wait 3000 before _line.requestAll');
-                Future.delayed(
-                  const Duration(milliseconds: 3000),
-                  _line.requestAll,
-                );                
+              onConnectionChanged: (isConnected) {
+                if (isConnected) {
+                  log(_debug, '[$DsClientReal._setupStreamController] _line.requestAll on connected');
+                  _line.requestAll();
+                }
               },
             );
             _dsClientConnectionListener.run();
@@ -238,8 +237,7 @@ class DsClientReal implements DsClient {
     onDone: () {
       log(_debug, '[$DsClientReal] done');
       _line.close();
-    },
-    );
+    });
     log(_debug, '[$DsClientReal] exit');
   }
   ///
