@@ -3,7 +3,7 @@ import 'auth_result.dart';
 import 'user/app_user_single.dart';
 ///
 class Authenticate {
-  static const _debug = true;
+  final _log = const Log('Authenticate')..level = LogLevel.debug;
   final _storeKey = 'spwd';
   AppUserSingle _user;
   ///
@@ -23,7 +23,7 @@ class Authenticate {
   Future<AuthResult> authenticateIfStored() async {
     final localStore = LocalStore();
     final userLogin = await localStore.readStringDecoded(_storeKey);
-    log(_debug, '[$Authenticate.authenticateIfStored] stored user: $userLogin');
+    _log.debug('[.authenticateIfStored] stored user: "$userLogin"');
     if (userLogin.isNotEmpty) {
       return authenticateByPhoneNumber(userLogin);
     } else {
@@ -41,10 +41,10 @@ class Authenticate {
   Future<AuthResult> fetchByLogin(String login) {
     return _user.fetchByLogin(login)
       .then((response) {
-        log(_debug, '[$Authenticate.fetchByLogin] response: ', response);
-        log(_debug, '[$Authenticate.fetchByLogin] user: ', _user);
+        _log.debug('[.fetchByLogin] response: ', response);
+        _log.debug('[.fetchByLogin] user: ', _user);
         if (response.hasError) {
-          log(_debug, '[$Authenticate.fetchByLogin] error: ', response.errorMessage);
+          _log.debug('[.fetchByLogin] error: ', response.errorMessage);
           return AuthResult(
             authenticated: false, 
             message: '${response.errorMessage}\n\n${const Localized('Try to check network connection')} ${const Localized('to the database')}.\n', 
@@ -70,12 +70,12 @@ class Authenticate {
     );
   }
   ///
-  Future<AuthResult> authenticateByLoginAndPass(String login, String pass) {
-    log(_debug, '[$Authenticate.authenticateByLoginAndPass] login: $login');
+  Future<AuthResult> authenticateByLoginAndPass(String login, String pass, {bool store = false}) {
+    _log.debug('[.authenticateByLoginAndPass] login: $login');
     _user = _user.clear();
     return _user.fetchByLogin(login)
       .then((response) {
-        log(_debug, '[$Authenticate.authenticateByLoginAndPass] user: $_user');
+        _log.debug('[.authenticateByLoginAndPass] user: $_user');
         final passLoaded = '${_user['pass']}';
         final passIsValid = UserPassword(value: pass).encrypted() == passLoaded;
         if (response.hasError) {
@@ -86,8 +86,10 @@ class Authenticate {
           );
         }
         if (_user.exists() &&  passIsValid) {
-          final localStore = LocalStore();
-          localStore.writeStringEncoded(_storeKey, login);
+          if (store) {
+            final localStore = LocalStore();
+            localStore.writeStringEncoded(_storeKey, login);
+          }
           return AuthResult(
             authenticated: true, 
             message: const Localized('Authenticated successfully').v,
@@ -120,9 +122,10 @@ class Authenticate {
     return _user.fetch(params: {
       'phoneNumber': phoneNumber,
     },).then((user) {
-      log(_debug, '[$Authenticate.authenticateByPhoneNumber] user: $user');
+      _log.debug('[.authenticateByPhoneNumber] user: $user');
       if (_user.exists()) {
         final localStore = LocalStore();
+        _log.debug('[.authenticateByPhoneNumber] adding user: "$user" to local store');
         localStore.writeStringEncoded(_storeKey, phoneNumber);
         return AuthResult(
           authenticated: true, 
@@ -148,6 +151,7 @@ class Authenticate {
   ///
   Future<AuthResult> logout() async {
     final localStore = LocalStore();
+    _log.debug('[.authenticateByPhoneNumber] removing user: "$_storeKey" from local store');
     await localStore.remove(_storeKey);
     _user = _user.clear();
     return AuthResult(
