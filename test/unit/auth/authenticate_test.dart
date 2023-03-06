@@ -5,7 +5,8 @@ import 'auth_data_source.dart';
 
 void main() {
   group('Authenticate', () {
-  DataSource.initialize(dataSets);
+    Log.initialize();
+    DataSource.initialize(dataSets);
     const debug = true;
     // final users = [
     //   {'exists': true, 'login': 'anton.lobanov', 'pass': '123qwe'},

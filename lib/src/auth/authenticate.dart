@@ -25,7 +25,7 @@ class Authenticate {
     final userLogin = await localStore.readStringDecoded(_storeKey);
     _log.debug('[.authenticateIfStored] stored user: "$userLogin"');
     if (userLogin.isNotEmpty) {
-      return authenticateByPhoneNumber(userLogin);
+      return authenticateByPhoneNumber(userLogin, store: true);
     } else {
       return AuthResult(
         authenticated: false, 
@@ -39,6 +39,9 @@ class Authenticate {
   }
   ///
   Future<AuthResult> fetchByLogin(String login) {
+    if (login.toLowerCase() == 'guest') {
+      return authenticateGuest();
+    }
     return _user.fetchByLogin(login)
       .then((response) {
         _log.debug('[.fetchByLogin] response: ', response);
@@ -61,11 +64,11 @@ class Authenticate {
       });
   }
   ///
-  AuthResult authenticateGuest() {
+  Future<AuthResult> authenticateGuest() async {
     _user = AppUserSingle.guest();
     return AuthResult(
       authenticated: true, 
-      message: 'Authenticated as: ${const Localized('Guest')}',
+      message: const Localized('Authenticated successfully').v, 
       user: _user,
     );
   }
@@ -118,15 +121,14 @@ class Authenticate {
       });
   }
   ///
-  Future<AuthResult> authenticateByPhoneNumber(String phoneNumber) {
-    return _user.fetch(params: {
-      'phoneNumber': phoneNumber,
-    },).then((user) {
+  Future<AuthResult> authenticateByPhoneNumber(String login, {bool store = false}) {
+    return _user.fetchByLogin(login).then((user) {
       _log.debug('[.authenticateByPhoneNumber] user: $user');
       if (_user.exists()) {
-        final localStore = LocalStore();
-        _log.debug('[.authenticateByPhoneNumber] adding user: "$user" to local store');
-        localStore.writeStringEncoded(_storeKey, phoneNumber);
+        if (store) {
+          final localStore = LocalStore();
+          localStore.writeStringEncoded(_storeKey, login);
+        }
         return AuthResult(
           authenticated: true, 
           message: const Localized('Authenticated successfully').v,
@@ -135,7 +137,7 @@ class Authenticate {
       } else {
         return AuthResult(
           authenticated: false, 
-          message: '${const Localized('User')} $phoneNumber ${const Localized('is not found')}.',
+          message: '${const Localized('User')} $login ${const Localized('is not found')}.',
           user: _user,
         );
       }

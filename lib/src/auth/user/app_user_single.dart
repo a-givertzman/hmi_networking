@@ -21,17 +21,21 @@ class AppUserSingle extends DataObject implements AppUser {
   }
   /// Создание гостевого пользователя.
   /// Используется при отсутствии связи или других прав доступа у пользователя
-  AppUserSingle.guest({String name = 'Guest'}) :
-    super(remote: _remoteAppUser)
+  AppUserSingle.guest() :
+    super(remote: DataSource.dataSet('app-user'))
   {
     _init();
     super.fromRow({
       'id': '0',
       'group': UserGroupList.guest,
-      'name': name,
+      'name': 'Guest',
       'login': 'guest',
       'pass': 'guest',
     });
+  }
+  ///
+  bool get isGuest {
+    return this['login'].value == 'guest';
   }
   /// Метод возвращает новый экземпляр класса
   /// с прежним remote, но без данных
