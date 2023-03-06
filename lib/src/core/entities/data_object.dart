@@ -83,7 +83,7 @@ class DataObject implements IDataObject {
         }
         return response;
       })
-      .onError((error, stackTrace) {
+      .catchError((error, stackTrace) {
         _valid = false;
         throw Failure.dataObject(
           message: 'Ошибка в методе fetch класса $runtimeType:\n$error',

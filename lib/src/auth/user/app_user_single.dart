@@ -7,6 +7,7 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/datasource/data_source.dart';
 import 'app_user.dart';
 
+final DataSet<Map<String, String>> _remoteAppUser = DataSource.dataSet('app-user');
 ///
 class AppUserSingle extends DataObject implements AppUser {
   ///
@@ -15,7 +16,7 @@ class AppUserSingle extends DataObject implements AppUser {
   AppUserSingle({
     DataSet<Map<String, String>>? remote, 
   }) :
-    super(remote: remote ?? DataSource.dataSet('app-user')) {
+    super(remote: remote ?? _remoteAppUser) {
     _init();
   }
   /// Создание гостевого пользователя.
