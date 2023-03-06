@@ -123,7 +123,7 @@ class Authenticate {
   ///
   Future<AuthResult> authenticateByPhoneNumber(String login, {bool store = false}) {
     return _user.fetchByLogin(login).then((user) {
-      log(_debug, '[$Authenticate.authenticateByPhoneNumber] user: $user');
+      _log.debug('[.authenticateByPhoneNumber] user: $user');
       if (_user.exists()) {
         if (store) {
           final localStore = LocalStore();
