@@ -94,9 +94,9 @@ class DsLineSocket implements LineSocket{
     return Uint8List.fromList(
       utf8.encode(
         DsDataPoint(
-          type: DsDataType.bool, 
+          type: DsDataType.integer, 
           name: DsPointName('/Local/Local.System.Connection'), 
-          value: isConnected ? 1 : 0, 
+          value: isConnected ? DsStatus.ok.value : DsStatus.invalid.value, 
           status: DsStatus.ok, 
           timestamp: DsTimeStamp.now().toString(),
         ).toJson(),
