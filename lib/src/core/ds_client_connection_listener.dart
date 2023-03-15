@@ -2,24 +2,25 @@ import 'package:hmi_core/hmi_core.dart';
 
 ///
 class DsClientConnectionListener {
-  bool _isConnected;
-  final Stream<DsDataPoint<bool>> _stream;
-  final void Function(bool isConnected) _onConnectionChanged;
+  DsStatus _connectionStatus;
+  final Stream<DsDataPoint<int>> _stream;
+  final void Function(DsStatus status) _onConnectionChanged;
   ///
   DsClientConnectionListener(
       this._stream, {
-      required bool isConnected,
-      required void Function(bool isConnected) onConnectionChanged, 
+      required DsStatus connectionStatus,
+      required void Function(DsStatus status) onConnectionChanged, 
     }) : 
-      _isConnected = isConnected,
+      _connectionStatus = connectionStatus,
       _onConnectionChanged = onConnectionChanged;
   ///
   void run() {
     _stream.listen((event) {
       // log(_debug, '[$DsClientReal._run] event: $event');
-      if (event.value != _isConnected) {
-        _isConnected = event.value; 
-        _onConnectionChanged(_isConnected);
+      final status = DsStatus.fromValue(event.value);
+      if (status != _connectionStatus) {
+        _connectionStatus = status; 
+        _onConnectionChanged(status);
       }
     });
   }

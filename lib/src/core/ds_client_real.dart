@@ -61,10 +61,10 @@ class DsClientReal implements DsClient {
             _isActive = true;
             log(_debug, '[$DsClientReal._setupStreamController] before _run');
             _dsClientConnectionListener = DsClientConnectionListener(
-              _stream<bool>('Local.System.Connection'),
-              isConnected: _line.isConnected,
-              onConnectionChanged: (isConnected) {
-                if (isConnected) {
+              _stream<int>('Local.System.Connection'),
+              connectionStatus: _line.isConnected ? DsStatus.ok : DsStatus.invalid,
+              onConnectionChanged: (connectionStatus) {
+                if (connectionStatus == DsStatus.ok) {
                   log(_debug, '[$DsClientReal._setupStreamController] _line.requestAll on connected');
                   _line.requestAll();
                 }
