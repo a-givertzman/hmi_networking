@@ -3,7 +3,7 @@ include: package:flutter_lints/flutter.yaml
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 
-analyser:
+analyzer:
   # strong-mode:
     # implicit-casts: false
   errors:
@@ -12,7 +12,7 @@ analyser:
     # must_be_imutable: error
     # sort_unnamed_constructors_first: ignore
   plugins:
-    - dart_colde_metrics
+    - dart_code_metrics
 
 dart_code_metrics:
   anti-patterns:
