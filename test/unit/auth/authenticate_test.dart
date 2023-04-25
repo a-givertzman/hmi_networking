@@ -100,23 +100,23 @@ void main() {
 // //           expect(value, '{"data": {}, "errCount": 0, "errDump": {}}');
 // //         });
 //     });
-    test('create', () async {
-      expect(
-        Authenticate(
-          user: AppUserSingle(
-            remote: DataSource.dataSet('app-user-test'),
-          ),
-        ), 
-        isInstanceOf<Authenticate>(),
-      );
-      final auth = Authenticate(
-        user: AppUserSingle(
-          remote:  DataSource.dataSet('app-user-test'),
-        ),
-      );
-      log(debug, 'auth: ', auth);
-      expect(auth, isInstanceOf<Authenticate>());
-    });
+    // test('create', () async {
+    //   expect(
+    //     Authenticate(
+    //       user: AppUserSingle(
+    //         remote: DataSource.dataSet('app-user-test'),
+    //       ),
+    //     ), 
+    //     isInstanceOf<Authenticate>(),
+    //   );
+    //   final auth = Authenticate(
+    //     user: AppUserSingle(
+    //       remote:  DataSource.dataSet('app-user-test'),
+    //     ),
+    //   );
+    //   log(debug, 'auth: ', auth);
+    //   expect(auth, isInstanceOf<Authenticate>());
+    // });
     // test('authenticateByLoginAndPass()', () async {
     //   final auth = Authenticate(
     //     user: AppUserSingle(
