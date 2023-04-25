@@ -6,7 +6,7 @@ import 'app_user_single.dart';
 
 ///
 class AppUserStacked extends AppUser {
-  final Queue<AppUserSingle> _users = Queue<AppUserSingle>();
+  final _users = Stacked<AppUserSingle>();
   ///
   AppUserStacked({
     AppUserSingle? appUser,
