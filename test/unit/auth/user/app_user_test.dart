@@ -98,14 +98,14 @@ void main() {
 // //           expect(value, '{"data": {}, "errCount": 0, "errDump": {}}');
 // //         });
 //     },);
-    // test('create', () async {
-    //   final appUser = AppUserSingle(
-    //     remote: DataSource.dataSet('app-user-test'),
-    //   );
-    //   log(debug, 'appUser: ', appUser);
-    //   expect(appUser, isInstanceOf<AppUserSingle>());
-    //   expect(AppUserSingle(remote: const DataSet.empty()), isInstanceOf<AppUserSingle>());
-    // });
+    test('create', () async {
+      final appUser = AppUserSingle.remote(
+        remote: DataSource.dataSet('app-user-test'),
+      );
+      log(debug, 'appUser: ', appUser);
+      expect(appUser, isInstanceOf<AppUserSingle>());
+      expect(AppUserSingle.remote(remote: const DataSet.empty()), isInstanceOf<AppUserSingle>());
+    });
     // test('clear()', () async {
     //   final DataSet<Map<String, String>> remote = DataSource.dataSet('app-user-test');
     //   final appUser = AppUserSingle(

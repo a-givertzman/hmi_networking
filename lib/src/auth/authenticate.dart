@@ -65,7 +65,7 @@ class Authenticate {
   }
   ///
   Future<AuthResult> authenticateGuest() async {
-    _user = const AppUserSingle.guest();
+    _user = _user.asGuest();
     return AuthResult(
       authenticated: true, 
       message: const Localized('Authenticated successfully').v, 
@@ -79,8 +79,6 @@ class Authenticate {
     return _user.fetchByLogin(login)
       .then((response) {
         _log.debug('[.authenticateByLoginAndPass] user: $_user');
-        final passLoaded = '${_user.asMap()['pass']}';
-        final passIsValid = UserPassword(value: pass).encrypted() == passLoaded;
         if (response.hasError) {
           return AuthResult(
             authenticated: false, 
@@ -88,6 +86,8 @@ class Authenticate {
             user: _user,
           );
         }
+        final passLoaded = _user.info?.password;
+        final passIsValid = UserPassword(value: pass).encrypted() == passLoaded;
         if (_user.exists() &&  passIsValid) {
           if (store) {
             final localStore = LocalStore();

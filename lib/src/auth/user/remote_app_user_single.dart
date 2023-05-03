@@ -12,25 +12,28 @@ class _RemoteAppUserSingle extends DataObject implements AppUserSingle {
     super(remote: remote ?? _remoteAppUser) {
       _init();
     }
-
   /// Создание гостевого пользователя.
   /// Используется при отсутствии связи или других прав доступа у пользователя
-  // AppUserSingle.guest() :
-  //   super(remote: DataSource.dataSet('app-user'))
-  // {
-  //   _init();
-  //   super.fromRow({
-  //     'id': '0',
-  //     'group': UserGroupList.guest,
-  //     'name': 'Guest',
-  //     'login': 'guest',
-  //     'pass': 'guest',
-  //   });
-  // }
-  ///
-  bool get isGuest {
-    return this['login'].value == 'guest';
+  _RemoteAppUserSingle.guest() :
+    super(remote: DataSource.dataSet('app-user'))
+  {
+    _init();
+    super.fromRow({
+      'id': '0',
+      'group': UserGroupList.guest,
+      'name': 'Guest',
+      'login': 'guest',
+      'pass': 'guest',
+    });
   }
+  ///
+  // bool get isGuest {
+  //   return this['login'].value == 'guest';
+  // }
+  //
+  //
+  @override
+  AppUserSingle asGuest() =>  _RemoteAppUserSingle.guest();
   /// Метод возвращает новый экземпляр класса
   /// с прежним remote, но без данных
   @override
@@ -71,11 +74,11 @@ class _RemoteAppUserSingle extends DataObject implements AppUserSingle {
   }
   //
   @override
-  UserGroup userGroup() {
+  List<String> userGroups() {
     if (valid()) {
-      return AppUserGroup(
+      return [
         '${this['group']}',
-      );
+      ];
     }
     throw Failure.dataObject(
       message: 'Ошибка в методе userGroup класса [$runtimeType] пользователь еще не проинициализирован',
@@ -91,4 +94,7 @@ class _RemoteAppUserSingle extends DataObject implements AppUserSingle {
       ],
     },);
   }
+  //
+  @override
+  UserInfo? get info => UserInfo.fromMap(asMap());
 }
