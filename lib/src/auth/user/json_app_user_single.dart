@@ -63,7 +63,7 @@ class _JsonAppUserSingle implements AppUserSingle {
   }
   //
   @override
-  List<String> userGroups() => info?.groups ?? []; 
+  List<String> userGroups() => _info?.groups ?? []; 
   //
   @override
   bool valid() => _valid;
