@@ -6,6 +6,7 @@ import 'package:hmi_networking/hmi_networking.dart';
 
 void main() {
   const stateColors = StateColors(
+    alarm: Color(0x00000000),
     error: Color(0x00000001), 
     obsolete: Color(0x00000002), 
     invalid: Color(0x00000003), 
