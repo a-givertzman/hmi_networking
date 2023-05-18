@@ -103,14 +103,14 @@ void main() {
     test('create', () async {
       expect(
         Authenticate(
-          user: AppUserSingle(
+          user: AppUserSingle.remote(
             remote: DataSource.dataSet('app-user-test'),
           ),
         ), 
         isInstanceOf<Authenticate>(),
       );
       final auth = Authenticate(
-        user: AppUserSingle(
+        user: AppUserSingle.remote(
           remote:  DataSource.dataSet('app-user-test'),
         ),
       );

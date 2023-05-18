@@ -17,12 +17,13 @@ class AppUserGroup implements UserGroup {
     String adminName = 'Administrator',
     String operatorName = 'Operator',
     String guestName = 'Guest',
+    Map<String, String>? additionalGroups,
   }) : 
-  _groups = {
+  _groups = (additionalGroups?? {})..addAll({
     UserGroupList.admin: adminName,
     UserGroupList.operator: operatorName,
     UserGroupList.guest: guestName,
-  } {
+  }) {
     if (_groups.containsKey(group)) {
       _group = group;
     } else {
