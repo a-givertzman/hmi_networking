@@ -1,7 +1,6 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/auth/user/user_info.dart';
 import 'package:hmi_networking/src/auth/user_group/app_user_group.dart';
-import 'package:hmi_networking/src/auth/user_group/user_group.dart';
 import 'package:hmi_networking/src/core/entities/data_object.dart';
 import 'package:hmi_networking/src/core/entities/response.dart';
 import 'package:hmi_networking/src/datasource/data_set.dart';
