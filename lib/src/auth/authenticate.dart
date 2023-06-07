@@ -120,6 +120,7 @@ class Authenticate {
         );
       });
   }
+  // TODO rename this method because current name is confusing
   ///
   Future<AuthResult> authenticateByPhoneNumber(String login, {bool store = false}) {
     return _user.fetchByLogin(login).then((user) {
