@@ -15,18 +15,12 @@ class UserInfo {
   });
   ///
   factory UserInfo.fromMap(Map<String, dynamic> map) {
-    final List<String> groups = [];
-    if (map.containsKey('group')) {
-      final serializedGroup = map['group'];
-      if(serializedGroup is List) {
-        groups.addAll(serializedGroup.cast<String>());
-      } else {
-        groups.add(serializedGroup);
-      }
-    }
-    if(groups.isEmpty) {
-      throw ArgumentError.value(map, 'map', '"group" in not provided');
-    }
+    const groupKey = 'group';
+    final List<String> groups = switch(map) {
+      {groupKey: []} => [],
+      {groupKey: final group} => group is List ? group.cast<String>() : [group.toString()],
+      _ => [],
+    };
     return UserInfo(
       id: "${map['id']}", 
       groups: groups, 
