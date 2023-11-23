@@ -18,7 +18,9 @@ class UserInfo {
     const groupKey = 'group';
     final List<String> groups = switch(map) {
       {groupKey: []} => [],
-      {groupKey: final group} => group is List ? group.cast<String>() : [group.toString()],
+      {groupKey: final group} => group is List 
+        ? group.map((entry) => entry.toString()).toList()
+        : [group.toString()],
       _ => [],
     };
     return UserInfo(
