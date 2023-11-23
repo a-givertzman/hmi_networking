@@ -217,27 +217,29 @@ class DsClientReal implements DsClient {
   /// раскидывает полученные события по подписчикам
   void _listenLine() {
     log(_debug, '[$DsClientReal]');
-    _line.stream.listen((dataPoint) {
-      final name = dataPoint.name.name;
-      // log(_debug, '[$DsClientReal.dataPoint] : $dataPoint');
-      // log(_debug, '[$DsClientReal._listenLine] point name: ${dataPoint.name}');
-      if (_receivers.containsKey(name)) {
-        // log(_debug, '[$DsClientReal._run] dataPint: $dataPint');
-        final receiver = _receivers[name];
-        if (receiver != null && !receiver.isClosed) {
-            // log(_debug, '[$DsClientReal._run] receiver: ${receiver}');
-            receiver.add(dataPoint);
+    _line.stream.listen(
+      (dataPoint) {
+        final name = dataPoint.name.name;
+        // log(_debug, '[$DsClientReal.dataPoint] : $dataPoint');
+        // log(_debug, '[$DsClientReal._listenLine] point name: ${dataPoint.name}');
+        if (_receivers.containsKey(name)) {
+          // log(_debug, '[$DsClientReal._run] dataPint: $dataPint');
+          final receiver = _receivers[name];
+          if (receiver != null && !receiver.isClosed) {
+              // log(_debug, '[$DsClientReal._run] receiver: ${receiver}');
+              receiver.add(dataPoint);
+          }
         }
-      }
-    },
-    onError: (e) {
-      log(_debug, '[$DsClientReal._run] error: $e');
-      // _socket.close();
-    },
-    onDone: () {
-      log(_debug, '[$DsClientReal] done');
-      _line.close();
-    });
+      },
+      onError: (e) {
+        log(_debug, '[$DsClientReal._run] error: $e');
+        // _socket.close();
+      },
+      onDone: () {
+        log(_debug, '[$DsClientReal] done');
+        _line.close();
+      },
+    );
     log(_debug, '[$DsClientReal] exit');
   }
   ///

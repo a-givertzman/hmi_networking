@@ -54,9 +54,9 @@ void main() {
     final receivedCommands = <String>[];
     const targetCommandsStartings = [
       // Command sent to server
-      '{"class":"requestAll","type":"bool","name":"","value":1,"status":0,"timestamp":"'
+      '{"class":"requestAll","type":"bool","name":"","value":1,"status":0,"timestamp":"',
     ];
-    line.stream.listen((event) { });
+    line.stream.listen((event) { return; });
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
     clientSocket!.listen(
@@ -105,7 +105,7 @@ void main() {
   });
   test('JdsLine with ServerSocket requestAll when isConnected == false | Check sent commands', () async {
     final receivedCommands = <String>[];
-    line.stream.listen((_) {});
+    line.stream.listen((_) { return; });
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
     clientSocket = await socketServer.first;
     clientSocket!.listen(
