@@ -15,31 +15,28 @@ class UserInfo {
   });
   ///
   factory UserInfo.fromMap(Map<String, dynamic> map) {
-    final List<String> groups = [];
-    if (map.containsKey('group')) {
-      groups.add(map['group']);
-    }
-    if (map.containsKey('groups') && groups.isEmpty) {
-      final serializedGroups = map['groups'] as List<dynamic>;
-      groups.addAll(serializedGroups.cast<String>());
-    }
-    if(groups.isEmpty) {
-      throw ArgumentError.value(map, 'map');
-    }
+    const groupKey = 'group';
+    final List<String> groups = switch(map) {
+      {groupKey: []} => [],
+      {groupKey: final group} => group is List 
+        ? group.map((entry) => entry.toString()).toList()
+        : [group.toString()],
+      _ => [],
+    };
     return UserInfo(
       id: "${map['id']}", 
       groups: groups, 
       name: map['name'], 
       login: map['login'], 
-      password: map['password'] ?? map['pass'],
+      password: map['pass'],
     );
   }
   ///
   Map<String, dynamic> asMap() => {
     'id': id,
-    'groups': groups,
+    'group': groups,
     'name': name,
     'login': login,
-    'password': password,
+    'pass': password,
   };
 }

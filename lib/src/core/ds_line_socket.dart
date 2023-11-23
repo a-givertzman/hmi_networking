@@ -135,10 +135,12 @@ class DsLineSocket implements LineSocket{
           return Future.value(const Result(data: true));
         }
         return Future.value(
-          Result(error: Failure(
-            message: 'Ошибка в методе $runtimeType.send: socket is not connected',
-            stackTrace: StackTrace.current
-          ))
+          Result(
+            error: Failure(
+              message: 'Ошибка в методе $runtimeType.send: socket is not connected',
+              stackTrace: StackTrace.current,
+            ),
+          ),
         );
       } catch (error) {
         _log.debug('[.send] error: $error');
