@@ -6,89 +6,87 @@ void main() {
     test(
       'created with correct default flags value',
       () {
-        final nos = NetworkOperationState();
+        final state = NetworkOperationState();
         expect(
-          nos.isEditing,
+          state.isEditing,
           false,
           reason: 'Default value of isEditing should be false',
         );
         expect(
-          nos.isChanged,
+          state.isChanged,
           false,
           reason: 'Default value of isChanged should be false',
         );
         expect(
-          nos.isSaving,
+          state.isSaving,
           false,
           reason: 'Default value of isSaving should be false',
         );
         expect(
-          nos.isSaved,
+          state.isSaved,
           false,
           reason: 'Default value of isSaved should be false',
         );
         expect(
-          nos.isLoading,
+          state.isLoading,
           false,
           reason: 'Default value of isLoading should be false',
         );
         expect(
-          nos.isLoaded,
+          state.isLoaded,
           false,
           reason: 'Default value of isLoaded should be false',
         );
         expect(
-          nos.isAuthenticating,
+          state.isAuthenticating,
           false,
           reason: 'Default value of isAuthenticating should be false',
         );
         expect(
-          nos.isAuthenticeted,
+          state.isAuthenticeted,
           false,
           reason: 'Default value of isAuthenticeted should be false',
         );
       },
     );
-
-    final constructorArgsList = [
-      {
-        'isEditing': false,
-        'isChanged': false,
-        'isSaving': false,
-        'isSaved': false,
-        'isLoading': false,
-        'isLoaded': false,
-        'isAuthenticating': false,
-        'isAuthenticeted': false,
-      },
-      {
-        'isEditing': true,
-        'isChanged': true,
-        'isSaving': true,
-        'isSaved': true,
-        'isLoading': true,
-        'isLoaded': true,
-        'isAuthenticating': true,
-        'isAuthenticeted': true,
-      },
-    ];
-
     test(
       'created with correctly passed flags value',
       () {
+        final constructorArgsList = [
+          {
+            'isEditing': false,
+            'isChanged': false,
+            'isSaving': false,
+            'isSaved': false,
+            'isLoading': false,
+            'isLoaded': false,
+            'isAuthenticating': false,
+            'isAuthenticeted': false,
+          },
+          {
+            'isEditing': true,
+            'isChanged': true,
+            'isSaving': true,
+            'isSaved': true,
+            'isLoading': true,
+            'isLoaded': true,
+            'isAuthenticating': true,
+            'isAuthenticeted': true,
+          },
+        ];
         for (final args in constructorArgsList) {
           if (args
               case {
-                'isEditing': bool isEditing,
-                'isChanged': bool isChanged,
-                'isSaving': bool isSaving,
-                'isSaved': bool isSaved,
-                'isLoading': bool isLoading,
-                'isLoaded': bool isLoaded,
-                'isAuthenticating': bool isAuthenticating,
-                'isAuthenticeted': bool isAuthenticeted,
+                'isEditing': final bool isEditing,
+                'isChanged': final bool isChanged,
+                'isSaving': final bool isSaving,
+                'isSaved': final bool isSaved,
+                'isLoading': final bool isLoading,
+                'isLoaded': final bool isLoaded,
+                'isAuthenticating': final bool isAuthenticating,
+                'isAuthenticeted': final bool isAuthenticeted,
               }) {
-            final nos = NetworkOperationState(
+            final state = NetworkOperationState(
               isEditing: isEditing,
               isChanged: isChanged,
               isSaving: isSaving,
@@ -99,42 +97,42 @@ void main() {
               isAuthenticeted: isAuthenticeted,
             );
             expect(
-              nos.isEditing,
+              state.isEditing,
               isEditing,
               reason: 'isEditing should be the same as passed value',
             );
             expect(
-              nos.isChanged,
+              state.isChanged,
               isChanged,
               reason: 'isChanged should be the same as passed value',
             );
             expect(
-              nos.isSaving,
+              state.isSaving,
               isSaving,
               reason: 'isSaving should be the same as passed value',
             );
             expect(
-              nos.isSaved,
+              state.isSaved,
               isSaved,
               reason: 'isSaved should be the same as passed value',
             );
             expect(
-              nos.isLoading,
+              state.isLoading,
               isLoading,
               reason: 'isLoading should be the same as passed value',
             );
             expect(
-              nos.isLoaded,
+              state.isLoaded,
               isLoaded,
               reason: 'isLoaded should be the same as passed value',
             );
             expect(
-              nos.isAuthenticating,
+              state.isAuthenticating,
               isAuthenticating,
               reason: 'isAuthenticating should be the same as passed value',
             );
             expect(
-              nos.isAuthenticeted,
+              state.isAuthenticeted,
               isAuthenticeted,
               reason: 'isAuthenticeted should be the same as passed value',
             );
