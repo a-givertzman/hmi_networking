@@ -1,7 +1,6 @@
 
 import 'dart:typed_data';
-
-import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 
 /// 
 /// Listen socket, send to socket,
@@ -14,11 +13,11 @@ abstract class LineSocket {
   /// stream of all data coming from the socket
   Stream<Uint8List> get stream;
   ///
-  Result<bool> requestAll();
+  ResultF<void> requestAll();
   /// Sending data to the socket, not blocking, buffered
-  Future<Result<bool>> send(List<int> data);
+  Future<ResultF<void>> send(List<int> data);
   /// Just closes the socket
   /// 
   /// NOTE: Writes may be buffered, and may not be flushed by a call to close(). To flush all buffered writes, call flush() before calling close().
-  Future close();
+  Future<void> close();
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client.dart';
 import 'package:hmi_networking/src/core/ds_client_connection_listener.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
@@ -249,7 +250,7 @@ class DsClientReal implements DsClient {
   /// в потоке Stream<DsDataPoint> stream
   /// В качестве результата Result<bool> получает результат записи в socket
   @override
-  Future<Result<bool>> send(
+  Future<ResultF<void>> send(
     DsCommand dsCommand,
   ) {
     return _line.send(dsCommand);
@@ -259,7 +260,7 @@ class DsClientReal implements DsClient {
   /// что бы сервер прочитал и прислал значения всех точек в потоке.
   /// Данные не ждем, они прийдут в потоке
   @override
-  Future<Result<bool>> requestAll() {
+  Future<ResultF<void>> requestAll() {
     return _line.requestAll();
   }
   ///
@@ -267,7 +268,7 @@ class DsClientReal implements DsClient {
   /// что бы сервер прочитал и прислал значения запрошенных точек в потоке.
   /// Данные не ждем, они прийдут в потоке
   @override
-  Future<Result<bool>> requestNamed(List<String> names) {
+  Future<ResultF<void>> requestNamed(List<String> names) {
     return send(DsCommand(
       dsClass: DsDataClass.requestList,
       type: DsDataType.bool,
@@ -279,7 +280,7 @@ class DsClientReal implements DsClient {
   }
   ///
   /// Останавливаем цикл обработки входящего потока данных от S7 DataServer
-  Future cancel() {
+  Future<void> cancel() {
     // TODO _dsClientConnectionListener must be released
     // _dsClientConnectionListener.close();
     return _line.close();
@@ -320,7 +321,7 @@ class DsClientReal implements DsClient {
   /// в потоке Stream<DsDataPoint> stream
   /// В качестве результата Result<bool> получает результат записи в socket
   @override
-  Result<bool> sendEmulated(
+  ResultF<void> sendEmulated(
     DsCommand dsCommand,
   ) {
     throw Failure.unexpected(
@@ -334,7 +335,7 @@ class DsClientReal implements DsClient {
   /// В качестве результата Result<bool> получает результат чтения из S7 
   /// данные не ждем, они прийдут в потоке
   @override
-  Result<bool> requestNamedEmulated(List<String> names) {
+  ResultF<void> requestNamedEmulated(List<String> names) {
     throw Failure.unexpected(
       message: '[$DsClientReal.requestNamedEmulated] method not implemented, used only for emulation in the test mode', 
       stackTrace: StackTrace.current,

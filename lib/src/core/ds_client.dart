@@ -1,4 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 
 ///
 abstract class DsClient {
@@ -29,20 +30,20 @@ abstract class DsClient {
   /// то они прийдут в текущем активном подключении 
   /// в потоке Stream<DsDataPoint> stream
   /// В качестве результата Result<bool> получает результат записи в socket
-  Future<Result<bool>> send(
+  Future<ResultF<void>> send(
     DsCommand dsCommand,
   );
   ///
   /// Делает запрос на S7 DataServer что бы получить все точки данных
   /// что бы сервер прочитал и прислал значения всех точек в потоке.
   /// Данные не ждем, они прийдут в потоке
-  Future<Result<bool>> requestAll();
+  Future<ResultF<void>> requestAll();
   ///
   /// Делает запрос на S7 DataServer в виде списка имен точек данных
   /// что бы сервер прочитал и прислал значения запрошенных точек в потоке
   /// В качестве результата Result<bool> получает результат чтения из S7 
   /// данные не ждем, они прийдут в потоке
-  Future<Result<bool>> requestNamed(List<String> names);
+  Future<ResultF<void>> requestNamed(List<String> names);
   ///
   /// Returns number of live subscriptions 
   int get subscriptionsCount;
@@ -84,7 +85,7 @@ abstract class DsClient {
   /// то они прийдут в текущем активном подключении 
   /// в потоке Stream<DsDataPoint> stream
   /// В качестве результата Result<bool> получает результат записи в socket
-  Result<bool> sendEmulated(
+  ResultF<void> sendEmulated(
     DsCommand dsCommand,
   );
   ///
@@ -92,5 +93,5 @@ abstract class DsClient {
   /// что бы сервер прочитал и прислал значения запрошенных точек в потоке
   /// В качестве результата Result<bool> получает результат чтения из S7 
   /// данные не ждем, они прийдут в потоке
-  Result<bool> requestNamedEmulated(List<String> names);
+  ResultF<void> requestNamedEmulated(List<String> names);
 }

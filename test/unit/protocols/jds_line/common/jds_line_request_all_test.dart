@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 import 'fake_line_socket.dart';
 
@@ -9,8 +10,8 @@ void main() {
   Log.initialize(level: LogLevel.off);
   test('JdsLine requestAll', () async {
     socket = FakeLineSocket(
-      requestAllResult: const Result(data: true),
-      sendResult: const Result(data: true),
+      requestAllResult: const Ok(null),
+      sendResult: const Ok(null),
     );
     line = JdsLine(lineSocket: socket);
     final receivedEvents = <DsDataPoint>[];
@@ -18,7 +19,7 @@ void main() {
     await Future.delayed(const Duration(milliseconds: 100));
     final result = await line.requestAll();
     await Future.delayed(const Duration(milliseconds: 100));
-    expect(result.data, true);
+    expect(result, isA<Ok<void, Failure>>());
     expect(
       receivedEvents.every(
         (event) => event.type == DsDataType.bool 
