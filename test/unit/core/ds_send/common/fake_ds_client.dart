@@ -1,4 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client.dart';
 ///
 class FakeDsClient implements DsClient {
@@ -11,8 +12,8 @@ class FakeDsClient implements DsClient {
     streams![name] as Stream<DsDataPoint<T>>;
   //
   @override
-  Future<Result<bool>> send(DsCommand dsCommand) {
-    return Future.value(const Result(data: true));
+  Future<ResultF<void>> send(DsCommand dsCommand) {
+    return Future.value(const Ok(null));
   }
   //
   @override
@@ -21,22 +22,22 @@ class FakeDsClient implements DsClient {
   }
   //
   @override
-  Future<Result<bool>> requestAll() {
+  Future<ResultF<void>> requestAll() {
     throw UnimplementedError();
   }
   //
   @override
-  Future<Result<bool>> requestNamed(List<String> names) {
+  Future<ResultF<void>> requestNamed(List<String> names) {
     throw UnimplementedError();
   }
   //
   @override
-  Result<bool> requestNamedEmulated(List<String> names) {
+  ResultF<void> requestNamedEmulated(List<String> names) {
     throw UnimplementedError();
   }
   //
   @override
-  Result<bool> sendEmulated(DsCommand dsCommand) {
+  ResultF<void> sendEmulated(DsCommand dsCommand) {
     throw UnimplementedError();
   }
   //

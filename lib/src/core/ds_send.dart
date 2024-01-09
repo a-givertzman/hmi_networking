@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 ///
@@ -32,7 +33,7 @@ class DsSend<T> {
     _response = response,
     _responseTimeout = responseTimeout;
   ///
-  Future<Result<DsDataPoint<T>>> exec(T value) {
+  Future<ResultF<DsDataPoint<T>>> exec(T value) {
     _dsClient.send(DsCommand(
       dsClass: DsDataClass.commonCmd,
       type: _types[T], 
@@ -44,11 +45,11 @@ class DsSend<T> {
     final response = _response;
     return _dsClient.stream<T>(response ?? _pointName.name)
       .first
-      .then((value) => Result(data: value))
+      .then<ResultF<DsDataPoint<T>>>((value) => Ok(value))
       .timeout(
         Duration(seconds: _responseTimeout), 
-        onTimeout: () => Result<DsDataPoint<T>>(
-          error: Failure(
+        onTimeout: () => Err(
+          Failure(
             message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${response ?? _pointName.name})', 
             stackTrace: StackTrace.current,
           ),

@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/line_socket.dart';
 
 ///
-class DsLineSocket implements LineSocket{
+class DsLineSocket implements LineSocket {
   static final _log = const Log('DsLineSocket')..level = LogLevel.info;
   bool _isActive = false;
   bool _isConnected = false;
@@ -105,26 +106,24 @@ class DsLineSocket implements LineSocket{
   }
   //
   @override
-  Result<bool> requestAll() {
+  ResultF<void> requestAll() {
     _controller.add(
       _buildConnectionStatus(_isConnected),
     );
-    return const Result(data: true);
+    return const Ok(null);
   }
   //
   @override
-  Future<Result<bool>> send(List<int> data) async {
+  Future<ResultF<void>> send(List<int> data) async {
     final socket = _socket;
     // TODO Better implementation of this feature to be released
     if(socket == null) {
       _log.debug('[.send] failed, socket was: $socket');
       await Future.delayed(const Duration(milliseconds: 100));
-      return Future.value(
-        Result(
-          error: Failure.connection(
-            message: 'Not connected', 
-            stackTrace: StackTrace.current,
-          ),
+      return Err(
+        Failure.connection(
+          message: 'Not connected', 
+          stackTrace: StackTrace.current,
         ),
       );
     } else {
@@ -132,27 +131,23 @@ class DsLineSocket implements LineSocket{
       try {
         if (_isConnected) {
           socket.add(data);
-          return Future.value(const Result(data: true));
+          return const Ok(null);
         }
-        return Future.value(
-          Result(
-            error: Failure(
-              message: 'Ошибка в методе $runtimeType.send: socket is not connected',
-              stackTrace: StackTrace.current,
-            ),
+        return Err(
+          Failure(
+            message: 'Ошибка в методе $runtimeType.send: socket is not connected',
+            stackTrace: StackTrace.current,
           ),
         );
       } catch (error) {
         _log.debug('[.send] error: $error');
         await _closeSocket(socket);
-        return Future.value(
-          Result(
-            error: Failure.connection(
-              message: '$error', 
-              stackTrace: StackTrace.current,
-            ),
+        return Err(
+          Failure.connection(
+            message: '$error', 
+            stackTrace: StackTrace.current,
           ),
-        );          
+        );         
       }
     }
   }
@@ -167,7 +162,7 @@ class DsLineSocket implements LineSocket{
   }
   //
   @override
-  Future close() async {
+  Future<void> close() async {
     _cancel = true;
     await _closeSocket(_socket);
     await _controller.close();

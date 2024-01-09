@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_send.dart';
 import 'fake_ds_client.dart';
 import 'test_point_paths.dart';
@@ -20,8 +21,8 @@ void main() {
       await sendIntResult
         .then((responsePoint) {
           log(_debug, 'responsePoint: $responsePoint');
-          expect(responsePoint.hasData, true, reason: 'Result should contains data');
-          expect(responsePoint.data.value, 121, reason: 'Result data should be 121');
+          expect(responsePoint is Ok, true, reason: 'Result should contains data');
+          expect((responsePoint as Ok<DsDataPoint<int>, Failure>).value.value, 121, reason: 'Result data should be 121');
         })
         .timeout(const Duration(seconds: timeout), onTimeout: () {
           expect(false, true, reason: 'Response timeout ($timeout sec) exceeded!');
@@ -36,51 +37,55 @@ void main() {
       ).exec(123);
       await sendIntResult
         .then((responsePoint) {
-          expect(responsePoint.hasData, false, reason: 'Result should contains data');
-          expect(responsePoint.hasError, true, reason: 'Result should contains Error');
+          expect(responsePoint is Ok, false, reason: 'Result should not contain data');
+          expect(responsePoint is Err, true, reason: 'Result should contain Error');
         })
         .timeout(const Duration(seconds: timeout), onTimeout: () {
           expect(false, true, reason: 'Response timeout ($timeout sec) exceeded!');
         });
     });
     test('with response executes all supported types', () async {
-      final sendIntResult = DsSend<int>(
+      final sendIntResult = await DsSend<int>(
         dsClient: dsClient,
         pointName: pointPaths[int]!,
         response: 'stream_int',
       ).exec(123);
-      await sendIntResult.then((responsePoint) {
-        expect(responsePoint.data.value, 1);
-      });
+      expect(sendIntResult is Ok, equals(true));
+      expect((sendIntResult as Ok<DsDataPoint<int>, Failure>).value.value, 1);
       final sendBoolResult = await DsSend<bool>(
         dsClient: dsClient,
         pointName: pointPaths[bool]!,
         response: 'stream_bool',
       ).exec(true);
-      expect(sendBoolResult.data.value, true);
+      expect(sendBoolResult is Ok, equals(true));
+      expect((sendBoolResult as Ok<DsDataPoint<bool>, Failure>).value.value, true);
       final sendRealResult = await DsSend<double>(
         dsClient: dsClient,
         pointName: pointPaths[double]!,
         response: 'stream_real',
       ).exec(0.5);
-      expect(sendRealResult.data.value, 1.234);
+      expect(sendRealResult is Ok, equals(true));
+      expect((sendRealResult as Ok<DsDataPoint<double>, Failure>).value.value, 1.234);
     });
     test('without response executes all supported types', () async {
       final sendIntResult = await DsSend<int>(
         dsClient: dsClient,
         pointName: pointPaths[int]!,
       ).exec(123);
-      expect(sendIntResult.data.value, 2);
+      expect(sendIntResult is Ok, equals(true));
+      expect((sendIntResult as Ok<DsDataPoint<int>, Failure>).value.value, 2);
       final sendBoolResult = await DsSend<bool>(
         dsClient: dsClient,
         pointName: pointPaths[bool]!,
       ).exec(true);
-      expect(sendBoolResult.data.value, false);
+      expect(sendBoolResult is Ok, equals(true));
+      expect((sendBoolResult as Ok<DsDataPoint<bool>, Failure>).value.value, false);
       final sendRealResult = await DsSend<double>(
         dsClient: dsClient,
         pointName: pointPaths[double]!,
       ).exec(0.5);
-      expect(sendRealResult.data.value, 2.345);
+      expect(sendRealResult is Ok, equals(true));
+      expect((sendRealResult as Ok<DsDataPoint<double>, Failure>).value.value, 2.345);
     });
   });
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/line_socket.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
 ///
@@ -127,7 +128,7 @@ class JdsLine implements CustomProtocolLine {
   Stream<DsDataPoint> get stream => _lineSocket.stream.transform(_dataPointTransformer);
   //
   @override
-  Future<Result<bool>> send(
+  Future<ResultF<void>> send(
     DsCommand dsCommand,
   ) {
     _log.debug('[$JdsLine.send] dsCommand: $dsCommand');
@@ -136,13 +137,13 @@ class JdsLine implements CustomProtocolLine {
   }
   //  
   @override
-  Future close() => _lineSocket.close();
+  Future<void> close() => _lineSocket.close();
   //
   @override
   bool get isConnected => _lineSocket.isConnected;
   //
   @override
-  Future<Result<bool>> requestAll() {
+  Future<ResultF<void>> requestAll() {
     _lineSocket.requestAll();
     return send(DsCommand(
       dsClass: DsDataClass.requestAll,

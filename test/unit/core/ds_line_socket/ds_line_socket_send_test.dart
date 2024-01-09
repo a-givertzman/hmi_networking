@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 
 void main() {
@@ -55,7 +56,7 @@ void main() {
         log.debug('sending: ${utf8.decode(entry.value)}');
         final result = await lineSocket.send(entry.value);
         log.debug('result: $result');
-        expect(result.hasData, true);
+        expect(result is Ok, true);
         await Future.delayed(Duration(milliseconds: entry.key));
       }
       await Future.delayed(const Duration(milliseconds: 1000));
