@@ -28,6 +28,7 @@ final class DataPointsCache {
     _cacheFile = cacheFile,
     _cachingTimeout = cachingTimeout;
   ///
+  /// Collection of all currently saved points.
   Iterable<DsDataPoint> get cachedPoints => _cache.values;
   ///
   /// Start listening the stream of incoming points.
@@ -48,7 +49,6 @@ final class DataPointsCache {
   /// Stop listening the stream of incoming points.
   Future<void> stop() async {
     await _subscription?.cancel();
-    _subscription = null;
     _timer?.cancel();
     await _saveCache();
   }
