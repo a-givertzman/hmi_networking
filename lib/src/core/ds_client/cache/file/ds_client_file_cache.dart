@@ -13,6 +13,20 @@ final class DsClientFileCache implements DsClientCache {
   }) : _cacheFile = cacheFile;
   //
   @override
+  Future<DsDataPoint?> get(String pointName) {
+    return _cacheFile.read().then(
+      (points) => points[pointName],
+    );
+  }
+  //
+  @override
+  Future<List<DsDataPoint>> getAll() {
+    return _cacheFile.read().then(
+      (points) => points.values.toList(),
+    );
+  }
+  //
+  @override
   Future<void> add(DsDataPoint point) async {
     final cache = await _cacheFile.read();
     cache[point.name.name] = point;
@@ -29,8 +43,4 @@ final class DsClientFileCache implements DsClientCache {
     );
     return _cacheFile.write(cache);
   }
-  //
-  @override
-  Future<Map<String, DsDataPoint>> get points => _cacheFile.read();
-
 }

@@ -4,8 +4,11 @@ import 'package:hmi_core/hmi_core.dart';
 /// Remembers latest values of each unique point.
 abstract interface class DsClientCache {
   ///
-  /// Map of all currently saved points with their signal names as keys.
-  Future<Map<String, DsDataPoint>> get points;
+  /// Retrieves point from cache by its name.
+  Future<DsDataPoint?> get(String pointName);
+  ///
+  /// Retrieves all points from cache.
+  Future<List<DsDataPoint>> getAll();
   ///
   /// Add point to the cache.
   Future<void> add(DsDataPoint point);

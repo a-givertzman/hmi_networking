@@ -28,9 +28,12 @@ final class DsClientDelayedCache implements DsClientCache {
     _memoryCache = memoryCache, 
     _fileCache = fileCache,
     _cachingTimeout = cachingTimeout;
+   //
+  @override
+  Future<DsDataPoint?> get(String pointName) => _memoryCache.get(pointName);
   //
   @override
-  Future<Map<String, DsDataPoint>> get points => _memoryCache.points;
+  Future<List<DsDataPoint>> getAll() => _memoryCache.getAll();
   //
   @override
   Future<void> add(DsDataPoint point) async {
@@ -51,7 +54,7 @@ final class DsClientDelayedCache implements DsClientCache {
   }
   ///
   Future<void> _saveCache() async {
-    final points = await _memoryCache.points;
-    return _fileCache.addMany(points.values);
+    final points = await _memoryCache.getAll();
+    return _fileCache.addMany(points);
   }
 }
