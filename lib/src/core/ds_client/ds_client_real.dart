@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client_connection_listener.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
@@ -13,12 +14,15 @@ class DsClientReal implements DsClient {
   bool _isActive = false;
   final CustomProtocolLine _line;
   final Map<String, StreamController<DsDataPoint>> _receivers = {};
+  final DsClientCache? _cache;
   late final DsClientConnectionListener _dsClientConnectionListener;
     ///
   DsClientReal({
     required CustomProtocolLine line,
+    DsClientCache? cache,
   }):
-    _line = line;
+    _line = line,
+    _cache = cache;
   ///
   /// текущее состояние подключения к серверу
   @override
@@ -229,6 +233,7 @@ class DsClientReal implements DsClient {
           if (receiver != null && !receiver.isClosed) {
               // log(_debug, '[$DsClientReal._run] receiver: ${receiver}');
               receiver.add(dataPoint);
+              _cache?.add(dataPoint);
           }
         }
       },
