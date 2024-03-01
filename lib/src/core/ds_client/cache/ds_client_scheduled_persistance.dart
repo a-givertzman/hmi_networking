@@ -29,7 +29,6 @@ final class DsClientScheduledPersistance {
     _cache = cache, 
     _cacheFile = cacheFile,
     _cachingTimeout = cachingTimeout;
-
   ///
   /// Start listening cache changes.
   Future<void> start() async {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:hmi_core/hmi_core.dart';
+
 /// 
 /// Remembers latest values of each unique point from provided stream.
 final class DsClientCache with ChangeNotifier {

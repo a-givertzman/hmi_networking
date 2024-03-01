@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/entities/jds_data_point.dart';
+
 ///
 /// Reads and writes cache states using json file.
 final class DsClientCacheFile {
