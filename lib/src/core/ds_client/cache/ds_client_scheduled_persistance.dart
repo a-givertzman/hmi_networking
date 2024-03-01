@@ -5,7 +5,7 @@ import 'ds_client_cache_file.dart';
 
 /// 
 /// Periodically persists cache states. 
-class DsClientScheduledPersistance {
+final class DsClientScheduledPersistance {
   final DsClientCache _cache;
   final DsClientCacheFile _cacheFile;
   final Duration _cachingTimeout;
