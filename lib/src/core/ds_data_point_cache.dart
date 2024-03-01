@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:hmi_core/hmi_core.dart';
 /// 
 /// Persists latest values of each unique point from provided stream.
-final class DataPointsCache {
+final class DsDataPointCache {
   final Stream<DsDataPoint> _incomingPoints;
   final Duration _cachingTimeout;
   final TextFile _cacheFile;
@@ -19,7 +19,7 @@ final class DataPointsCache {
   /// then [cachingTimeout] is essentially the period of caching.
   /// 
   /// [cacheFile] - the file in which the cache is saved and from which the cache is read.
-  DataPointsCache({
+  DsDataPointCache({
     required Stream<DsDataPoint> incomingPoints,
     Duration cachingTimeout = const Duration(seconds: 5),
     TextFile cacheFile = const TextFile.path('./cache/points.json'),

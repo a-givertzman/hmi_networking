@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/core/ds_client.dart';
-import 'package:hmi_networking/src/core/ds_client_connection_listener.dart';
+import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
+import 'package:hmi_networking/src/core/ds_client/ds_client_connection_listener.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
 
 ///

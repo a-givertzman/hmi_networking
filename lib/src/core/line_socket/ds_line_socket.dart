@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/core/line_socket.dart';
+import 'package:hmi_networking/src/core/line_socket/line_socket.dart';
 
 ///
 class DsLineSocket implements LineSocket {
