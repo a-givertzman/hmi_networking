@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/entities/jds_data_point.dart';
 
 ///
@@ -15,7 +16,7 @@ final class DsClientCacheTextFile {
     final serializedCache = json.encode(
       cache.map((key, value) => MapEntry(
         key, 
-        JdsDataPoint(value).toJson(),
+        JdsDataPoint(value).toMap(),
       )),
     );
     return _cacheFile.write(serializedCache);
@@ -26,12 +27,15 @@ final class DsClientCacheTextFile {
     return JsonMap.fromTextFile(_cacheFile)
       .decoded
       .then(
-        (points) => points.map(
-          (key, jsonPoint) => MapEntry(
-            key, 
-            JdsDataPoint.fromJson(jsonPoint).value,
+        (result) => switch(result) {
+          Ok(value:final points) => points.map(
+            (key, jsonPoint) => MapEntry(
+              key,
+              JdsDataPoint.fromMap(jsonPoint),
+            ),
           ),
-        ),
+          Err() => <String, DsDataPoint>{},
+        },
       );
   }
 }

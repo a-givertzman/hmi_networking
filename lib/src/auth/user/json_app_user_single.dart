@@ -44,6 +44,10 @@ class _JsonAppUserSingle implements AppUserSingle {
   Future<Response<Map<String, dynamic>>> fetchByLogin(String login) {
     return _json
     .decoded
+    .then((result) => switch(result) {
+      Ok(:final value) => value,
+      Err() => <String, dynamic>{},
+    })
     .then((map) {
       final userData = map[login] as Map<String, dynamic>?;
       if(userData == null) {
