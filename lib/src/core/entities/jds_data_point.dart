@@ -106,4 +106,10 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
   //
   @override
   String toString() => _point.toString();
+  //
+  @override
+  bool operator ==(Object other) => _point == other;
+  //
+  @override
+  int get hashCode => _point.hashCode;
 }

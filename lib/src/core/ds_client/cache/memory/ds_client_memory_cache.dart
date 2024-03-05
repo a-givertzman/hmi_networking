@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:hmi_core/hmi_core.dart';
-import '../ds_client_cache.dart';
+import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 
 /// 
 /// Remembers latest values of each unique point in RAM.
