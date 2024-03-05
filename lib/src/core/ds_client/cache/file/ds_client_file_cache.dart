@@ -1,13 +1,13 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
-import 'package:hmi_networking/src/core/ds_client/cache/file/ds_client_cache_text_file.dart';
+import 'package:hmi_networking/src/core/ds_client/cache/file/ds_cache_file.dart';
 
 /// Remembers latest values of each unique point in json file.
 final class DsClientFileCache implements DsClientCache {
-  final DsClientCacheTextFile _cacheFile;
+  final DsCacheFile _cacheFile;
   /// Remembers latest values of each unique point in [cacheFile] in json format.
   const DsClientFileCache({
-    DsClientCacheTextFile cacheFile = const DsClientCacheTextFile(
+    DsCacheFile cacheFile = const DsCacheFile(
       TextFile.path('./cache/points.json'),
     ),
   }) : _cacheFile = cacheFile;
