@@ -38,22 +38,22 @@ final class DsClientDelayedCache implements DsClientCache {
   @override
   Future<void> add(DsDataPoint point) async {
     await _memoryCache.add(point);
-    _saveCacheDelayed();
+    _persistCacheDelayed();
   }
   //
   @override
   Future<void> addMany(Iterable<DsDataPoint> points) async {
     await _memoryCache.addMany(points);
-    _saveCacheDelayed();
+    _persistCacheDelayed();
   }
   ///
-  void _saveCacheDelayed() {
+  void _persistCacheDelayed() {
     if(!(_timer?.isActive ?? false)) {
-      _timer = Timer(_cachingTimeout, _saveCache);
+      _timer = Timer(_cachingTimeout, _persistCache);
     }
   }
   ///
-  Future<void> _saveCache() async {
+  Future<void> _persistCache() async {
     final points = await _memoryCache.getAll();
     return _fileCache.addMany(points);
   }
