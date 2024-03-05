@@ -7,12 +7,14 @@ import 'package:hmi_networking/src/core/ds_client/cache/memory/ds_client_memory_
 /// 
 /// Periodically persists memory cache into file. 
 final class DsClientDelayedCache implements DsClientCache {
-  final DsClientMemoryCache _memoryCache;
-  final DsClientFileCache _fileCache;
+  final DsClientCache _memoryCache;
+  final DsClientCache _fileCache;
   final Duration _cachingTimeout;
   Timer? _timer;
   /// 
   /// Periodically persists [memoryCache] into [fileCache].
+  /// 
+  /// Recommended implementation for [memoryCache] - [DsClientMemoryCache], for [fileCache] - [DsClientFileCache].
   /// 
   /// [cachingTimeout] - the timeout of timer that triggers caching into [fileCache].
   /// Timer resets by adding into [memoryCache] after exceedance of [cachingTimeout].
@@ -21,8 +23,8 @@ final class DsClientDelayedCache implements DsClientCache {
   /// 
   /// [fileCache] - the file in which the cache is saved and from which the cache is read.
   DsClientDelayedCache({
-    required DsClientMemoryCache memoryCache, 
-    DsClientFileCache fileCache = const DsClientFileCache(),
+    required DsClientCache memoryCache, 
+    DsClientCache fileCache = const DsClientFileCache(),
     Duration cachingTimeout = const Duration(seconds: 5),
   }) : 
     _memoryCache = memoryCache, 
