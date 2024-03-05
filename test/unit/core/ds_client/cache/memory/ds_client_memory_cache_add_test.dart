@@ -103,7 +103,7 @@ void main() {
         );
         final newPoints = pointsBatch;
         expect(
-          newPoints, isNot(containsAll(oldPoints)),
+          newPoints, everyElement(isNot(isIn(oldPoints))),
           reason: 'Points batches should have different attributes in this test.',
         );
         await cache.addMany(newPoints);
