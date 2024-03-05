@@ -68,15 +68,16 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
         DsDataType.dInt    || 
         DsDataType.word    || 
         DsDataType.lInt    ||
-        DsDataType.real    => _point.value.toString(),
+        DsDataType.real    => _point.value,
         DsDataType.time || DsDataType.dateAndTime  => throw Failure.convertion(
           message: 'Ошибка в методе $JdsDataPoint.fromJson(): тип ${_point.type} не поддерживается',
           stackTrace: StackTrace.current,
         ),
-      },
+      }.toString(),
       'status': _point.status.value,
-      'history': _point.history,
       'alarm': _point.alarm,
+      'history': _point.history,
+      'timestamp': _point.timestamp,
   };
   //
   @override
