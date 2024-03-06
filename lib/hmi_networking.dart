@@ -3,6 +3,7 @@ library hmi_networking;
 export 'src/core/ds_client/ds_client.dart';
 export 'src/core/ds_client/ds_client_connection_listener.dart';
 export 'src/core/ds_client/ds_client_real.dart';
+export 'src/core/ds_client/ds_client_fake.dart';
 export 'src/core/line_socket/ds_line_socket.dart';
 export 'src/core/line_socket/line_socket.dart';
 export 'src/core/ds_data_stream_extract.dart';
