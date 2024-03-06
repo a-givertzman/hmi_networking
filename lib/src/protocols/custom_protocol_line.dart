@@ -1,22 +1,26 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-///
-abstract class CustomProtocolLine {
+/// 
+/// Interface to communicate with remote device(s) in both ways by sending commands 
+/// and receiving events (in the form of [DsDataPoint]s).
+abstract interface class CustomProtocolLine {
   /// 
+  /// Connection status with other device(s).
   bool get isConnected;
   ///
-  /// TODO Documentation description to be writen
+  /// Continuous flow of data from subordinate device(s).
   Stream<DsDataPoint> get stream;
   ///
   /// Requests all possible information from subordinated devices,
-  /// as well as diagnostics
+  /// including diagnostics.
   Future<ResultF<void>> requestAll();
   ///
-  /// TODO Documentation description to be writen
+  /// Send command to a particular device.
   Future<ResultF<void>> send(
-    DsCommand dsCommand,
+    DsCommand command,
   );
   ///
-  /// TODO Documentation description to be writen
+  /// Close connection to device(s). 
+  /// Unable to send commands and receiving events after this call.
   Future<void> close();
 }

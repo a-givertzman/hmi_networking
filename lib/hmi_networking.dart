@@ -1,12 +1,18 @@
 library hmi_networking;
 
-export 'src/core/ds_client.dart';
-export 'src/core/ds_client_connection_listener.dart';
-export 'src/core/ds_client_real.dart';
-export 'src/core/ds_line_socket.dart';
-export 'src/core/line_socket.dart';
+export 'src/core/ds_client/ds_client.dart';
+export 'src/core/ds_client/ds_client_connection_listener.dart';
+export 'src/core/ds_client/ds_client_real.dart';
+export 'src/core/ds_client/ds_client_fake.dart';
+export 'src/core/ds_client/cache/ds_client_cache.dart';
+export 'src/core/ds_client/cache/delayed/ds_client_delayed_cache.dart';
+export 'src/core/ds_client/cache/file/ds_cache_file.dart';
+export 'src/core/ds_client/cache/file/ds_client_file_cache.dart';
+export 'src/core/ds_client/cache/memory/ds_client_memory_cache.dart';
+export 'src/core/line_socket/ds_line_socket.dart';
+export 'src/core/line_socket/line_socket.dart';
 export 'src/core/ds_data_stream_extract.dart';
-export 'src/core/ds_data_point_extracted.dart';
+export 'src/core/entities/ds_data_point_extracted.dart';
 export 'src/core/ds_send.dart';
 export 'src/core/entities/double_container.dart';
 export 'src/core/entities/network_operation_state.dart';

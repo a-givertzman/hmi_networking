@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/core/ds_client.dart';
-import 'package:hmi_networking/src/core/ds_client_connection_listener.dart';
+import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
+import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
+import 'package:hmi_networking/src/core/ds_client/ds_client_connection_listener.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
 
 ///
@@ -13,12 +14,15 @@ class DsClientReal implements DsClient {
   bool _isActive = false;
   final CustomProtocolLine _line;
   final Map<String, StreamController<DsDataPoint>> _receivers = {};
+  final DsClientCache? _cache;
   late final DsClientConnectionListener _dsClientConnectionListener;
     ///
   DsClientReal({
     required CustomProtocolLine line,
+    DsClientCache? cache,
   }):
-    _line = line;
+    _line = line,
+    _cache = cache;
   ///
   /// текущее состояние подключения к серверу
   @override
@@ -229,6 +233,7 @@ class DsClientReal implements DsClient {
           if (receiver != null && !receiver.isClosed) {
               // log(_debug, '[$DsClientReal._run] receiver: ${receiver}');
               receiver.add(dataPoint);
+              _cache?.add(dataPoint);
           }
         }
       },
@@ -285,84 +290,4 @@ class DsClientReal implements DsClient {
     // _dsClientConnectionListener.close();
     return _line.close();
   }
-  ///
-  ///
-  /// ====================================================================
-  /// Методы работающие только в режиме эмуляции для удобства тестирования
-  /// ====================================================================
-  ///
-  /// поток данных отфильтрованный по имени точки данных DsDataPoint
-  @override
-  Stream<DsDataPoint<double>> streamEmulated(
-    String filterByValue, {
-    int delay = 100, 
-    double min = 0, 
-    double max = 100, 
-    int firstEventDelay = 0,
-  }) {
-    throw Failure.unexpected(
-      message: '[$DsClientReal.streamEmulated] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
-    );
-  }
-  ///
-  /// поток данных отфильтрованный по массиву имен точек данных DsDataPoint
-  @override
-  StreamMerged<DsDataPoint> streamMergedEmulated(List<String> names) {
-    throw Failure.unexpected(
-      message: '[$DsClientReal.streamMergedEmulated] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
-    );
-  }
-  ///
-  /// Посылает команду сервеер S7 DataServer
-  /// Если команда запрашивает данные, 
-  /// то они прийдут в текущем активном подключении 
-  /// в потоке Stream<DsDataPoint> stream
-  /// В качестве результата Result<bool> получает результат записи в socket
-  @override
-  ResultF<void> sendEmulated(
-    DsCommand dsCommand,
-  ) {
-    throw Failure.unexpected(
-      message: '[$DsClientReal.sendEmulated] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
-    );
-  }
-  ///
-  /// Делает запрос на S7 DataServer в виде списка имен точек данных
-  /// что бы сервер прочитал и прислал значения запрошенных точек в потоке
-  /// В качестве результата Result<bool> получает результат чтения из S7 
-  /// данные не ждем, они прийдут в потоке
-  @override
-  ResultF<void> requestNamedEmulated(List<String> names) {
-    throw Failure.unexpected(
-      message: '[$DsClientReal.requestNamedEmulated] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
-    );
-  }
-  //
-  @override
-  Stream<DsDataPoint<bool>> streamBoolEmulated(String filterByValue, {int delay = 100}) {
-    throw Failure.unexpected(
-      message: '[$DsClientReal.streamBoolEmulated] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
-    );
-  }
-  //
-  @override
-  Stream<DsDataPoint<double>> streamRequestedEmulated(String filterByValue, {int delay = 500, double min = 0, double max = 100}) {
-    throw Failure.unexpected(
-      message: '[$DsClientReal.streamRequestedEmulated] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
-    );
-  }
-  //
-  @override
-  Stream<DsDataPoint<int>> streamEmulatedInt(String filterByValue, {int delay = 100, double min = 0, double max = 100, int firstEventDelay = 0}) {
-    throw Failure.unexpected(
-      message: '[$DsClientReal.streamEmulatedInt] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
-    );
-  }  
 }

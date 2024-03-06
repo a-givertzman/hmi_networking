@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core.dart';
-import 'ds_data_point_extracted.dart';
+import 'entities/ds_data_point_extracted.dart';
 ///
 ///
 class DsDataStreamExtract<T> {
