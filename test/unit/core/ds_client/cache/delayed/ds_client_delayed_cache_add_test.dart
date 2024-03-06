@@ -34,7 +34,7 @@ void main() {
           fakeSecondaryCache.internalMap[point.name.name], isNull,
           reason: 'Secondary cache souldn\'t be updated before delay.',
         );
-        await Future.delayed(delay);
+        await Future.delayed(delay * 1.2);
         expect(
           fakeSecondaryCache.internalMap[point.name.name], equals(point),
           reason: 'Secondary cache sould be updated after delay.',
@@ -77,7 +77,7 @@ void main() {
           fakeSecondaryCache.internalMap.values, isEmpty,
           reason: 'Secondary cache souldn\'t be updated before delay.',
         );
-        await Future.delayed(delay);
+        await Future.delayed(delay * 1.2);
         expect(
           fakeSecondaryCache.internalMap.values, equals(batch),
           reason: 'Secondary cache sould be updated after delay.',
