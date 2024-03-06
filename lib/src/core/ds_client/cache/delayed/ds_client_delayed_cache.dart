@@ -5,58 +5,58 @@ import 'package:hmi_networking/src/core/ds_client/cache/file/ds_client_file_cach
 import 'package:hmi_networking/src/core/ds_client/cache/memory/ds_client_memory_cache.dart';
 
 /// 
-/// Periodically persists memory cache into file. 
+/// Periodically persists primary cache into secondary. 
 final class DsClientDelayedCache implements DsClientCache {
-  final DsClientCache _memoryCache;
-  final DsClientCache _fileCache;
+  final DsClientCache _primaryCache;
+  final DsClientCache _secondaryCache;
   final Duration _cachingTimeout;
   Timer? _timer;
   /// 
-  /// Periodically persists [memoryCache] into [fileCache].
+  /// Periodically persists [primaryCache] into [secondaryCache].
   /// 
-  /// Recommended implementation for [memoryCache] - [DsClientMemoryCache], for [fileCache] - [DsClientFileCache].
+  /// Recommended implementation for [primaryCache] - [DsClientMemoryCache], for [secondaryCache] - [DsClientFileCache].
   /// 
-  /// [cachingTimeout] - the timeout of timer that triggers caching into [fileCache].
-  /// Timer resets by adding into [memoryCache] after exceedance of [cachingTimeout].
-  /// I.e. if state constantly changing in [memoryCache],
+  /// [cachingTimeout] - the timeout of timer that triggers caching into [secondaryCache].
+  /// Timer resets by adding into [primaryCache] after exceedance of [cachingTimeout].
+  /// I.e. if state constantly changing in [primaryCache],
   /// then [cachingTimeout] is essentially the period of caching.
   /// 
-  /// [fileCache] - the file in which the cache is saved and from which the cache is read.
+  /// [secondaryCache] - the file in which the cache is saved and from which the cache is read.
   DsClientDelayedCache({
-    required DsClientCache memoryCache, 
-    DsClientCache fileCache = const DsClientFileCache(),
+    required DsClientCache primaryCache, 
+    DsClientCache secondaryCache = const DsClientFileCache(),
     Duration cachingTimeout = const Duration(seconds: 5),
   }) : 
-    _memoryCache = memoryCache, 
-    _fileCache = fileCache,
+    _primaryCache = primaryCache, 
+    _secondaryCache = secondaryCache,
     _cachingTimeout = cachingTimeout;
    //
   @override
-  Future<DsDataPoint?> get(String pointName) => _memoryCache.get(pointName);
+  Future<DsDataPoint?> get(String pointName) => _primaryCache.get(pointName);
   //
   @override
-  Future<List<DsDataPoint>> getAll() => _memoryCache.getAll();
+  Future<List<DsDataPoint>> getAll() => _primaryCache.getAll();
   //
   @override
   Future<void> add(DsDataPoint point) async {
-    await _memoryCache.add(point);
-    _persistCacheDelayed();
+    await _primaryCache.add(point);
+    _persistToSecondaryDelayed();
   }
   //
   @override
   Future<void> addMany(Iterable<DsDataPoint> points) async {
-    await _memoryCache.addMany(points);
-    _persistCacheDelayed();
+    await _primaryCache.addMany(points);
+    _persistToSecondaryDelayed();
   }
   ///
-  void _persistCacheDelayed() {
+  void _persistToSecondaryDelayed() {
     if(!(_timer?.isActive ?? false)) {
-      _timer = Timer(_cachingTimeout, _persistCache);
+      _timer = Timer(_cachingTimeout, _persistToSecondary);
     }
   }
   ///
-  Future<void> _persistCache() async {
-    final points = await _memoryCache.getAll();
-    return _fileCache.addMany(points);
+  Future<void> _persistToSecondary() async {
+    final points = await _primaryCache.getAll();
+    return _secondaryCache.addMany(points);
   }
 }

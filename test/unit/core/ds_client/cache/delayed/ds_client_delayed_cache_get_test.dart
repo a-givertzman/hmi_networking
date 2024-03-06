@@ -9,16 +9,16 @@ void main() {
   group('DsClientDelayedCache', () {
     test('getAll() returns no points if no initial cache provided', () async {
       final cache = DsClientDelayedCache(
-        memoryCache: FakeDsClientCache(),
-        fileCache:  FakeDsClientCache(),
+        primaryCache: FakeDsClientCache(),
+        secondaryCache:  FakeDsClientCache(),
       );
       expect(await cache.getAll(), equals(const <DsDataPoint>[]));
     });
     test('get(pointName) returns null if no initial cache provided', () async {
       final testPointNames = ['Winch2.EncoderBR1', 'ConstantTension.Active', 'HPA.LowNiroPressure', 'HPU.HighPressure', 'Winch1.Overload'];
       final cache = DsClientDelayedCache(
-        memoryCache: FakeDsClientCache(),
-        fileCache:  FakeDsClientCache(),
+        primaryCache: FakeDsClientCache(),
+        secondaryCache:  FakeDsClientCache(),
       );
       for(final pointName in testPointNames) {
         expect(await cache.get(pointName), isNull);
@@ -41,8 +41,8 @@ void main() {
     test('getAll() returns provided initial cache', () async {
       for(final initialCache in initialCaches) {
         final cache = DsClientDelayedCache(
-        memoryCache: FakeDsClientCache(initialCache),
-        fileCache:  FakeDsClientCache(initialCache),
+        primaryCache: FakeDsClientCache(initialCache),
+        secondaryCache:  FakeDsClientCache(initialCache),
       );
         expect(await cache.getAll(), initialCache.values.toList());
       }
