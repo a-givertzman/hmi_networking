@@ -2,18 +2,18 @@ import 'package:hmi_core/src/core/entities/ds_data_point.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 
 final class FakeDsClientCache implements DsClientCache {
-  final Map<String, DsDataPoint> map = {};
+  final Map<String, DsDataPoint> internalMap = {};
   FakeDsClientCache([Map<String, DsDataPoint> initialMap = const {}]) {
-    map.addAll(initialMap);
+    internalMap.addAll(initialMap);
   }
   @override
   Future<void> add(DsDataPoint point) async {
-    map[point.name.name] = point;
+    internalMap[point.name.name] = point;
   }
 
   @override
   Future<void> addMany(Iterable<DsDataPoint> points) async {
-    map.addEntries(
+    internalMap.addEntries(
       points.map(
         (point) => MapEntry(point.name.name, point),
       ),
@@ -21,9 +21,9 @@ final class FakeDsClientCache implements DsClientCache {
   }
 
   @override
-  Future<DsDataPoint?> get(String pointName) async => map[pointName];
+  Future<DsDataPoint?> get(String pointName) async => internalMap[pointName];
 
   @override
-  Future<List<DsDataPoint>> getAll() async => map.values.toList();
+  Future<List<DsDataPoint>> getAll() async => internalMap.values.toList();
 
 }
