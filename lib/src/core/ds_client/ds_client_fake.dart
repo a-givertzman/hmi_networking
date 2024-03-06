@@ -317,7 +317,7 @@ class DsClientFake implements DsClient {
       status: DsStatus.ok,
       timestamp: DateTime.now().toIso8601String(),
     );
-    if (_receivers.keys.contains(point.name)) {
+    if (_receivers.keys.contains(point.name.name)) {
       // print('decodedEvent: $dataPint');
       _receivers[name]!.add(point);
     }
@@ -331,7 +331,7 @@ class DsClientFake implements DsClient {
       status: DsStatus.ok,
       timestamp: DateTime.now().toIso8601String(),
     );
-    if (_receivers.keys.contains(point.name)) {
+    if (_receivers.keys.contains(point.name.name)) {
       // print('decodedEvent: $dataPint');
       _receivers[name]!.add(point);
     }
