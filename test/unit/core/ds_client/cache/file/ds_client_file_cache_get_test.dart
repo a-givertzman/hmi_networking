@@ -18,7 +18,7 @@ void main() {
         cacheFile: FakeDsCacheFile(),
       );
       for(final pointName in testPointNames) {
-        expect(await cache.get(pointName), isNull);
+        expect(await cache.get(pointName), isA<None>());
       }
     });
     final initialCaches = [
@@ -54,7 +54,10 @@ void main() {
         for(var i=0; i<cacheEntries.length; i++) {
           final pointName = cacheEntries[i].key;
           final point = cacheEntries[i].value;
-          expect(await cache.get(pointName), point);
+          final option = await cache.get(pointName);
+          expect(option, isA<Some>());
+          final receivedPoint = (option as Some<DsDataPoint>).value;
+          expect(receivedPoint, equals(point));
         }
       }
     });

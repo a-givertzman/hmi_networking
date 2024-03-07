@@ -266,13 +266,14 @@ class DsClientReal implements DsClient {
   /// Данные не ждем, они прийдут в потоке
   @override
   Future<ResultF<void>> requestAll() async {
-    if (_cache == null) {
+    final cache = _cache;
+    if (cache == null) {
       return _line.requestAll();
     } else {
       for(final entry in _receivers.entries) {
         final pointName = entry.key;
-        final cachedPoint = await _cache?.get(pointName);
-        if (cachedPoint != null) {
+        final option = await cache.get(pointName);
+        if(option case Some(value:final cachedPoint)) {
           final controller = entry.value;
           controller.add(cachedPoint);
         }

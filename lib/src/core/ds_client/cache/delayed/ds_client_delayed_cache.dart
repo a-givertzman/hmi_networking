@@ -33,7 +33,7 @@ final class DsClientDelayedCache implements DsClientCache {
     _cachingTimeout = cachingTimeout;
    //
   @override
-  Future<DsDataPoint?> get(String pointName) => _primaryCache.get(pointName);
+  Future<Option<DsDataPoint>> get(String pointName) => _primaryCache.get(pointName);
   //
   @override
   Future<List<DsDataPoint>> getAll() => _primaryCache.getAll();

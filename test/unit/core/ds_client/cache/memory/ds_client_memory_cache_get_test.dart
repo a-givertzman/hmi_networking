@@ -12,7 +12,7 @@ void main() {
       final testPointNames = ['Winch2.EncoderBR1', 'ConstantTension.Active', 'HPA.LowNiroPressure', 'HPU.HighPressure', 'Winch1.Overload'];
       final cache = DsClientMemoryCache();
       for(final pointName in testPointNames) {
-        expect(await cache.get(pointName), isNull);
+        expect(await cache.get(pointName), isA<None>());
       }
     });
     final initialCaches = [
@@ -32,7 +32,7 @@ void main() {
     test('getAll() returns provided initial cache', () async {
       for(final initialCache in initialCaches) {
         final cache = DsClientMemoryCache(initialCache: initialCache);
-        expect(await cache.getAll(), initialCache.values.toList());
+        expect(await cache.getAll(), equals(initialCache.values.toList()));
       }
     });
     test('get(pointName) returns provided initial cache', () async {
@@ -42,7 +42,10 @@ void main() {
         for(var i=0; i<cacheEntries.length; i++) {
           final pointName = cacheEntries[i].key;
           final point = cacheEntries[i].value;
-          expect(await cache.get(pointName), point);
+          final option = await cache.get(pointName);
+          expect(option, isA<Some>());
+          final receivedPoint = (option as Some<DsDataPoint>).value;
+          expect(receivedPoint, equals(point));
         }
       }
     });

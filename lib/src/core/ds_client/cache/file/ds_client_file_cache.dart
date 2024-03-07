@@ -13,10 +13,13 @@ final class DsClientFileCache implements DsClientCache {
   }) : _cacheFile = cacheFile;
   //
   @override
-  Future<DsDataPoint?> get(String pointName) {
-    return _cacheFile.read().then(
-      (points) => points[pointName],
-    );
+  Future<Option<DsDataPoint>> get(String pointName) async {
+    final points = await _cacheFile.read();
+    final point = points[pointName];
+    return switch(point) {
+      null => const None() as Option<DsDataPoint>, 
+      _ => Some(point),
+    };
   }
   //
   @override
