@@ -16,7 +16,10 @@ void main() {
       final cache = DsClientMemoryCache();
       for(final point in testPoints) {
         await cache.add(point);
-        expect(await cache.get(point.name.name), equals(point));
+        final option = await cache.get(point.name.name);
+          expect(option, isA<Some>());
+          final receivedPoint = (option as Some<DsDataPoint>).value;
+          expect(receivedPoint, equals(point));
       }
     });
     test('addMany(points) inserts multiple points to its internal state', () async {
@@ -57,8 +60,11 @@ void main() {
       DsDataPoint oldPoint = uniqueTestPoints[0];
       await cache.add(oldPoint);
       for(final point in uniqueTestPoints.sublist(1)) {
+        final optionPrevious = await cache.get(pointName);
+        expect(optionPrevious, isA<Some>());
+        final receivedPointPrevious = (optionPrevious as Some<DsDataPoint>).value;
         expect(
-          await cache.get(pointName), equals(oldPoint), 
+          receivedPointPrevious, equals(oldPoint), 
           reason: 'Should be equal to old value before an addition.',
         );
         final newPoint = point;
@@ -67,8 +73,11 @@ void main() {
           reason: 'Points should have different attributes in this test.',
         );
         await cache.add(newPoint);
+        final optionCurrent = await cache.get(pointName);
+        expect(optionCurrent, isA<Some>());
+        final receivedPointCurrent = (optionCurrent as Some<DsDataPoint>).value;
         expect(
-          await cache.get(pointName), equals(newPoint), 
+          receivedPointCurrent, equals(newPoint), 
           reason: 'Should be equal to new value after an addition.',
         );
         oldPoint = newPoint;

@@ -265,8 +265,21 @@ class DsClientReal implements DsClient {
   /// что бы сервер прочитал и прислал значения всех точек в потоке.
   /// Данные не ждем, они прийдут в потоке
   @override
-  Future<ResultF<void>> requestAll() {
-    return _line.requestAll();
+  Future<ResultF<void>> requestAll() async {
+    final cache = _cache;
+    if (cache == null) {
+      return _line.requestAll();
+    } else {
+      for(final entry in _receivers.entries) {
+        final pointName = entry.key;
+        final option = await cache.get(pointName);
+        if(option case Some(value:final cachedPoint)) {
+          final controller = entry.value;
+          controller.add(cachedPoint);
+        }
+      }
+      return const Ok(null);
+    }
   }
   ///
   /// Делает запрос на S7 DataServer в виде списка имен точек данных

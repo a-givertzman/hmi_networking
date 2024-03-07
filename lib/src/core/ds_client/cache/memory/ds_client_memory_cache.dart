@@ -15,7 +15,13 @@ final class DsClientMemoryCache implements DsClientCache {
   }
   //
   @override
-  Future<DsDataPoint?> get(String pointName) => Future.value(_cache[pointName]);
+  Future<Option<DsDataPoint>> get(String pointName) async {
+    final point = _cache[pointName];
+    return switch(point) {
+      null => const None() as Option<DsDataPoint>, 
+      _ => Some(point),
+    };
+  }
   //
   @override
   Future<List<DsDataPoint>> getAll() => Future.value(_cache.values.toList());
