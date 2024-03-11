@@ -5,6 +5,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client_connection_listener.dart';
+import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
 
 ///
@@ -15,14 +16,17 @@ class DsClientReal implements DsClient {
   final CustomProtocolLine _line;
   final Map<String, StreamController<DsDataPoint>> _receivers = {};
   final DsClientCache? _cache;
+  final JdsService? _jdsService;
   late final DsClientConnectionListener _dsClientConnectionListener;
     ///
   DsClientReal({
     required CustomProtocolLine line,
     DsClientCache? cache,
+    JdsService? jdsService,
   }):
     _line = line,
-    _cache = cache;
+    _cache = cache,
+    _jdsService = jdsService;
   ///
   /// текущее состояние подключения к серверу
   @override
@@ -61,9 +65,10 @@ class DsClientReal implements DsClient {
     // StreamController<DsDataPoint> streamController;
     if (!_receivers.containsKey(name)) {
       final streamController = StreamController<DsDataPoint>.broadcast(
-        onListen: () {
+        onListen: () async {
           if (!_isActive) {
             _isActive = true;
+            await _tryStartupJds();
             log(_debug, '[$DsClientReal._setupStreamController] before _run');
             _dsClientConnectionListener = DsClientConnectionListener(
               _stream<int>('Local.System.Connection'),
@@ -302,5 +307,17 @@ class DsClientReal implements DsClient {
     // TODO _dsClientConnectionListener must be released
     // _dsClientConnectionListener.close();
     return _line.close();
+  }
+  ///
+  Future<ResultF<void>> _tryStartupJds() async {
+    final jdsService = _jdsService;
+    if(jdsService != null) {
+      await jdsService.authenticate('');
+      return switch(await jdsService.points()) {
+        Ok(value:final config) => await jdsService.subscribe(config.names),
+        Err(:final error) => Err(error),
+      };
+    }
+    return const Ok(null);
   }
 }
