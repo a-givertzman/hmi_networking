@@ -5,7 +5,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client_connection_listener.dart';
-import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
+import 'package:hmi_networking/src/protocols/jds_service/jds_service.dart';
 import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
 
 ///

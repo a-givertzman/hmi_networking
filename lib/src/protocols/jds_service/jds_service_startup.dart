@@ -1,6 +1,6 @@
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/core/jds_service/jds_point_config/jds_point_configs.dart';
-import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
+import 'package:hmi_networking/src/protocols/jds_service/jds_point_config/jds_point_configs.dart';
+import 'package:hmi_networking/src/protocols/jds_service/jds_service.dart';
 ///
 class JdsServiceStartup {
   final JdsService _service;

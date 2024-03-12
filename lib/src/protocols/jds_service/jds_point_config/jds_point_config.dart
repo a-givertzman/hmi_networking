@@ -1,7 +1,7 @@
-import 'package:hmi_networking/src/core/jds_service/jds_package/jds_data_type.dart';
-import 'package:hmi_networking/src/core/jds_service/jds_point_config/ds_access_mode.dart';
-import 'package:hmi_networking/src/core/jds_service/jds_point_config/ds_filters.dart';
-import 'package:hmi_networking/src/core/jds_service/jds_point_config/ds_point_address.dart';
+import 'package:hmi_networking/src/protocols/jds_service/jds_package/jds_data_type.dart';
+import 'package:hmi_networking/src/protocols/jds_service/jds_point_config/ds_access_mode.dart';
+import 'package:hmi_networking/src/protocols/jds_service/jds_point_config/ds_filters.dart';
+import 'package:hmi_networking/src/protocols/jds_service/jds_point_config/ds_point_address.dart';
 ///
 class JdsPointConfig {
   final JdsDataType type;

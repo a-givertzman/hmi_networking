@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/core/jds_service/jds_package/jds_package.dart';
+import 'package:hmi_networking/src/protocols/jds_service/jds_package/jds_package.dart';
 import 'package:hmi_networking/src/core/request_destination.dart';
 ///
 class JdsServiceDestination implements RequestDestination<JdsPackage, JdsPackage> {
