@@ -9,6 +9,7 @@ export 'src/core/ds_client/cache/delayed/ds_client_delayed_cache.dart';
 export 'src/core/ds_client/cache/file/ds_cache_file.dart';
 export 'src/core/ds_client/cache/file/ds_client_file_cache.dart';
 export 'src/core/ds_client/cache/memory/ds_client_memory_cache.dart';
+export 'src/core/ds_client/cache/update_cache_from_point_configs.dart';
 export 'src/core/request_destination.dart';
 export 'src/core/socket_destination.dart';
 export 'src/core/jds_service/jds_service.dart';
