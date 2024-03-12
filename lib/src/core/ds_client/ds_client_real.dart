@@ -1,8 +1,8 @@
 import 'dart:async';
-
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
+import 'package:hmi_networking/src/core/ds_client/cache/update_cache_from_point_configs.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client_connection_listener.dart';
 import 'package:hmi_networking/src/protocols/jds_service/jds_service.dart';
@@ -17,6 +17,7 @@ class DsClientReal implements DsClient {
   final Map<String, StreamController<DsDataPoint>> _receivers = {};
   final DsClientCache? _cache;
   final JdsService? _jdsService;
+  late final UpdatePointsCacheFromJdsService? _cacheUpdate;
   late final DsClientConnectionListener _dsClientConnectionListener;
     ///
   DsClientReal({
@@ -68,13 +69,22 @@ class DsClientReal implements DsClient {
         onListen: () async {
           if (!_isActive) {
             _isActive = true;
-            await _tryStartupJds();
             log(_debug, '[$DsClientReal._setupStreamController] before _run');
+            final jdsService = _jdsService;
+            final cache = _cache; 
+            _cacheUpdate = jdsService != null && cache != null
+              ? UpdatePointsCacheFromJdsService(
+                  cache: cache,
+                  jdsService: jdsService,
+                )
+              : null;
             _dsClientConnectionListener = DsClientConnectionListener(
               _stream<int>('Local.System.Connection'),
               connectionStatus: _line.isConnected ? DsStatus.ok : DsStatus.invalid,
-              onConnectionChanged: (connectionStatus) {
+              onConnectionChanged: (connectionStatus) async {
                 if (connectionStatus == DsStatus.ok) {
+                  log(_debug, '[$DsClientReal._setupStreamController] pulling fresh configs on connected');
+                  await _cacheUpdate?.apply();
                   log(_debug, '[$DsClientReal._setupStreamController] _line.requestAll on connected');
                   _line.requestAll();
                 }
@@ -307,17 +317,5 @@ class DsClientReal implements DsClient {
     // TODO _dsClientConnectionListener must be released
     // _dsClientConnectionListener.close();
     return _line.close();
-  }
-  ///
-  Future<ResultF<void>> _tryStartupJds() async {
-    final jdsService = _jdsService;
-    if(jdsService != null) {
-      await jdsService.authenticate('');
-      return switch(await jdsService.points()) {
-        Ok(value:final config) => await jdsService.subscribe(config.names),
-        Err(:final error) => Err(error),
-      };
-    }
-    return const Ok(null);
   }
 }
