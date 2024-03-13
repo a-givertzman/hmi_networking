@@ -1,3 +1,4 @@
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/protocols/transport_protocol.dart';
 import 'package:hmi_networking/src/protocols/protocol_endpoint.dart';
@@ -15,11 +16,22 @@ class TransportEndpoint implements ProtocolEndpoint<List<int>, List<int>> {
   @override
   Future<ResultF<List<int>>> exchange(List<int> data) async {
     switch(await _protocol.establishConnection()) {
-      case Ok(value:final socket): 
+      case Ok(value:final socket):
         socket.add(data);
-        return Ok(await socket.stream.toList());
+        return socket.stream.toList()
+          .then<ResultF<List<int>>>(
+            (list) => Ok(list),
+          )
+          .catchError(
+            (error, stackTrace) => Err<List<int>, Failure>(
+              Failure(
+                message: error.toString(),
+                stackTrace: stackTrace,
+              ),
+            ),
+          );
       case Err(:final error):
         return Err(error);
     }
-  }  
+  }
 }
