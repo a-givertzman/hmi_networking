@@ -26,8 +26,8 @@ class JdsPackage<T> {
     return JdsPackage<T>(
       type: JdsDataType.fromString(map['type']),
       value: switch(type) {        
-        JdsDataType.bool => int.parse('$value') > 0,
-        JdsDataType.int => int.parse('$value'),
+        JdsDataType.boolean => int.parse('$value') > 0,
+        JdsDataType.integer => int.parse('$value'),
         JdsDataType.float => double.parse('$value'),
         JdsDataType.string => '$value',
       } as T,

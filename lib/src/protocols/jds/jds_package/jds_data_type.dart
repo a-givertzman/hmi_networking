@@ -1,7 +1,7 @@
 ///
 enum JdsDataType {
-  bool,
-  int,
+  boolean,
+  integer,
   float,
   string;
   ///
@@ -9,8 +9,8 @@ enum JdsDataType {
   ///
   factory JdsDataType.fromString(String type) {
     return switch(type) {
-      'Bool' => JdsDataType.bool,
-      'Int' => JdsDataType.int,
+      'Bool' => JdsDataType.boolean,
+      'Int' => JdsDataType.integer,
       'Float' => JdsDataType.float,
       'String' => JdsDataType.string,
       _ => throw ArgumentError.value(type, 'type'),
@@ -20,8 +20,8 @@ enum JdsDataType {
   @override
   String toString() {
     return switch(this) {      
-      JdsDataType.bool => 'Bool',
-      JdsDataType.int => 'Int',
+      JdsDataType.boolean => 'Bool',
+      JdsDataType.integer => 'Int',
       JdsDataType.float => 'Float',
       JdsDataType.string => 'String',
     };
