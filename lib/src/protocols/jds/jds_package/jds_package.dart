@@ -1,7 +1,7 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/protocols/jds_service/jds_package/jds_cot.dart';
-import 'package:hmi_networking/src/protocols/jds_service/jds_package/jds_data_type.dart';
+import 'package:hmi_networking/src/protocols/jds/jds_package/jds_cot.dart';
+import 'package:hmi_networking/src/protocols/jds/jds_package/jds_data_type.dart';
 ///
 class JdsPackage<T> {
   final JdsDataType type;

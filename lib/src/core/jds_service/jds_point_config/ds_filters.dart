@@ -1,3 +1,4 @@
+///
 class DsFilters {
   final double? threshold;
   final double? factor;

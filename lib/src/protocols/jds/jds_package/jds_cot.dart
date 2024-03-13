@@ -1,13 +1,29 @@
-/// Json data storage - Cause of transmission
+///
+/// Cause of transmission of JDS package
 enum JdsCot {
+  /// 
+  /// Information
   inf,
+  /// 
+  /// Command
   act,
+  /// 
+  /// Command completed
   actCon,
+  /// 
+  /// Command failed
   actErr,
+  /// 
+  /// Request
   req,
+  /// 
+  /// Request completed
   reqCon,
+  /// 
+  /// Request failed
   reqErr;
   ///
+  /// Cause of transmission of JDS package
   const JdsCot();
   ///
   factory JdsCot.fromString(String cot) {

@@ -1,27 +1,29 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/protocols/jds_service/jds_package/jds_cot.dart';
-import 'package:hmi_networking/src/protocols/jds_service/jds_package/jds_data_type.dart';
-import 'package:hmi_networking/src/protocols/jds_service/jds_package/jds_package.dart';
-import 'package:hmi_networking/src/protocols/jds_service/jds_point_config/jds_point_configs.dart';
-import 'package:hmi_networking/src/core/request_destination.dart';
+import 'package:hmi_networking/hmi_networking.dart';
+
 ///
+/// Collection of JDS requests supported by service on external server.
 class JdsService {
-  final RequestDestination<JdsPackage, JdsPackage> _jdsDestination;
+  final JdsEndpoint _endpoint;
   ///
+  /// Collection of JDS requests supported by service on external server.
+  /// 
+  /// [endpoint] - to communicate through JDS protocol.
   const JdsService({
-    required RequestDestination<JdsPackage, JdsPackage> jdsDestination,
+    required JdsEndpoint endpoint,
   }) : 
-    _jdsDestination = jdsDestination;
+    _endpoint = endpoint;
   ///
+  /// Proceed to authentication process with [token].
   Future<ResultF<void>> authenticate(String token) {
-    return _jdsDestination.send(
-      JdsPackage(
-        type: JdsDataType.string, 
-        value: token, 
-        name: DsPointName('/App/Jds/Authenticate'), 
-        status: DsStatus.ok, 
-        cot: JdsCot.req, 
+    return _endpoint.exchange(
+      JdsPackage<String>(
+        type: JdsDataType.string,
+        value: token,
+        name: DsPointName('/App/Jds/Authenticate'),
+        status: DsStatus.ok,
+        cot: JdsCot.req,
         timestamp: DateTime.now(),
       ),
     ).then((result) => switch(result) {
@@ -30,14 +32,15 @@ class JdsService {
     });
   }
   ///
+  /// Get configuration of data points from the server.
   Future<ResultF<JdsPointConfigs>> points() {
-    return _jdsDestination.send(
+    return _endpoint.exchange(
       JdsPackage<String>(
-        type: JdsDataType.string, 
-        value: '', 
-        name: DsPointName('/App/Jds/Points'), 
-        status: DsStatus.ok, 
-        cot: JdsCot.req, 
+        type: JdsDataType.string,
+        value: '',
+        name: DsPointName('/App/Jds/Points'),
+        status: DsStatus.ok,
+        cot: JdsCot.req,
         timestamp: DateTime.now(),
       ),
     )
@@ -59,14 +62,15 @@ class JdsService {
     });
   }
   ///
+  /// Tell server to send specific data points.
   Future<ResultF<void>> subscribe([List<String> names = const []]) {
-    return _jdsDestination.send(
+    return _endpoint.exchange(
       JdsPackage<String>(
-        type: JdsDataType.string, 
-        value: '[${names.join(',')}]', 
-        name: DsPointName('/App/Jds/Subscribe'), 
-        status: DsStatus.ok, 
-        cot: JdsCot.req, 
+        type: JdsDataType.string,
+        value: '[${names.join(',')}]',
+        name: DsPointName('/App/Jds/Subscribe'),
+        status: DsStatus.ok,
+        cot: JdsCot.req,
         timestamp: DateTime.now(),
       ),
     ).then((result) => switch(result) {

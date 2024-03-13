@@ -1,25 +1,31 @@
 import 'dart:convert';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/protocols/jds_service/jds_package/jds_package.dart';
-import 'package:hmi_networking/src/core/request_destination.dart';
-///
-class JdsServiceDestination implements RequestDestination<JdsPackage, JdsPackage> {
-  final RequestDestination<List<int>, List<int>> _bytesDestination;
+import 'package:hmi_networking/src/protocols/transport_endpoint.dart';
+import 'package:hmi_networking/src/protocols/jds/jds_package/jds_package.dart';
+import 'package:hmi_networking/src/protocols/protocol_endpoint.dart';
+
+/// 
+/// Destination supporting JDS communication protocol.
+class JdsEndpoint implements ProtocolEndpoint<JdsPackage, JdsPackage> {
+  final TransportEndpoint _tansportEndpoint;
   ///
-  const JdsServiceDestination({
-    required RequestDestination<List<int>, List<int>> bytesDestination,
-  }) : _bytesDestination = bytesDestination;
-  ///
+  /// Destination supporting JDS communication protocol.
+  /// 
+  /// [transportEndpoint] - binary destination to transfer serialized JDS packages over it.
+  const JdsEndpoint({
+    required TransportEndpoint transportEndpoint,
+  }) : _tansportEndpoint = transportEndpoint;
+  //
   @override
-  Future<ResultF<JdsPackage>> send(JdsPackage package) async {
+  Future<ResultF<JdsPackage>> exchange(JdsPackage package) async {
     return switch(_encodeJson(package)) {      
-      Ok(value: final bytes) => _decodeResult(await _bytesDestination.send(bytes)),
+      Ok(value: final bytes) => _decodeResult(await _tansportEndpoint.exchange(bytes)),
       Err(:final error) => Err(error),
     };
   }
   ///
-  ResultF<JdsPackage> _decodeResult(ResultF<List<int>> bytesResult) => switch(bytesResult){
+  ResultF<JdsPackage> _decodeResult(ResultF<List<int>> bytesResult) => switch(bytesResult) {
     Ok(value:final bytes) => _decodeJson(bytes),
     Err(:final error) => Err(error),
   };
