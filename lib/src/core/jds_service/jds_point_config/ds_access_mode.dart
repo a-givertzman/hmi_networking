@@ -14,4 +14,11 @@ enum DsAccessMode {
       _ => throw ArgumentError.value(mode, 'mode'),
     };
   }
+  ///
+  @override
+  String toString() => switch(this) {
+    DsAccessMode.read => 'r',
+    DsAccessMode.write => 'w',
+    DsAccessMode.readWrite => 'rw',
+  };
 }

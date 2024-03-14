@@ -11,4 +11,9 @@ class DsPointAddress {
       bit: map['bit'],
     );
   }
+  ///
+  Map<String, dynamic> toMap() => {
+    'offset': offset,
+    'bit': bit,
+  };
 }

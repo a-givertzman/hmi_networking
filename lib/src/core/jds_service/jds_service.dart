@@ -29,7 +29,15 @@ class JdsService {
     ).then((result) => switch(result) {
       Ok(value:final package) => package.toResult(),
       Err(:final error) => Err(error),
-    });
+    })
+    .onError(
+      (error, stackTrace) => Err(
+        Failure(
+          message: error.toString(), 
+          stackTrace: stackTrace,
+        ),
+      ),
+    );
   }
   ///
   /// Get configuration of data points from the server.
@@ -48,7 +56,7 @@ class JdsService {
       Ok(value: final package) => package.toResult(),
       Err(:final error) => Err(error),
     })
-    .then((result) async {
+    .then<ResultF<JdsPointConfigs>>((result) async {
       switch(result) {
         case Ok(:final value):
           final parsingResult = await JsonMap.fromString(value).decoded;
@@ -59,7 +67,15 @@ class JdsService {
         case Err(:final error):
           return Err(error);
       }
-    });
+    })
+    .onError(
+      (error, stackTrace) => Err(
+        Failure(
+          message: error.toString(), 
+          stackTrace: stackTrace,
+        ),
+      ),
+    );
   }
   ///
   /// Tell server to send specific data points.
@@ -67,15 +83,24 @@ class JdsService {
     return _endpoint.exchange(
       JdsPackage<String>(
         type: JdsDataType.string,
-        value: '[${names.join(',')}]',
+        value: '[${names.map((name) => '"$name"').join(',')}]',
         name: DsPointName('/App/Jds/Subscribe'),
         status: DsStatus.ok,
         cot: JdsCot.req,
         timestamp: DateTime.now(),
       ),
-    ).then((result) => switch(result) {
+    )
+    .then((result) => switch(result) {
       Ok(value:final package) => package.toResult(),
       Err(:final error) => Err(error),
-    });
+    })
+    .onError(
+      (error, stackTrace) => Err(
+        Failure(
+          message: error.toString(), 
+          stackTrace: stackTrace,
+        ),
+      ),
+    );
   }
 }

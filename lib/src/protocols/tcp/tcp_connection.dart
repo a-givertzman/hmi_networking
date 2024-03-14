@@ -33,12 +33,12 @@ class TcpConnection implements TransportConnection {
     return packageTimeout == null
       ? stream
       : stream
-      .timeout(
-        packageTimeout,
-        onTimeout: (_) async {
-          await _socket.flush();
-          close();
-        },
-      );
+        .timeout(
+          packageTimeout,
+          onTimeout: (_) async {
+            await _socket.flush();
+            close();
+          },
+        );
   }
 }

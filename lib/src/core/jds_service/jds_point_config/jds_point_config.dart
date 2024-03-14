@@ -31,4 +31,13 @@ class JdsPointConfig {
       history: DsAccessMode.fromString(map['history']),
     );
   }
+  ///
+  Map<String, dynamic> toMap() => {
+    'type': type.toString(),
+    'address': address.toMap(),
+    'alarm': alarmClass,
+    'comment': comment,
+    'filters': filters?.toMap(),
+    'history': history.toString(),
+  };
 }

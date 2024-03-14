@@ -11,4 +11,9 @@ class DsFilters {
       factor: map['factor'],
     );
   }
+  ///
+  Map<String, dynamic> toMap() => {
+    'threshold': threshold,
+    'factor': factor,
+  };
 }

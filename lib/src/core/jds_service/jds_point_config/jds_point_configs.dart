@@ -17,6 +17,10 @@ class JdsPointConfigs {
     );
   }
   ///
+  Map<String,dynamic> toMap() => _map.map(
+    (key, config) => MapEntry(key, config.toMap()),
+  );
+  ///
   JdsPointConfig? get(String name) => _map[name];
   ///
   List<String> get names => _map.keys.toList();

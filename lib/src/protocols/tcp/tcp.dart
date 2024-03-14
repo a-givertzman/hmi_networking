@@ -32,20 +32,20 @@ class Tcp implements TransportProtocol {
       _address.host, 
       _address.port,
       timeout: _connectionTimeout,
-    )
-    .then<ResultF<TransportConnection>>(
+    ).then<ResultF<TransportConnection>>(
       (socket) => Ok(
         TcpConnection(
           socket,
           packageTimeout: _packageTimeout,
         ),
       ),
-    )
-    .onError((error, stackTrace) => Err(
+    ).onError(
+      (error, stackTrace) => Err(
       Failure(
         message: error.toString(),
         stackTrace: stackTrace,
       ),
-    ));
+      ),
+    );
   }
 }

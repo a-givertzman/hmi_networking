@@ -32,7 +32,7 @@ class JdsPackage<T> {
         JdsDataType.string => '$value',
       } as T,
       name: DsPointName(map['name']),
-      status: DsStatus.fromString(map['status']),
+      status: DsStatus.fromValue(map['status']),
       cot: JdsCot.fromString(map['cot']),
       timestamp: DateTime.parse(map['timestamp']),
     );
@@ -40,7 +40,10 @@ class JdsPackage<T> {
   ///
   Map<String,dynamic> toMap() => {
     'type': type.toString(),
-    'value': value,
+    'value': switch(type) {        
+      JdsDataType.boolean => value as bool ? '1' : '0',
+      _ => '$value',
+    },
     'name': name.toString(),
     'status': status.value,
     'cot': cot.toString(),
@@ -48,8 +51,8 @@ class JdsPackage<T> {
   };
   ///
   ResultF<T> toResult() => switch(cot) {
-    JdsCot.reqCon => Ok(value),
-    JdsCot.reqErr => Err(
+    JdsCot.reqCon || JdsCot.actCon => Ok(value),
+    JdsCot.reqErr || JdsCot.actErr => Err(
       Failure(
         message: value, 
         stackTrace: 
@@ -64,4 +67,17 @@ class JdsPackage<T> {
       ),
     ),
   };
+  //
+  @override
+  bool operator ==(Object other) =>
+    other is JdsPackage
+    && type == other.type
+    && name == other.name
+    && value == other.value
+    && status == other.status
+    && cot == other.cot
+    && timestamp == other.timestamp;
+  //
+  @override
+  int get hashCode => type.hashCode ^ name.hashCode ^ value.hashCode ^ status.hashCode ^ cot.hashCode ^ timestamp.hashCode;
 }
