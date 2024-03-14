@@ -26,7 +26,7 @@ export 'src/core/entities/double_container.dart';
 export 'src/core/entities/network_operation_state.dart';
 export 'src/core/entities/data_object.dart';
 export 'src/core/entities/response.dart';
-export 'src/core/entities/internet_endpoint.dart';
+export 'src/core/entities/web_address.dart';
 export 'src/protocols/protocol_endpoint.dart';
 export 'src/protocols/transport_endpoint.dart';
 export 'src/protocols/transport_connection.dart';

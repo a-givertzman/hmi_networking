@@ -4,18 +4,18 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/protocols/transport_protocol.dart';
 import 'package:hmi_networking/src/protocols/transport_connection.dart';
 import 'package:hmi_networking/src/protocols/tcp/tcp_connection.dart';
-import 'package:hmi_networking/src/core/entities/internet_endpoint.dart';
+import 'package:hmi_networking/src/core/entities/web_address.dart';
 ///
 /// Generates TCP connections to specified address.
 class Tcp implements TransportProtocol {
-  final InternetEndpoint _address;
+  final WebAddress _address;
   final Duration? _packageTimeout;
   ///
   /// Generates [TcpConnection]s to the specified [address].
   /// 
   /// If [packageTimeout] is provided, connection will close after a specified period of inactivity from the connection.
   const Tcp({
-    required InternetEndpoint address,
+    required WebAddress address,
     Duration? packageTimeout,
   }) : 
     _address = address,
