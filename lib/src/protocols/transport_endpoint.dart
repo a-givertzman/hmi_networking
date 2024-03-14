@@ -22,8 +22,8 @@ class TransportEndpoint implements ProtocolEndpoint<List<int>, List<int>> {
           .then<ResultF<List<int>>>(
             (list) => Ok(list),
           )
-          .catchError(
-            (error, stackTrace) => Err<List<int>, Failure>(
+          .onError(
+            (error, stackTrace) => Err(
               Failure(
                 message: error.toString(),
                 stackTrace: stackTrace,
