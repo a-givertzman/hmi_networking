@@ -5,31 +5,24 @@ import 'package:hmi_networking/hmi_networking.dart';
 ///
 /// Collection of JDS requests supported by service on external server.
 class JdsService {
-  final JdsEndpoint _endpoint;
+  final DsClient _dsClient;
   ///
   /// Collection of JDS requests supported by service on external server.
   /// 
   /// [endpoint] - to communicate through JDS protocol.
   const JdsService({
-    required JdsEndpoint endpoint,
+    required DsClient dsClient,
   }) : 
-    _endpoint = endpoint;
+    _dsClient = dsClient;
   ///
   /// Proceed to authentication process with [token].
   Future<ResultF<void>> authenticate(String token) {
-    return _endpoint.exchange(
-      JdsPackage<String>(
-        type: JdsDataType.string,
-        value: token,
-        name: DsPointName('/App/Jds/Authenticate'),
-        status: DsStatus.ok,
-        cot: JdsCot.req,
-        timestamp: DateTime.now(),
-      ),
-    ).then((result) => switch(result) {
-      Ok(value:final package) => package.toResult(),
-      Err(:final error) => Err(error),
-    })
+    return DsSend<String>(
+      dsClient: _dsClient, 
+      pointName: DsPointName('/App/Jds/Auth.Secret'),
+      cot: DsCot.req, 
+      responseCots: [DsCot.reqCon, DsCot.reqErr],
+    ).exec(token)
     .onError(
       (error, stackTrace) => Err(
         Failure(
@@ -42,24 +35,16 @@ class JdsService {
   ///
   /// Get configuration of data points from the server.
   Future<ResultF<JdsPointConfigs>> points() {
-    return _endpoint.exchange(
-      JdsPackage<String>(
-        type: JdsDataType.string,
-        value: '',
-        name: DsPointName('/App/Jds/Points'),
-        status: DsStatus.ok,
-        cot: JdsCot.req,
-        timestamp: DateTime.now(),
-      ),
-    )
-    .then((result) => switch(result) {
-      Ok(value: final package) => package.toResult(),
-      Err(:final error) => Err(error),
-    })
+    return DsSend<String>(
+      dsClient: _dsClient, 
+      pointName: DsPointName('/App/Jds/Points'),
+      cot: DsCot.req, 
+      responseCots: [DsCot.reqCon, DsCot.reqErr],
+    ).exec('')
     .then<ResultF<JdsPointConfigs>>((result) async {
       switch(result) {
-        case Ok(:final value):
-          final parsingResult = await JsonMap.fromString(value).decoded;
+        case Ok(value:final point):
+          final parsingResult = await JsonMap.fromString(point.value).decoded;
           return switch(parsingResult) {
             Ok(value: final map) => Ok(JdsPointConfigs.fromMap(map)),
             Err(:final error) => Err(error),
@@ -80,20 +65,12 @@ class JdsService {
   ///
   /// Tell server to send specific data points.
   Future<ResultF<void>> subscribe([List<String> names = const []]) {
-    return _endpoint.exchange(
-      JdsPackage<String>(
-        type: JdsDataType.string,
-        value: '[${names.map((name) => '"$name"').join(',')}]',
-        name: DsPointName('/App/Jds/Subscribe'),
-        status: DsStatus.ok,
-        cot: JdsCot.req,
-        timestamp: DateTime.now(),
-      ),
-    )
-    .then((result) => switch(result) {
-      Ok(value:final package) => package.toResult(),
-      Err(:final error) => Err(error),
-    })
+    return DsSend<String>(
+      dsClient: _dsClient, 
+      pointName: DsPointName('/App/Jds/Subscribe'),
+      cot: DsCot.req, 
+      responseCots: [DsCot.reqCon, DsCot.reqErr],
+    ).exec('[${names.map((name) => '"$name"').join(',')}]')
     .onError(
       (error, stackTrace) => Err(
         Failure(

@@ -10,9 +10,12 @@ class DsSend<T> {
     bool: DsDataType.bool,
     int: DsDataType.integer,
     double: DsDataType.real,
+    String: DsDataType.string,
   };
   final DsClient _dsClient;
   final DsPointName _pointName;
+  final DsCot _cot;
+  final List<DsCot> _responseCots;
   final String? _response;
   final int _responseTimeout;
   ///
@@ -24,28 +27,33 @@ class DsSend<T> {
   DsSend({
     required DsClient dsClient,
     required DsPointName pointName,
+    required DsCot cot,
+    required List<DsCot> responseCots,
     String? response,
     int responseTimeout = 10,
   }) : 
     assert(_types.containsKey(T)),
     _dsClient = dsClient,
     _pointName = pointName,
+    _cot = cot,
+    _responseCots = responseCots,
     _response = response,
     _responseTimeout = responseTimeout;
   ///
   Future<ResultF<DsDataPoint<T>>> exec(T value) {
-    _dsClient.send(DsCommand(
-      dsClass: DsDataClass.commonCmd,
+    _dsClient.send(DsDataPoint(
       type: _types[T], 
-      name: _pointName.toString(), 
-      value: value, 
+      name: _pointName, 
+      value: value,
       status: DsStatus.ok,
-      timestamp: DsTimeStamp.now(),
+      cot: _cot,
+      timestamp: DateTime.now().toUtc().toIso8601String(),
     ));
     final response = _response;
     return _dsClient.stream<T>(response ?? _pointName.name)
+      .where((event) => _responseCots.contains(event.cot))
       .first
-      .then<ResultF<DsDataPoint<T>>>((value) => Ok(value))
+      .then<ResultF<DsDataPoint<T>>>((point) => point.toResult())
       .timeout(
         Duration(seconds: _responseTimeout), 
         onTimeout: () => Err(

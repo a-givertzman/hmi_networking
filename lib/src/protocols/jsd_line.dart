@@ -32,6 +32,7 @@ class JdsLine implements CustomProtocolLine {
   ///
   /// Parse incoming json string into DsDataPoint
   /// depending on type stored in the json['type'] field
+  // ignore: long-method
   static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
     _log.debug('[$JdsLine._dataPointFromJson] json: $json');
     try {
@@ -44,6 +45,7 @@ class JdsLine implements CustomProtocolLine {
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
           alarm: json['alarm'] as int? ?? 0,
+          cot: DsCot.fromString(json['cot']),
           timestamp: json['timestamp'] as String,
         );
       } else if (dType == DsDataType.integer 
@@ -58,6 +60,7 @@ class JdsLine implements CustomProtocolLine {
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
           alarm: json['alarm'] as int? ?? 0,
+          cot: DsCot.fromString(json['cot']),
           timestamp: json['timestamp'] as String,
         );
       } else if (dType == DsDataType.real) {
@@ -68,6 +71,29 @@ class JdsLine implements CustomProtocolLine {
           status: DsStatus.fromValue(json['status']  as int),
           history: json['history'] as int? ?? 0,
           alarm: json['alarm'] as int? ?? 0,
+          cot: DsCot.fromString(json['cot']),
+          timestamp: json['timestamp'] as String,
+        );
+      } else if (dType == DsDataType.real) {
+        return DsDataPoint<double>(
+          type: dType,
+          name: DsPointName('${json['name']}'),
+          value: double.parse('${json['value']}'),
+          status: DsStatus.fromValue(json['status']  as int),
+          history: json['history'] as int? ?? 0,
+          alarm: json['alarm'] as int? ?? 0,
+          cot: DsCot.fromString(json['cot']),
+          timestamp: json['timestamp'] as String,
+        );
+      } else if (dType == DsDataType.string) {
+        return DsDataPoint<String>(
+          type: dType,
+          name: DsPointName('${json['name']}'),
+          value: '${json['value']}',
+          status: DsStatus.fromValue(json['status']  as int),
+          history: json['history'] as int? ?? 0,
+          alarm: json['alarm'] as int? ?? 0,
+          cot: DsCot.fromString(json['cot']),
           timestamp: json['timestamp'] as String,
         );
       } else {
@@ -129,10 +155,10 @@ class JdsLine implements CustomProtocolLine {
   //
   @override
   Future<ResultF<void>> send(
-    DsCommand dsCommand,
+    DsDataPoint point,
   ) {
-    _log.debug('[$JdsLine.send] dsCommand: $dsCommand');
-    List<int> bytes = utf8.encode(_dsCommandToJson(dsCommand));
+    _log.debug('[$JdsLine.send] point: $point');
+    List<int> bytes = utf8.encode(point.toJson());
     return _lineSocket.send([...bytes, Jds.endOfTransmission]);
   }
   //  
@@ -143,15 +169,15 @@ class JdsLine implements CustomProtocolLine {
   bool get isConnected => _lineSocket.isConnected;
   //
   @override
-  Future<ResultF<void>> requestAll() {
+  Future<ResultF<void>> requestAll() async {
     _lineSocket.requestAll();
-    return send(DsCommand(
-      dsClass: DsDataClass.requestAll,
+    return send(DsDataPoint(
       type: DsDataType.bool,
-      name: '',
-      value: 1,
+      name: DsPointName('/App/Jds/Gi'),
+      value: true,
       status: DsStatus.ok,
-      timestamp: DsTimeStamp.now(),
+      cot: DsCot.req,
+      timestamp: DateTime.now().toUtc().toIso8601String(),
     ));
   }
   ///

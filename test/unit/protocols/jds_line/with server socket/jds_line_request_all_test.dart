@@ -14,8 +14,8 @@ void main() {
   Socket? clientSocket;
   // Points that should have been received after request all command sent
   final targetDataPoints = {
-    'Local.System.Connection established': DsDataPoint(type: DsDataType.integer, name: DsPointName("/Local/Local.System.Connection"), value: 0, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-    'Local.System.Connection lost': DsDataPoint(type: DsDataType.integer, name: DsPointName("/Local/Local.System.Connection"), value: 10, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
+    'Local.System.Connection established': DsDataPoint(type: DsDataType.integer, name: DsPointName("/Local/Local.System.Connection"), value: 0, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+    'Local.System.Connection lost': DsDataPoint(type: DsDataType.integer, name: DsPointName("/Local/Local.System.Connection"), value: 10, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
   };
   setUp(() async {
     socketServer = await ServerSocket.bind(ip, 0);

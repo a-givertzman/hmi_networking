@@ -1,4 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 /// 
 /// [DsDataPoint] with json transformation capabilities.
 final class JdsDataPoint<T> implements DsDataPoint<T> {
@@ -8,6 +9,7 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
   const JdsDataPoint(this._point);
   /// 
   /// Deserializes [DsDataPoint] from [json].
+  // ignore: long-method
   factory JdsDataPoint.fromMap(Map<String,dynamic> json) {
     final type = DsDataType.fromString(json['type'] as String);
     final name = DsPointName(json['name'] as String);
@@ -15,6 +17,7 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
     final status = DsStatus.fromValue(json['status'] as int);
     final history = json['history'] as int? ?? 0;
     final alarm = json['alarm'] as int? ?? 0;
+    final cot = DsCot.fromString(json['cot'] as String);
     final timestamp = json['timestamp'] as String;
     return JdsDataPoint<T>(
       switch(type) {
@@ -23,20 +26,22 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
           name: name, 
           value: int.parse(value) > 0, 
           history: history, 
-          alarm: alarm, 
+          alarm: alarm,
+          cot: cot,
           status: status, 
           timestamp: timestamp,
         ) as DsDataPoint<T>,
         DsDataType.integer || 
         DsDataType.uInt    || 
         DsDataType.dInt    || 
-        DsDataType.word    || 
+        DsDataType.word    ||
         DsDataType.lInt    => DsDataPoint<int>(
           type: type, 
           name: name, 
           value: int.parse(value), 
           history: history, 
-          alarm: alarm, 
+          alarm: alarm,
+          cot: cot,
           status: status, 
           timestamp: timestamp,
         ) as DsDataPoint<T>,
@@ -45,9 +50,18 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
           name: name, 
           value: double.parse(value), 
           history: history, 
-          alarm: alarm, 
+          alarm: alarm,
+          cot: cot,
           status: status, 
           timestamp: timestamp,
+        ) as DsDataPoint<T>,
+        DsDataType.string => DsDataPoint<String>(
+          type: type, 
+          name: name,
+          value: value,
+          status: status,
+          timestamp: timestamp,
+          cot: cot,
         ) as DsDataPoint<T>,
         DsDataType.time || DsDataType.dateAndTime  => throw Failure.convertion(
           message: 'Ошибка в методе $JdsDataPoint.fromJson(): тип $type не поддерживается',
@@ -56,6 +70,7 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
       },
     );
   }
+  
   /// 
   /// Converts [DsDataPoint] to [Map] eligible to further serialization.
   Map<String, dynamic> toMap() => {
@@ -69,12 +84,14 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
         DsDataType.word    || 
         DsDataType.lInt    ||
         DsDataType.real    => _point.value,
+        DsDataType.string => _point.value.toString(),
         DsDataType.time || DsDataType.dateAndTime  => throw Failure.convertion(
           message: 'Ошибка в методе $JdsDataPoint.fromJson(): тип ${_point.type} не поддерживается',
           stackTrace: StackTrace.current,
         ),
       }.toString(),
       'status': _point.status.value,
+      'cot': _point.cot.toString(),
       'alarm': _point.alarm,
       'history': _point.history,
       'timestamp': _point.timestamp,
@@ -94,6 +111,8 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
   //
   @override
   int get alarm => _point.alarm;
+  @override
+  DsCot get cot => _point.cot;
   //
   @override
   int get history => _point.history;
@@ -112,4 +131,7 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
   //
   @override
   int get hashCode => _point.hashCode;
+  //
+  @override
+  ResultF<DsDataPoint<T>> toResult() => _point.toResult();
 }

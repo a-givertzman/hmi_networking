@@ -11,6 +11,8 @@ void main() {
         () => DsSend<String>(
           dsClient: FakeDsClient(),
           pointName: DsPointName('/'),
+          cot: DsCot.act,
+          responseCots: [DsCot.actCon, DsCot.actErr],
         ), 
         throwsA(isA<AssertionError>()),
         reason: 'DsSend constructor didn`t assert on unsupported type',
@@ -19,6 +21,8 @@ void main() {
         () => DsSend<DateTime>(
           dsClient: FakeDsClient(),
           pointName: DsPointName('/'),
+          cot: DsCot.act,
+          responseCots: [DsCot.actCon, DsCot.actErr],
         ), 
         throwsA(isA<AssertionError>()),
         reason: 'DsSend constructor didnt`t assert on unsupported type',
@@ -29,6 +33,8 @@ void main() {
         () => DsSend<bool>(
           dsClient: FakeDsClient(),
           pointName: DsPointName('/'),
+          cot: DsCot.act,
+          responseCots: [DsCot.actCon, DsCot.actErr],
         ), 
         returnsNormally,
         reason: 'DsSend constructor asserted on supported type',
@@ -37,6 +43,8 @@ void main() {
         () => DsSend<int>(
           dsClient: FakeDsClient(),
           pointName: DsPointName('/'),
+          cot: DsCot.act,
+          responseCots: [DsCot.actCon, DsCot.actErr],
         ), 
         returnsNormally,
         reason: 'DsSend constructor asserted on supported type',
@@ -45,6 +53,8 @@ void main() {
         () => DsSend<double>(
           dsClient: FakeDsClient(),
           pointName: DsPointName('/'),
+          cot: DsCot.act,
+          responseCots: [DsCot.actCon, DsCot.actErr],
         ), 
         returnsNormally,
         reason: 'DsSend constructor asserted on supported type',

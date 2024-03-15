@@ -13,10 +13,10 @@ class UpdatePointsCacheFromJdsService {
   /// [jdsService] - to pull config from.
   /// 
   /// [cache] - to save config to.
-  const UpdatePointsCacheFromJdsService({
-    required DsClientCache cache, 
+  UpdatePointsCacheFromJdsService({
+    required DsClientCache cache,
     required JdsService jdsService,
-  }) : 
+  }) :
     _cache = cache, 
     _jdsService = jdsService;
   ///
@@ -38,6 +38,7 @@ class UpdatePointsCacheFromJdsService {
               name: DsPointName(pointName),
               value: 0,
               status: DsStatus.invalid,
+              cot: DsCot.inf,
               timestamp: DsTimeStamp.now().toString(),
             ),
           ),
