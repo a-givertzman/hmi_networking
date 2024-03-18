@@ -6,7 +6,7 @@ import '../ds_send/common/fake_ds_client.dart';
 
 void main() {
   group('JdsServie .auth(token)', () {
-    test('with token', () async {
+    test('completes bormally if no error from stream', () async {
       final jdsService = JdsService(
         dsClient: FakeDsClient(
           streams: {
@@ -25,6 +25,19 @@ void main() {
       );
       final result = await jdsService.authenticate('');
       expect(result, isA<Ok>(), reason: 'Result should contain data');
+    });
+    test('completes with Err if error emitted from stream', () async {
+      final jdsService = JdsService(
+        dsClient: FakeDsClient(
+          streams: {
+            'Auth.Secret': Stream<DsDataPoint<String>>.error(
+              Error(),
+            ), 
+          },
+        ),
+      );
+      final result = await jdsService.authenticate('');
+      expect(result, isA<Err>(), reason: 'Result should be error');
     });
   });
 }

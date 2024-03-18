@@ -7,7 +7,7 @@ import '../ds_send/common/fake_ds_client.dart';
 
 void main() {
   group('JdsServie .points()', () {
-    test('with empty config response', () async {
+    test('completes normally with empty config response', () async {
       final jdsService = JdsService(
         dsClient: FakeDsClient(
           streams: {
@@ -32,7 +32,7 @@ void main() {
         reason: 'Result data should be empty config map',
       );
     });
-    test('with filled config response', () async {
+    test('completes normally with filled config response', () async {
       const testConfigString = '''    {
               "Point.Name.0":{"address":{"bit":0,"offset":0},"alarm":0,"comment":"Test Point Bool","filters":{"threshold":5.0},"type":"Bool"},
               "Point.Name.1":{"address":{"bit":0,"offset":0},"alarm":0,"comment":"Test Point Bool","filters":{"factor":0.1,"threshold":5.0},"type":"Bool"},
@@ -105,6 +105,39 @@ void main() {
         equals(testConfig),
         reason: 'Result data should be empty config map',
       );
+    });
+    test('completes with Err if error emitted from stream', () async {
+      final jdsService = JdsService(
+        dsClient: FakeDsClient(
+          streams: {
+            'Points': Stream<DsDataPoint<String>>.error(
+              Error(),
+            ), 
+          },
+        ),
+      );
+      final result = await jdsService.points();
+      expect(result, isA<Err>(), reason: 'Result should be error');
+    });
+    test('completes with Err if error emitted from parsing', () async {
+      final jdsService = JdsService(
+        dsClient: FakeDsClient(
+          streams: {
+            'Points': Stream<DsDataPoint<String>>.value(
+              DsDataPoint<String>(
+                type: DsDataType.string,
+                name: DsPointName('/App/Jds/Points'),
+                value: '{"Point.Name.0":{}}',
+                status: DsStatus.ok,
+                timestamp: DsTimeStamp.now().toString(),
+                cot: DsCot.reqCon,
+              ),
+            ),
+          },
+        ),
+      );
+      final result = await jdsService.points();
+      expect(result, isA<Err>(), reason: 'Result should be error');
     });
   });
 }

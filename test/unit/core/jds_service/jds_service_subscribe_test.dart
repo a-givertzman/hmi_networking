@@ -49,5 +49,18 @@ void main() {
       ]);
       expect(result, isA<Ok>(), reason: 'Result should contain data');
     });
+    test('completes with Err if error emitted from stream', () async {
+      final jdsService = JdsService(
+        dsClient: FakeDsClient(
+          streams: {
+            'Subscribe': Stream<DsDataPoint<String>>.error(
+              Error(),
+            ), 
+          },
+        ),
+      );
+      final result = await jdsService.subscribe();
+      expect(result, isA<Err>(), reason: 'Result should be error');
+    });
   });
 }
