@@ -22,22 +22,28 @@ class JdsPointConfig {
   });
   ///
   factory JdsPointConfig.fromMap(Map<String, dynamic> map) {
+    final filters = map['filters'];
+    final history = map['history'];
     return JdsPointConfig(
       type: DsDataType.fromString(map['type']), 
       address: DsPointAddress.fromMap(map['address']),
       alarmClass: map['alarm'],
       comment: map['comment'],
-      filters: DsFilters.fromMap(map['filters']),
-      history: DsAccessMode.fromString(map['history']),
+      filters: filters != null ? DsFilters.fromMap(filters) : null,
+      history: history != null ? DsAccessMode.fromString(history) : null,
     );
   }
   ///
   Map<String, dynamic> toMap() => {
     'type': type.value,
     'address': address.toMap(),
-    'alarm': alarmClass,
-    'comment': comment,
-    'filters': filters?.toMap(),
-    'history': history.toString(),
+    if(alarmClass != null)
+      'alarm': alarmClass,
+    if(comment != null)
+      'comment': comment,
+    if(filters != null)
+      'filters': filters?.toMap(),
+    if(history != null)
+      'history': history.toString(),
   };
 }

@@ -1,9 +1,9 @@
 ///
 class DsFilters {
-  final double? threshold;
+  final double threshold;
   final double? factor;
   ///
-  const DsFilters({this.threshold, this.factor});
+  const DsFilters({required this.threshold, this.factor});
   ///
   factory DsFilters.fromMap(Map<String, dynamic> map) {
     return DsFilters(
@@ -14,6 +14,7 @@ class DsFilters {
   ///
   Map<String, dynamic> toMap() => {
     'threshold': threshold,
-    'factor': factor,
+    if(factor != null)
+      'factor': factor,
   };
 }
