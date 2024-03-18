@@ -54,7 +54,7 @@ void main() {
     final receivedCommands = <String>[];
     const targetCommandsStartings = [
       // Command sent to server
-      '{"class":"requestAll","type":"bool","name":"","value":1,"status":0,"timestamp":"',
+      '{"type":"bool","name":"/App/Jds/Gi","value":true,"status":0,"history":0,"alarm":0,"cot":"Req","timestamp":"',
     ];
     line.stream.listen((event) { return; });
     // Do not remove! `Connection reset by peer` error will be thrown on group run.
@@ -71,8 +71,8 @@ void main() {
     expect(receivedCommands.length, targetCommandsStartings.length);
     for (int i = 0; i < targetCommandsStartings.length; i++) {
       expect(
-        receivedCommands[i].startsWith(targetCommandsStartings[i]),
-        true,
+        receivedCommands[i],
+        startsWith(targetCommandsStartings[i]),
         reason: 'Sent command doesn`t match json template',
       );
     }

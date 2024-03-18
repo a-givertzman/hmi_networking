@@ -23,7 +23,7 @@ void main() {
       await sendIntResult
         .then((responsePoint) {
           log(_debug, 'responsePoint: $responsePoint');
-          expect(responsePoint is Ok, true, reason: 'Result should contains data');
+          expect(responsePoint is Ok, true, reason: 'Result should contain data');
           expect((responsePoint as Ok<DsDataPoint<int>, Failure>).value.value, 121, reason: 'Result data should be 121');
         })
         .timeout(const Duration(seconds: timeout), onTimeout: () {
@@ -52,8 +52,8 @@ void main() {
       final sendIntResult = await DsSend<int>(
         dsClient: dsClient,
         pointName: pointPaths[int]!,
-        cot: DsCot.req,
-        responseCots: [DsCot.reqCon, DsCot.reqErr],
+        cot: DsCot.act,
+        responseCots: [DsCot.actCon, DsCot.actErr],
         response: 'stream_int',
       ).exec(123);
       expect(sendIntResult is Ok, equals(true));
@@ -61,8 +61,8 @@ void main() {
       final sendBoolResult = await DsSend<bool>(
         dsClient: dsClient,
         pointName: pointPaths[bool]!,
-        cot: DsCot.req,
-        responseCots: [DsCot.reqCon, DsCot.reqErr],
+        cot: DsCot.act,
+        responseCots: [DsCot.actCon, DsCot.actErr],
         response: 'stream_bool',
       ).exec(true);
       expect(sendBoolResult is Ok, equals(true));
@@ -70,8 +70,8 @@ void main() {
       final sendRealResult = await DsSend<double>(
         dsClient: dsClient,
         pointName: pointPaths[double]!,
-        cot: DsCot.req,
-        responseCots: [DsCot.reqCon, DsCot.reqErr],
+        cot: DsCot.act,
+        responseCots: [DsCot.actCon, DsCot.actErr],
         response: 'stream_real',
       ).exec(0.5);
       expect(sendRealResult is Ok, equals(true));
@@ -81,24 +81,24 @@ void main() {
       final sendIntResult = await DsSend<int>(
         dsClient: dsClient,
         pointName: pointPaths[int]!,
-        cot: DsCot.req,
-        responseCots: [DsCot.reqCon, DsCot.reqErr],
+        cot: DsCot.act,
+        responseCots: [DsCot.actCon, DsCot.actErr],
       ).exec(123);
       expect(sendIntResult is Ok, equals(true));
       expect((sendIntResult as Ok<DsDataPoint<int>, Failure>).value.value, 2);
       final sendBoolResult = await DsSend<bool>(
         dsClient: dsClient,
         pointName: pointPaths[bool]!,
-        cot: DsCot.req,
-        responseCots: [DsCot.reqCon, DsCot.reqErr],
+        cot: DsCot.act,
+        responseCots: [DsCot.actCon, DsCot.actErr],
       ).exec(true);
       expect(sendBoolResult is Ok, equals(true));
       expect((sendBoolResult as Ok<DsDataPoint<bool>, Failure>).value.value, false);
       final sendRealResult = await DsSend<double>(
         dsClient: dsClient,
         pointName: pointPaths[double]!,
-        cot: DsCot.req,
-        responseCots: [DsCot.reqCon, DsCot.reqErr],
+        cot: DsCot.act,
+        responseCots: [DsCot.actCon, DsCot.actErr],
       ).exec(0.5);
       expect(sendRealResult is Ok, equals(true));
       expect((sendRealResult as Ok<DsDataPoint<double>, Failure>).value.value, 2.345);

@@ -16,14 +16,14 @@ void main() {
           'cache': {
             '': DsDataPoint<bool>(type: DsDataType.bool, name: DsPointName('/'), value: false, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
           },
-          'file_content': '{"":{"type":"bool","name":"/","value":"0","status":0,"alarm":0,"history":0,"timestamp":"2024-03-04T19:25:29.228612"}}',
+          'file_content': '{"":{"type":"bool","name":"/","value":"0","status":0,"alarm":0,"history":0,"cot":"Inf","timestamp":"2024-03-04T19:25:29.228612"}}',
         },
         {
           'cache': {
             'abc': DsDataPoint<bool>(type: DsDataType.bool, name: DsPointName('/'), value: false, status: DsStatus.ok, timestamp: "2024-03-04T19:27:53.149811", cot: DsCot.inf),
             '123': DsDataPoint<bool>(type: DsDataType.bool, name: DsPointName('/'), value: true, status: DsStatus.ok, timestamp: "2024-03-04T19:28:18.812448", cot: DsCot.inf),
           },
-          'file_content': '{"abc":{"type":"bool","name":"/","value":"0","status":0,"alarm":0,"history":0,"timestamp":"2024-03-04T19:27:53.149811"},"123":{"type":"bool","name":"/","value":"1","status":0,"alarm":0,"history":0,"timestamp":"2024-03-04T19:28:18.812448"}}',
+          'file_content': '{"abc":{"type":"bool","name":"/","value":"0","status":0,"alarm":0,"history":0,"cot":"Inf","timestamp":"2024-03-04T19:27:53.149811"},"123":{"type":"bool","name":"/","value":"1","status":0,"alarm":0,"history":0,"cot":"Inf","timestamp":"2024-03-04T19:28:18.812448"}}',
         },
         {
           'cache': {
@@ -31,7 +31,7 @@ void main() {
             'point2': DsDataPoint<int>(type: DsDataType.integer, name: DsPointName('/test/point2'), value: 342134, status: DsStatus.ok, timestamp: "2024-03-04T19:28:58.117634", cot: DsCot.inf),
             'point3': DsDataPoint<bool>(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.ok, timestamp: "2024-03-04T19:29:20.274314", cot: DsCot.inf), 
           },
-          'file_content': '{"point1":{"type":"real","name":"/test/point1","value":"474.20942","status":0,"alarm":0,"history":0,"timestamp":"2024-03-04T19:28:42.201794"},"point2":{"type":"int","name":"/test/point2","value":"342134","status":0,"alarm":0,"history":0,"timestamp":"2024-03-04T19:28:58.117634"},"point3":{"type":"bool","name":"/test/point3","value":"0","status":0,"alarm":0,"history":0,"timestamp":"2024-03-04T19:29:20.274314"}}',
+          'file_content': '{"point1":{"type":"real","name":"/test/point1","value":"474.20942","status":0,"alarm":0,"history":0,"cot":"Inf","timestamp":"2024-03-04T19:28:42.201794"},"point2":{"type":"int","name":"/test/point2","value":"342134","status":0,"alarm":0,"history":0,"cot":"Inf","timestamp":"2024-03-04T19:28:58.117634"},"point3":{"type":"bool","name":"/test/point3","value":"0","status":0,"alarm":0,"history":0,"cot":"Inf","timestamp":"2024-03-04T19:29:20.274314"}}',
         },
       ];
       for(final initialCache in initialCaches) {

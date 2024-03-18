@@ -91,9 +91,9 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
         ),
       }.toString(),
       'status': _point.status.value,
-      'cot': _point.cot.toString(),
       'alarm': _point.alarm,
       'history': _point.history,
+      'cot': _point.cot.toString(),
       'timestamp': _point.timestamp,
   };
   //

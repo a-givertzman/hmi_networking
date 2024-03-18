@@ -4,11 +4,14 @@ import 'package:hmi_networking/hmi_networking.dart';
 import 'package:hmi_networking/src/core/ds_send.dart';
 import 'fake_ds_client.dart';
 
+///
+class _FakeType {}
+///
 void main() {
   group('DsSend constructor', () {
     test('asserts if unsupported type was provided', () {
       expect(
-        () => DsSend<String>(
+        () => DsSend<_FakeType>(
           dsClient: FakeDsClient(),
           pointName: DsPointName('/'),
           cot: DsCot.act,

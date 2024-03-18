@@ -24,7 +24,7 @@ final validCommandsPool = [
         status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"bool","name":"/line1/ied12/db902_panel_controls/Test.command.bool","value":0,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"bool","name":"/line1/ied12/db902_panel_controls/Test.command.bool","value":false,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -34,7 +34,7 @@ final validCommandsPool = [
         status: DsStatus.ok, 
         cot: DsCot.inf,
         timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"bool","name":"/line1/ied12/db902_panel_controls/Test.command.bool","value":1,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"bool","name":"/line1/ied12/db902_panel_controls/Test.command.bool","value":true,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -44,7 +44,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.int","value":32767,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.int","value":32767,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -54,7 +54,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.int","value":-32768,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.int","value":-32768,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -64,7 +64,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"dint","name":"/line1/ied12/db902_panel_controls/Test.command.dInt","value":4294967295,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"dint","name":"/line1/ied12/db902_panel_controls/Test.command.dInt","value":4294967295,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -74,7 +74,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"lint","name":"/line1/ied12/db902_panel_controls/Test.command.lInt","value":9223372036854775807,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"lint","name":"/line1/ied12/db902_panel_controls/Test.command.lInt","value":9223372036854775807,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -84,7 +84,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"lint","name":"/line1/ied12/db902_panel_controls/Test.command.lInt","value":-9223372036854775808,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"lint","name":"/line1/ied12/db902_panel_controls/Test.command.lInt","value":-9223372036854775808,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -94,7 +94,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"uint","name":"/line1/ied12/db902_panel_controls/Test.command.uInt","value":65535,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"uint","name":"/line1/ied12/db902_panel_controls/Test.command.uInt","value":65535,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -104,7 +104,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"word","name":"/line1/ied12/db902_panel_controls/Test.command.word","value":65535,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"word","name":"/line1/ied12/db902_panel_controls/Test.command.word","value":65535,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -114,7 +114,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"real","name":"/line1/ied12/db902_panel_controls/Test.command.real","value":3.402823e+38,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"real","name":"/line1/ied12/db902_panel_controls/Test.command.real","value":3.402823e+38,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -124,7 +124,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"real","name":"/line1/ied12/db902_panel_controls/Test.command.real","value":-3.402823e+38,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"real","name":"/line1/ied12/db902_panel_controls/Test.command.real","value":-3.402823e+38,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -134,7 +134,7 @@ final validCommandsPool = [
       status: DsStatus.ok, 
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',    ),
-    '{"class":"commonCmd","type":"real","name":"/line1/ied12/db902_panel_controls/Test.command.real","value":1.175495e-38,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"real","name":"/line1/ied12/db902_panel_controls/Test.command.real","value":1.175495e-38,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   Pair<DsDataPoint, String>(
     DsDataPoint(
@@ -145,7 +145,7 @@ final validCommandsPool = [
       cot: DsCot.inf,
       timestamp: '2023-01-23T12:22:18.919520',
     ),
-    '{"class":"commonCmd","type":"real","name":"/line1/ied12/db902_panel_controls/Test.command.real","value":-1.175495e-38,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+    '{"type":"real","name":"/line1/ied12/db902_panel_controls/Test.command.real","value":-1.175495e-38,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   ),
   // Pair<DsCommand, String>(
   //   DsCommand(
@@ -156,7 +156,7 @@ final validCommandsPool = [
   //     status: DsStatus.ok, 
   //     timestamp: DsTimeStamp.now(),
   //   ),
-  //   '{"class":"commonCmd","type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.time","value":1,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+  //   '{"type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.time","value":1,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   // ),
   // Pair<DsCommand, String>(
   //   DsCommand(
@@ -167,9 +167,10 @@ final validCommandsPool = [
   //     status: DsStatus.ok, 
   //     timestamp: DsTimeStamp.now(),
   //   ),
-  //   '{"class":"commonCmd","type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.dateAndTime","value":1,"status":0,"timestamp":"2023-01-23T12:22:18.919520"}',
+  //   '{"type":"int","name":"/line1/ied12/db902_panel_controls/Test.command.dateAndTime","value":1,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"2023-01-23T12:22:18.919520"}',
   // ),
 ];
+class _FakeInvalidType {}
 /// 
 /// Commands with all DsDataClass-DsDataType combinations
 final invalidCommandsPool = [
@@ -177,7 +178,7 @@ final invalidCommandsPool = [
     DsDataPoint(
       type: dataType, 
       name: DsPointName('/'), 
-      value: 'string value', 
+      value: _FakeInvalidType(), 
       status: DsStatus.ok,
       cot: DsCot.req,
       timestamp: DsTimeStamp.now().toString(),
