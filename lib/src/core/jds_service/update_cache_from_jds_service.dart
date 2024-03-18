@@ -4,7 +4,7 @@ import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 /// 
 /// [JdsService] cache update sequence.
-class UpdatePointsCacheFromJdsService {
+class UpdateCacheFromJdsService {
   final DsClientCache _cache;
   final JdsService _jdsService;
   ///
@@ -13,7 +13,7 @@ class UpdatePointsCacheFromJdsService {
   /// [jdsService] - to pull config from.
   /// 
   /// [cache] - to save config to.
-  UpdatePointsCacheFromJdsService({
+  UpdateCacheFromJdsService({
     required DsClientCache cache,
     required JdsService jdsService,
   }) :

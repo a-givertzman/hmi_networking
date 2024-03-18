@@ -1,6 +1,6 @@
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
-import 'package:hmi_networking/src/core/ds_client/cache/update_cache_from_point_configs.dart';
+import 'package:hmi_networking/src/core/jds_service/update_cache_from_jds_service.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 
 /// 
@@ -29,7 +29,7 @@ class JdsServiceStartup {
       case Ok(value:final config):
         final cache = _cache;
         if(cache != null) {
-          await UpdatePointsCacheFromJdsService(
+          await UpdateCacheFromJdsService(
             cache: cache,
             jdsService: _service,
           ).apply();
