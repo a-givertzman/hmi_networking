@@ -41,6 +41,7 @@ class DsSend<T> {
     _responseTimeout = responseTimeout;
   ///
   Future<ResultF<DsDataPoint<T>>> exec(T value) {
+    final responseStream = _dsClient.stream<T>(_response ?? _pointName.name);
     _dsClient.send(DsDataPoint(
       type: _types[T], 
       name: _pointName, 
@@ -49,8 +50,7 @@ class DsSend<T> {
       cot: _cot,
       timestamp: DateTime.now().toUtc().toIso8601String(),
     ));
-    final response = _response;
-    return _dsClient.stream<T>(response ?? _pointName.name)
+    return responseStream
       .where((event) => _responseCots.contains(event.cot))
       .first
       .then<ResultF<DsDataPoint<T>>>((point) => point.toResult())
@@ -58,7 +58,7 @@ class DsSend<T> {
         Duration(seconds: _responseTimeout), 
         onTimeout: () => Err(
           Failure(
-            message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${response ?? _pointName.name})', 
+            message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${_response ?? _pointName.name})', 
             stackTrace: StackTrace.current,
           ),
         ),
