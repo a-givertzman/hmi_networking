@@ -9,10 +9,15 @@ void main() {
     () async {
       bool isPointsRequested = false;
       bool isSubscribed = false;
+      bool isAuthRequested = false;
       final service = FakeJdsService(
         onPoints: () async {
           isPointsRequested = true;
           return const Ok(JdsPointConfigs({}));
+        },
+        onAuth: (_) async {
+          isAuthRequested = true;
+          return const Ok(null);
         },
         onSubscribe: (names) async {
           isSubscribed = true;
@@ -22,6 +27,7 @@ void main() {
       final startup = JdsServiceStartup(service: service);
       final result = await startup.run();
       expect(result, isA<Ok>());
+      expect(isAuthRequested, isTrue);
       expect(isPointsRequested, isTrue);
       expect(isSubscribed, isTrue);
     },
