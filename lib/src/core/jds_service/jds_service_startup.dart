@@ -1,6 +1,7 @@
-import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
+import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 import 'package:hmi_networking/src/core/jds_service/update_cache_from_jds_service.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 
@@ -9,20 +10,25 @@ import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 class JdsServiceStartup {
   static const _log = Log('JdsServiceStartup');
   final JdsService _service;
-  final DsClientCache? _cache;
+  final DsClientCache _cache;
+  final DsClient _dsClient;
   final Duration _authRetryDelay;
   ///
   /// [JdsService] startup sequence.
   /// 
-  /// If [cache] is provided, config from server will be saved to it.
+  /// Config from [service] will be saved to [cache].
+  /// 
+  /// [dsClient] will be subscribed on all points from [service] config.
   const JdsServiceStartup({
+    required DsClient dsClient,
     required JdsService service,
-    DsClientCache? cache,
+    required DsClientCache cache,
     Duration authRetryDelay = const Duration(milliseconds: 1000),
   }) : 
     _service = service,
     _cache = cache,
-    _authRetryDelay = authRetryDelay;
+    _authRetryDelay = authRetryDelay,
+    _dsClient = dsClient;
   ///
   /// Pull points config from JDS service,
   /// save it to cache (if provided) 
@@ -35,19 +41,26 @@ class JdsServiceStartup {
       _log.warning('Retrying...');
     }
     _log.info('Pulling points config...');
-    final configResult = await _service.points();
+    final configResult = await UpdateCacheFromJdsService(
+      cache: _cache,
+      jdsService: _service,
+    ).apply();
     switch(configResult) {
       case Ok(value:final config):
         _log.info('Points config successfully pulled!');
-        final cache = _cache;
-        if(cache != null) {
-          await UpdateCacheFromJdsService(
-            cache: cache,
-            jdsService: _service,
-          ).apply();
-        }
         _log.info('Subscribing to received points...');
-        return _service.subscribe(config.names);
+        final subscribeResult = await _service.subscribe(
+          config.values.map((pointName) => pointName.toString()).toList(),
+        );
+        switch(subscribeResult) {
+          case Ok():
+            for(final name in config.keys) {
+              _dsClient.stream<String>(name);       
+            }
+            return const Ok(null);
+          case Err(:final error):
+            return Err(error);
+        }
       case Err(:final error):
         _log.warning('Failed to pull points');
         return Err(error);

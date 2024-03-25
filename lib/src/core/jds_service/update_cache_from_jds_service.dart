@@ -1,7 +1,6 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
-import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
+import 'package:hmi_networking/hmi_networking.dart';
 /// 
 /// [JdsService] cache update sequence.
 class UpdateCacheFromJdsService {
@@ -22,20 +21,31 @@ class UpdateCacheFromJdsService {
   ///
   /// Pull points config fron JDS service and 
   /// save default values of new poins if any appeared.
-  Future<ResultF<void>> apply() async {
-    final cachePointNames = (await _cache.getAll())
-      .map((point) => point.name.toString()).toSet();
+  /// 
+  /// Returns map with all points names currently availible,
+  /// where short point names as keys and full point paths as values.
+  Future<ResultF<Map<String, DsPointName>>> apply() async {
     switch(await _jdsService.points()) {
       case Ok(value:final pointConfigs):
-        final configPointNames = pointConfigs.names.toSet();
-        final newPointNames = configPointNames.where(
-          (pointName) => !cachePointNames.contains(pointName),
+        final cachePoints = await _cache.getAll();
+        final cachedNames = {
+          for(final point in cachePoints)
+            point.name.name: point.name,
+        };
+        final configNames = {
+          for(final pointName in pointConfigs.names.map((name) => DsPointName(name)))
+            pointName.name: pointName,
+        };
+        final cacheNamesSet = cachedNames.keys.toSet();
+        final configNamesSet = configNames.keys.toSet();
+        final newPointNames = configNamesSet.where(
+          (pointName) => !cacheNamesSet.contains(pointName),
         );
         await _cache.addMany(
           newPointNames.map(
             (pointName) => DsDataPoint(
               type: DsDataType.integer,
-              name: DsPointName(pointName),
+              name: configNames[pointName]!,
               value: 0,
               status: DsStatus.invalid,
               cot: DsCot.inf,
@@ -43,7 +53,10 @@ class UpdateCacheFromJdsService {
             ),
           ),
         );
-        return const Ok(null);
+        return Ok({
+          ...cachedNames,
+          ...configNames,
+        });
       case Err(:final error):
         return Err(error);
     }

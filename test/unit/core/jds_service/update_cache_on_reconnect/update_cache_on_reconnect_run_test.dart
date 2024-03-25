@@ -5,14 +5,14 @@ import 'package:hmi_networking/src/core/jds_service/update_cache_from_jds_servic
 import 'package:hmi_networking/src/core/jds_service/update_cache_on_reconnect.dart';
 ///
 final class _FakeUpdateCacheFromJdsService implements UpdateCacheFromJdsService {
-  final Future<ResultF<void>> Function() _onApply;
+  final Future<ResultF<Map<String, DsPointName>>> Function() _onApply;
   ///
   const _FakeUpdateCacheFromJdsService({
-    required Future<ResultF<void>> Function() onApply,
+    required Future<ResultF<Map<String, DsPointName>>> Function() onApply,
   }) : _onApply = onApply;
   //
   @override
-  Future<ResultF<void>> apply() => _onApply();
+  Future<ResultF<Map<String, DsPointName>>> apply() => _onApply();
 }
 
 void main() {
@@ -34,7 +34,7 @@ void main() {
       cacheUpdate: _FakeUpdateCacheFromJdsService(
         onApply: () async {
           updatesCount += 1;
-          return const Ok(null);
+          return const Ok({});
         },
       ),
     );
