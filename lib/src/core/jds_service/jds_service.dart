@@ -1,7 +1,9 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/hmi_networking.dart';
+import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
+import 'package:hmi_networking/src/core/ds_send.dart';
 import 'package:hmi_networking/src/core/entities/point_route.dart';
+import 'package:hmi_networking/src/core/jds_service/jds_point_config/jds_point_configs.dart';
 
 ///
 /// Collection of JDS requests supported by service on external server.
