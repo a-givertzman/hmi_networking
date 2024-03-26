@@ -1,25 +1,29 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/hmi_networking.dart';
+import 'package:hmi_networking/src/core/entities/point_route.dart';
 
 ///
 /// Collection of JDS requests supported by service on external server.
 class JdsService {
   final DsClient _dsClient;
+  final PointRoute _route;
   ///
   /// Collection of JDS requests supported by service on external server.
   /// 
   /// [endpoint] - to communicate through JDS protocol.
   const JdsService({
     required DsClient dsClient,
+    PointRoute route = const PointRoute.empty(),
   }) : 
-    _dsClient = dsClient;
+    _dsClient = dsClient,
+    _route = route;
   ///
   /// Proceed to authentication process with [token].
   Future<ResultF<void>> authenticate(String token) {
     return DsSend<String>(
       dsClient: _dsClient, 
-      pointName: DsPointName('/App/Jds/Auth.Secret'),
+      pointName: _route.join(DsPointName('/Auth.Secret')),
       cot: DsCot.req, 
       responseCots: [DsCot.reqCon, DsCot.reqErr],
     ).exec(token)
@@ -37,7 +41,7 @@ class JdsService {
   Future<ResultF<JdsPointConfigs>> points() {
     return DsSend<String>(
       dsClient: _dsClient, 
-      pointName: DsPointName('/App/Jds/Points'),
+      pointName: _route.join(DsPointName('/Points')),
       cot: DsCot.req, 
       responseCots: [DsCot.reqCon, DsCot.reqErr],
     ).exec('')
@@ -67,7 +71,7 @@ class JdsService {
   Future<ResultF<void>> subscribe([List<String> names = const []]) {
     return DsSend<String>(
       dsClient: _dsClient, 
-      pointName: DsPointName('/App/Jds/Subscribe'),
+      pointName: _route.join(DsPointName('/Subscribe')),
       cot: DsCot.req, 
       responseCots: [DsCot.reqCon, DsCot.reqErr],
     ).exec('[${names.map((name) => '"$name"').join(',')}]')
