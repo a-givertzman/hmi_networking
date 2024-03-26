@@ -7,8 +7,8 @@ import 'test_point_paths.dart';
 import 'test_streams.dart';
 //
 void main() {
-  // ignore: no_leading_underscores_for_local_identifiers
-  const _debug = true;
+  Log.initialize();
+  const log = Log('DsSend .exec() test');
   group('DsSend exec', () {
     const timeout = 10;
     final dsClient = FakeDsClient(streams: testStreams);
@@ -22,7 +22,7 @@ void main() {
       ).exec(123);
       await sendIntResult
         .then((responsePoint) {
-          log(_debug, 'responsePoint: $responsePoint');
+          log.debug('responsePoint: $responsePoint');
           expect(responsePoint is Ok, true, reason: 'Result should contain data');
           expect((responsePoint as Ok<DsDataPoint<int>, Failure>).value.value, 121, reason: 'Result data should be 121');
         })
@@ -31,7 +31,7 @@ void main() {
         });
     });
     test('with response and exceeded timeout', () async {
-      log(_debug, 'time out will be exceeded...');
+      log.debug('time out will be exceeded...');
       final sendIntResult = DsSend<int>(
         dsClient: dsClient,
         pointName: pointPaths[int]!,

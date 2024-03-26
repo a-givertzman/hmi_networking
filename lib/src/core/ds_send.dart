@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/hmi_networking.dart';
+import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 
 ///
 /// Sends value of type [T] to the DataServer
@@ -41,7 +41,9 @@ class DsSend<T> {
     _responseTimeout = responseTimeout;
   ///
   Future<ResultF<DsDataPoint<T>>> exec(T value) {
-    final responseStream = _dsClient.stream<T>(_response ?? _pointName.name);
+    final responseStream = BufferedStream(
+      _dsClient.stream<T>(_response ?? _pointName.name),
+    );
     _dsClient.send(DsDataPoint(
       type: _types[T], 
       name: _pointName, 
@@ -51,9 +53,18 @@ class DsSend<T> {
       timestamp: DateTime.now().toUtc().toIso8601String(),
     ));
     return responseStream
+      .stream
       .where((event) => _responseCots.contains(event.cot))
       .first
       .then<ResultF<DsDataPoint<T>>>((point) => point.toResult())
+      .onError(
+        (error, stackTrace) => Err(
+          Failure(
+            message: error.toString(), 
+            stackTrace: stackTrace,
+          ),
+        ),
+      )
       .timeout(
         Duration(seconds: _responseTimeout), 
         onTimeout: () => Err(

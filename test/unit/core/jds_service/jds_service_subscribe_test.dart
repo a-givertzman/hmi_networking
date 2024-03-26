@@ -5,6 +5,7 @@ import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 import '../ds_send/common/fake_ds_client.dart';
 
 void main() {
+  Log.initialize();
   group('JdsServie .subscribe(names)', () {
     test('with subscribtions list', () async {
       final jdsService = JdsService(

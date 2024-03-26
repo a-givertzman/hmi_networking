@@ -6,6 +6,7 @@ import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 import '../ds_send/common/fake_ds_client.dart';
 
 void main() {
+  Log.initialize();
   group('JdsServie .points()', () {
     test('completes normally with empty config response', () async {
       final jdsService = JdsService(
