@@ -283,7 +283,7 @@ class DsClientReal implements DsClient {
     if (cache == null) {
       return _line.requestAll();
     } else {
-      for(final entry in _receivers.entries) {
+      for(final entry in _receivers.entries.toList()) {
         final pointName = entry.key;
         final option = await cache.get(pointName);
         if(option case Some(value:final cachedPoint)) {
