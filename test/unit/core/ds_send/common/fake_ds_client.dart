@@ -12,7 +12,7 @@ class FakeDsClient implements DsClient {
     streams![name] as Stream<DsDataPoint<T>>;
   //
   @override
-  Future<ResultF<void>> send(DsCommand dsCommand) {
+  Future<ResultF<void>> send(DsDataPoint point) {
     return Future.value(const Ok(null));
   }
   //

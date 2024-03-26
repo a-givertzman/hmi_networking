@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
@@ -20,6 +19,7 @@ class DsClientReal implements DsClient {
   DsClientReal({
     required CustomProtocolLine line,
     DsClientCache? cache,
+    FutureOr<void> Function(bool isConnected)? onConnectionChanged,
   }):
     _line = line,
     _cache = cache;
@@ -43,34 +43,29 @@ class DsClientReal implements DsClient {
   }
   ///
   Stream<DsDataPoint<T>> _stream<T>(String name) {
-    if (T == bool) {
-      return _streamToBool(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>;
-    }
-    if (T == int) {
-      return _streamToInt(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>;
-    }
-    if (T == double) {
-      return _streamToDouble(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>;
-    }
-    return _setupStreamController(name).stream as Stream<DsDataPoint<T>>;
+    return switch(T) {
+      bool => _streamToBool(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>,
+      int => _streamToInt(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>,
+      double => _streamToDouble(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>,
+      String => _streamToString(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>,
+      _ => _setupStreamController(name).stream as Stream<DsDataPoint<T>>,
+    };
   }
   ///
   /// Вернет StreamController с именем [name] из Map<String, StreamContoller> _receivers
   /// если такой есть, если нет, то создаст.
   StreamController<DsDataPoint> _setupStreamController(String name) {
-    // StreamController<DsDataPoint> streamController;
     if (!_receivers.containsKey(name)) {
       final streamController = StreamController<DsDataPoint>.broadcast(
-        onListen: () {
+        onListen: () async {
           if (!_isActive) {
             _isActive = true;
             log(_debug, '[$DsClientReal._setupStreamController] before _run');
             _dsClientConnectionListener = DsClientConnectionListener(
               _stream<int>('Local.System.Connection'),
               connectionStatus: _line.isConnected ? DsStatus.ok : DsStatus.invalid,
-              onConnectionChanged: (connectionStatus) {
+              onConnectionChanged: (connectionStatus) async {
                 if (connectionStatus == DsStatus.ok) {
-                  log(_debug, '[$DsClientReal._setupStreamController] _line.requestAll on connected');
                   _line.requestAll();
                 }
               },
@@ -124,6 +119,7 @@ class DsClientReal implements DsClient {
           name: event.name,
           value: value,
           status: status,
+          cot: event.cot,
           timestamp: event.timestamp,
         );
       });
@@ -147,6 +143,22 @@ class DsClientReal implements DsClient {
           name: event.name,
           value: value,
           status: status,
+          cot: event.cot,
+          timestamp: event.timestamp,
+        );
+      });
+  }
+  ///
+  Stream<DsDataPoint<String>> _streamToString(Stream<DsDataPoint> stream) {
+    return stream
+      .map((event) {
+        // log(_debug, '[$DsClientReal.streamInt.map] event: ', event.name, '\t', event.value);
+        return DsDataPoint<String>(
+          type: DsDataType.string,
+          name: event.name,
+          value: event.value.toString(),
+          status: event.status,
+          cot: event.cot,
           timestamp: event.timestamp,
         );
       });
@@ -175,6 +187,7 @@ class DsClientReal implements DsClient {
           name: event.name,
           value: value,
           status: status,
+          cot: event.cot,
           timestamp: event.timestamp,
         );
       });
@@ -256,9 +269,9 @@ class DsClientReal implements DsClient {
   /// В качестве результата Result<bool> получает результат записи в socket
   @override
   Future<ResultF<void>> send(
-    DsCommand dsCommand,
+    DsDataPoint point,
   ) {
-    return _line.send(dsCommand);
+    return _line.send(point);
   }
   ///
   /// Делает запрос на S7 DataServer что бы получить все точки данных
@@ -270,7 +283,7 @@ class DsClientReal implements DsClient {
     if (cache == null) {
       return _line.requestAll();
     } else {
-      for(final entry in _receivers.entries) {
+      for(final entry in _receivers.entries.toList()) {
         final pointName = entry.key;
         final option = await cache.get(pointName);
         if(option case Some(value:final cachedPoint)) {
@@ -287,13 +300,13 @@ class DsClientReal implements DsClient {
   /// Данные не ждем, они прийдут в потоке
   @override
   Future<ResultF<void>> requestNamed(List<String> names) {
-    return send(DsCommand(
-      dsClass: DsDataClass.requestList,
+    return send(DsDataPoint(
       type: DsDataType.bool,
-      name: '',
+      name: DsPointName('/App/Jds/Gi'),
       value: names,
       status: DsStatus.ok,
-      timestamp: DsTimeStamp.now(),
+      cot: DsCot.req,
+      timestamp: DsTimeStamp.now().toString(),
     ));
   }
   ///

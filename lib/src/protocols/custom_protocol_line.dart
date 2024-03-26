@@ -17,7 +17,7 @@ abstract interface class CustomProtocolLine {
   ///
   /// Send command to a particular device.
   Future<ResultF<void>> send(
-    DsCommand command,
+    DsDataPoint point,
   );
   ///
   /// Close connection to device(s). 

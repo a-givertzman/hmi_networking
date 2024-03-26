@@ -27,9 +27,9 @@ void main() {
       final receivedEvents = <String>[];
       const targetEventsStartings = [
         // Status after successful connection
-        '{"type":"int","name":"/Local/Local.System.Connection","value":0,"status":0,"history":0,"alarm":0,"timestamp":"',
+        '{"type":"int","name":"/Local/Local.System.Connection","value":0,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"',
         // Status by requestAll()
-        '{"type":"int","name":"/Local/Local.System.Connection","value":0,"status":0,"history":0,"alarm":0,"timestamp":"',
+        '{"type":"int","name":"/Local/Local.System.Connection","value":0,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"',
       ];
       lineSocketSubscription = lineSocket.stream.listen((event) {
         receivedEvents.addAll(
@@ -49,11 +49,11 @@ void main() {
       final receivedEvents = <String>[];
       const targetEventsStartings = [
         // Status after successful connection
-        '{"type":"int","name":"/Local/Local.System.Connection","value":0,"status":0,"history":0,"alarm":0,"timestamp":"',
+        '{"type":"int","name":"/Local/Local.System.Connection","value":0,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"',
         // Status after connection loss
-        '{"type":"int","name":"/Local/Local.System.Connection","value":10,"status":0,"history":0,"alarm":0,"timestamp":"',
+        '{"type":"int","name":"/Local/Local.System.Connection","value":10,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"',
         // Status by requestAll()
-        '{"type":"int","name":"/Local/Local.System.Connection","value":10,"status":0,"history":0,"alarm":0,"timestamp":"',
+        '{"type":"int","name":"/Local/Local.System.Connection","value":10,"status":0,"history":0,"alarm":0,"cot":"Inf","timestamp":"',
       ];
       lineSocketSubscription = lineSocket.stream.listen((event) {
         receivedEvents.addAll(

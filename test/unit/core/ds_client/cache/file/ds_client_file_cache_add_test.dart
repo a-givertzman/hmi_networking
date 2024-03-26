@@ -8,12 +8,12 @@ void main() {
   group('DsClientFileCache', () {
     test('add(point) inserts point to file', () async {
       final testPoints = [
-        DsDataPoint(type: DsDataType.bool, name: DsPointName('/a'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-        DsDataPoint(type: DsDataType.bool, name: DsPointName('/b'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-        DsDataPoint(type: DsDataType.bool, name: DsPointName('/c'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-        DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point1'), value: 474.20942, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-        DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point2'), value: 342134, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()), 
+        DsDataPoint(type: DsDataType.bool, name: DsPointName('/a'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.bool, name: DsPointName('/b'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.bool, name: DsPointName('/c'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point1'), value: 474.20942, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point2'), value: 342134, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf), 
       ];
       final fakeFile = FakeDsCacheFile();
       final cache = DsClientFileCache(
@@ -27,19 +27,19 @@ void main() {
     test('addMany(points) inserts multiple points to file', () async {
       final testPointBatches = [
         [
-          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point2'), value: true, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString()),
-          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.timeInvalid, timestamp: DsTimeStamp.now().toString()),
+          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point2'), value: true, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.timeInvalid, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
         ],
         [
-          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point2'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point3'), value: 474.20942, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point5'), value: 342134, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),  
+          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point2'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point3'), value: 474.20942, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point5'), value: 342134, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),  
         ],
         [
-          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point5'), value: 474.20942, status: DsStatus.obsolete, timestamp: DsTimeStamp.now().toString()),
-          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point6'), value: 342134, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString()),
-          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point7'), value: false, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString()), 
+          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point5'), value: 474.20942, status: DsStatus.obsolete, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point6'), value: 342134, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point7'), value: false, status: DsStatus.invalid, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf), 
         ],
       ];
       for(final batch in testPointBatches) {
@@ -53,12 +53,12 @@ void main() {
     });
     test('add(point) updates point inside file', () async {
       final uniqueTestPoints = [
-        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612"),
-        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: true, status: DsStatus.obsolete, timestamp: "2024-03-04T19:25:29.228612"),
-        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.invalid, timestamp: "2024-03-04T19:25:29.228612"),
-        DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point1'), value: 474.20942, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612"),
-        DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point1'), value: 342134, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612"),
-        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.timeInvalid, timestamp: "2024-03-04T19:25:29.228612"), 
+        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: true, status: DsStatus.obsolete, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.invalid, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point1'), value: 474.20942, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point1'), value: 342134, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
+        DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.timeInvalid, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf), 
       ];
       const pointName = 'point1';
       final fakeFile = FakeDsCacheFile();
@@ -88,19 +88,19 @@ void main() {
     test('addMany(points) updates multiple point inside file', () async {
       final uniquePointsBatches = [
         [
-          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228611"),
-          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point2'), value: 474.20942, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612"),
-          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point3'), value: 342134, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228613"),
+          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228611", cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point2'), value: 474.20942, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point3'), value: 342134, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228613", cot: DsCot.inf),
         ],
         [
-          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.timeInvalid, timestamp: "2024-03-04T19:25:29.228614"),
-          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point1'), value: 474.20942, status: DsStatus.obsolete, timestamp: "2024-03-04T19:25:29.228615"),
-          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point2'), value: 342134, status: DsStatus.invalid, timestamp: "2024-03-04T19:25:29.228616"),
+          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.timeInvalid, timestamp: "2024-03-04T19:25:29.228614", cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point1'), value: 474.20942, status: DsStatus.obsolete, timestamp: "2024-03-04T19:25:29.228615", cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point2'), value: 342134, status: DsStatus.invalid, timestamp: "2024-03-04T19:25:29.228616", cot: DsCot.inf),
         ],
         [
-          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.timeInvalid, timestamp: "2024-03-04T19:25:29.228617"),
-          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point2'), value: 474.20942, status: DsStatus.obsolete, timestamp: "2024-03-04T19:25:29.228618"),
-          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point3'), value: 342134, status: DsStatus.invalid, timestamp: "2024-03-04T19:25:29.228619"),
+          DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.timeInvalid, timestamp: "2024-03-04T19:25:29.228617", cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point2'), value: 474.20942, status: DsStatus.obsolete, timestamp: "2024-03-04T19:25:29.228618", cot: DsCot.inf),
+          DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point3'), value: 342134, status: DsStatus.invalid, timestamp: "2024-03-04T19:25:29.228619", cot: DsCot.inf),
         ],
       ];
       final fakeFile = FakeDsCacheFile();
