@@ -16,6 +16,7 @@ dependencies:
         url: https://github.com/a-givertzman/hmi_core.git
         ref: 2.0.0
   shared_preferences: ^2.0.20
+  async: ^2.11.0
 
 dev_dependencies:
   flutter_test:

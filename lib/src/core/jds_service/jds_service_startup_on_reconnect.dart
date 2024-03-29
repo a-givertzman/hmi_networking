@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:async/async.dart';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service_startup.dart';
@@ -9,9 +10,7 @@ class JdsServiceStartupOnReconnect {
   final JdsServiceStartup _startup;
   bool _isConnected;
   StreamSubscription<bool>? _connectionSubscription;
-  final Completer _startupCompleter = Completer();
-  // final CancelableCompleter _startupCompleter = CancelableCompleter();
-  // Future? _startupFuture;
+  final CancelableCompleter _startupCompleter = CancelableCompleter();
   ///
   /// [JdsService] cache update sequence.
   JdsServiceStartupOnReconnect({
@@ -36,14 +35,17 @@ class JdsServiceStartupOnReconnect {
     ).listen((isConnected) async {
       if(_isConnected != isConnected) {
         _isConnected = isConnected;
-        if(!_startupCompleter.isCompleted) {
-          _startupCompleter.complete(null);
+        if(!_startupCompleter.isCanceled && !_startupCompleter.isCompleted) {
+          _startupCompleter.completeOperation(
+            CancelableOperation.fromValue(null),
+            propagateCancel: true,
+          );
         }
         _startupCompleter.complete(_startup.run());
       }
     });
   }
-
+  ///
   Future<void> cancel() async {
     await _connectionSubscription?.cancel();
     _startupCompleter.complete(null);
