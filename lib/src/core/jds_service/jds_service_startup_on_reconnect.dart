@@ -5,7 +5,7 @@ import 'package:hmi_networking/src/core/jds_service/jds_service_startup.dart';
 /// 
 /// [JdsService] cache update sequence.
 class JdsServiceStartupOnReconnect {
-  final Stream<DsDataPoint<bool>> _connectionStatuses;
+  final Stream<bool> _connectionStatuses;
   final JdsServiceStartup _startup;
   bool _isConnected;
   ///
@@ -15,23 +15,29 @@ class JdsServiceStartupOnReconnect {
   /// 
   /// [cache] - to save config to.
   JdsServiceStartupOnReconnect({
-    required Stream<DsDataPoint<bool>> connectionStatuses,
+    required Stream<DsDataPoint<int>> connectionStatuses,
     required JdsServiceStartup startup,
     bool initialConnectionStatus = false,
   }) :
-    _connectionStatuses = connectionStatuses,
+    _connectionStatuses = connectionStatuses.map(
+      (point) => switch(point) {
+        DsDataPoint<int>(
+          value: final connectionStatus, 
+          status: DsStatus.ok, 
+          cot: DsCot.inf,
+        ) => connectionStatus == DsStatus.ok.value,
+        _ => false
+      },
+    ),
     _startup = startup, 
     _isConnected = initialConnectionStatus;
   ///
-  StreamSubscription<DsDataPoint<bool>> run() {
-    return _connectionStatuses.listen((point) async {
-      if(point.value != _isConnected) {
-        _isConnected = point.value;
-        if(_isConnected && point.status == DsStatus.ok) {
-          await _startup.run();
-        }
+  StreamSubscription<bool> run() {
+    return _connectionStatuses.listen((isConnected) async {
+      if(_isConnected != isConnected) {
+        _isConnected = isConnected;
+        await _startup.run();
       }
     });
   }
-
 }

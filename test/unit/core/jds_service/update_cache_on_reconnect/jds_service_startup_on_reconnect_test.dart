@@ -19,10 +19,10 @@ void main() {
     final update = JdsServiceStartupOnReconnect(
       connectionStatuses: Stream.fromIterable(
         List.generate(100, 
-          (index) => DsDataPoint<bool>(
-            type: DsDataType.bool,
+          (index) => DsDataPoint<int>(
+            type: DsDataType.integer,
             name: DsPointName('/'),
-            value: true,
+            value: DsStatus.ok.value,
             status: DsStatus.ok,
             timestamp: DsTimeStamp.now().toString(),
             cot: DsCot.inf,
