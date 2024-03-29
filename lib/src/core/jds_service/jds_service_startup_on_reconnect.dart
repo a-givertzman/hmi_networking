@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_networking/src/core/jds_service/update_cache_from_jds_service.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
+import 'package:hmi_networking/src/core/jds_service/jds_service_startup.dart';
 /// 
 /// [JdsService] cache update sequence.
-class UpdateCacheOnReconnect {
+class JdsServiceStartupOnReconnect {
   final Stream<DsDataPoint<bool>> _connectionStatuses;
-  final UpdateCacheFromJdsService _cacheUpdate;
+  final JdsServiceStartup _startup;
   bool _isConnected;
   ///
   /// [JdsService] cache update sequence.
@@ -14,13 +14,13 @@ class UpdateCacheOnReconnect {
   /// [jdsService] - to pull config from.
   /// 
   /// [cache] - to save config to.
-  UpdateCacheOnReconnect({
+  JdsServiceStartupOnReconnect({
     required Stream<DsDataPoint<bool>> connectionStatuses,
-    required UpdateCacheFromJdsService cacheUpdate,
+    required JdsServiceStartup startup,
     bool initialConnectionStatus = false,
   }) :
     _connectionStatuses = connectionStatuses,
-    _cacheUpdate = cacheUpdate, 
+    _startup = startup, 
     _isConnected = initialConnectionStatus;
   ///
   StreamSubscription<DsDataPoint<bool>> run() {
@@ -28,7 +28,7 @@ class UpdateCacheOnReconnect {
       if(point.value != _isConnected) {
         _isConnected = point.value;
         if(_isConnected && point.status == DsStatus.ok) {
-          await _cacheUpdate.apply();
+          await _startup.run();
         }
       }
     });

@@ -13,7 +13,7 @@ export 'src/core/ds_client/cache/filtered/ds_client_filtered_addition_cache.dart
 export 'src/core/ds_client/cache/filtered/ds_client_filtered_retrievment_cache.dart';
 export 'src/core/ds_client/cache/filtered/ds_client_filtered_cache.dart';
 export 'src/core/jds_service/update_cache_from_jds_service.dart';
-export 'src/core/jds_service/update_cache_on_reconnect.dart';
+export 'src/core/jds_service/jds_service_startup_on_reconnect.dart';
 export 'src/core/jds_service/jds_service.dart';
 export 'src/core/jds_service/jds_service_startup.dart';
 export 'src/core/jds_service/jds_service_route.dart';
