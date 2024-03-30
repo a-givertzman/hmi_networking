@@ -10,7 +10,7 @@ class JdsServiceStartupOnReconnect {
   final JdsServiceStartup _startup;
   bool _isConnected;
   StreamSubscription<bool>? _connectionSubscription;
-  final CancelableCompleter _startupCompleter = CancelableCompleter();
+  CancelableOperation? _startupProcess;
   ///
   /// [JdsService] cache update sequence.
   JdsServiceStartupOnReconnect({
@@ -35,19 +35,16 @@ class JdsServiceStartupOnReconnect {
     ).listen((isConnected) async {
       if(_isConnected != isConnected) {
         _isConnected = isConnected;
-        if(!_startupCompleter.isCanceled && !_startupCompleter.isCompleted) {
-          _startupCompleter.completeOperation(
-            CancelableOperation.fromValue(null),
-            propagateCancel: true,
-          );
+        await _startupProcess?.cancel();
+        if(_isConnected) {
+          _startupProcess = CancelableOperation.fromFuture(_startup.run());
         }
-        _startupCompleter.complete(_startup.run());
       }
     });
   }
   ///
   Future<void> cancel() async {
     await _connectionSubscription?.cancel();
-    _startupCompleter.complete(null);
+    await _startupProcess?.cancel();
   }
 }
