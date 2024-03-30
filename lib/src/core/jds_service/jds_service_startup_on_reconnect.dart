@@ -7,6 +7,7 @@ import 'package:hmi_networking/src/core/non_repetitive_stream.dart';
 /// 
 /// [JdsService] cache update sequence.
 class JdsServiceStartupOnReconnect {
+  static const _log = Log('JdsServiceStartupOnReconnect');
   final Stream<DsDataPoint<int>> _connectionStatuses;
   final JdsServiceStartup _startup;
   bool _isConnected;
@@ -42,14 +43,18 @@ class JdsServiceStartupOnReconnect {
         },
       ),
     ).stream
-    .where((event) => _isStartupCompleted)
+    .where((_) => _isStartupCompleted)
     .listen((_) async {
       while(_isConnected) {
+        _log.info('Entering startup loop...');
         _isStartupCompleted = false;
         if(await _startup.run() case Ok()) {
+          _log.info('Startup completed! Exiting startup loop...');
           _isStartupCompleted = true;
           break;
         }
+        _log.info('Startup failed! Starting next startup attempt...');
+        _isStartupCompleted = true;
       }
     });
   }
