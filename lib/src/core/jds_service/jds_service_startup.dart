@@ -40,25 +40,20 @@ class JdsServiceStartup {
       await Future.delayed(_authRetryDelay);
       _log.warning('Retrying...');
     }
-    _log.info('Pulling points config...');
-    final configResult = await UpdateCacheFromJdsService(
-      cache: _cache,
-      jdsService: _service,
-    ).apply();
-    switch(configResult) {
-      case Ok(value:final config):
+    _log.info('Requesting points config...');
+    switch(await _service.points()) {
+      case Ok(value:final configs):
         _log.info('Points config successfully pulled!');
         _log.info('Subscribing to received points...');
         final subscribeResult = await _service.subscribe(
-          config.values.map((pointName) => pointName.toString()).toList(),
+          configs.names,
         );
         switch(subscribeResult) {
           case Ok():
-            for(final name in config.keys) {
-              _dsClient.stream<String>(name);       
-            }
+            _log.info('Succsessfully subscribed!');
             return const Ok(null);
           case Err(:final error):
+            _log.warning('Failed to subscribe');
             return Err(error);
         }
       case Err(:final error):
