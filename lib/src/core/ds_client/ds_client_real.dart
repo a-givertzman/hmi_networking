@@ -237,6 +237,7 @@ class DsClientReal implements DsClient {
     log(_debug, '[$DsClientReal]');
     _line.stream.listen(
       (dataPoint) {
+        _cache?.add(dataPoint);
         final name = dataPoint.name.name;
         // log(_debug, '[$DsClientReal.dataPoint] : $dataPoint');
         // log(_debug, '[$DsClientReal._listenLine] point name: ${dataPoint.name}');
@@ -246,7 +247,6 @@ class DsClientReal implements DsClient {
           if (receiver != null && !receiver.isClosed) {
               // log(_debug, '[$DsClientReal._run] receiver: ${receiver}');
               receiver.add(dataPoint);
-              _cache?.add(dataPoint);
           }
         }
       },
