@@ -1,16 +1,17 @@
 import 'dart:async';
-import 'package:async/async.dart';
 import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service_startup.dart';
+import 'package:hmi_networking/src/core/non_repetitive_stream.dart';
 /// 
 /// [JdsService] cache update sequence.
 class JdsServiceStartupOnReconnect {
   final Stream<DsDataPoint<int>> _connectionStatuses;
   final JdsServiceStartup _startup;
   bool _isConnected;
+  bool _isStartupCompleted = true;
   StreamSubscription<bool>? _connectionSubscription;
-  CancelableOperation? _startupProcess;
   ///
   /// [JdsService] cache update sequence.
   JdsServiceStartupOnReconnect({
@@ -23,28 +24,37 @@ class JdsServiceStartupOnReconnect {
     _isConnected = initialConnectionStatus;
   ///
   void run() {
-    _connectionSubscription ??= _connectionStatuses.map(
-      (point) => switch(point) {
-        DsDataPoint<int>(
-          value: final connectionStatus, 
-          status: DsStatus.ok, 
-          cot: DsCot.inf,
-        ) => connectionStatus == DsStatus.ok.value,
-        _ => false
-      },
-    ).listen((isConnected) async {
-      if(_isConnected != isConnected) {
-        _isConnected = isConnected;
-        await _startupProcess?.cancel();
-        if(_isConnected) {
-          _startupProcess = CancelableOperation.fromFuture(_startup.run());
+    _connectionSubscription ??= NonRepetitiveStream(
+      stream: _connectionStatuses.map(
+        (point) {
+          switch(point) {
+            case DsDataPoint<int>(
+              value: final connectionStatus, 
+              status: DsStatus.ok, 
+              cot: DsCot.inf,
+            ):
+              final isConnected = connectionStatus == DsStatus.ok.value;
+              _isConnected = isConnected;
+              return isConnected;
+            case _: 
+              return false;
+          }
+        },
+      ),
+    ).stream
+    .where((event) => _isStartupCompleted)
+    .listen((_) async {
+      while(_isConnected) {
+        _isStartupCompleted = false;
+        if(await _startup.run() case Ok()) {
+          _isStartupCompleted = true;
+          break;
         }
       }
     });
   }
   ///
-  Future<void> cancel() async {
+  Future<void> dispose() async {
     await _connectionSubscription?.cancel();
-    await _startupProcess?.cancel();
   }
 }

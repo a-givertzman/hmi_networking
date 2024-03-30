@@ -27,6 +27,7 @@ export 'src/core/line_socket/line_socket.dart';
 export 'src/core/ds_data_stream_extract.dart';
 export 'src/core/entities/ds_data_point_extracted.dart';
 export 'src/core/ds_send.dart';
+export 'src/core/non_repetitive_stream.dart';
 export 'src/core/entities/double_container.dart';
 export 'src/core/entities/network_operation_state.dart';
 export 'src/core/entities/data_object.dart';

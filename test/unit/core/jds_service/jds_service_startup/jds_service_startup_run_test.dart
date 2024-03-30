@@ -2,8 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_point_config/jds_point_configs.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service_startup.dart';
-import '../../ds_client/cache/delayed/fake_ds_client_cache.dart';
-import '../../ds_send/common/fake_ds_client.dart';
 import '../fake_jds_service.dart';
 
 void main() {
@@ -28,8 +26,6 @@ void main() {
       );
       final startup = JdsServiceStartup(
         service: service, 
-        cache: FakeDsClientCache(),
-        dsClient: FakeDsClient(),
       );
       final result = await startup.run();
       expect(result, isA<Ok>());
