@@ -1,7 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
-import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 
 /// 
@@ -17,9 +15,7 @@ class JdsServiceStartup {
   /// 
   /// [dsClient] will be subscribed on all points from [service] config.
   const JdsServiceStartup({
-    required DsClient dsClient,
     required JdsService service,
-    required DsClientCache cache,
     Duration authRetryDelay = const Duration(milliseconds: 1000),
   }) : 
     _service = service,
