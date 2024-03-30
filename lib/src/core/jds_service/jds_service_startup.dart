@@ -2,7 +2,6 @@ import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
-import 'package:hmi_networking/src/core/jds_service/update_cache_from_jds_service.dart';
 import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 
 /// 
@@ -10,8 +9,6 @@ import 'package:hmi_networking/src/core/jds_service/jds_service.dart';
 class JdsServiceStartup {
   static const _log = Log('JdsServiceStartup');
   final JdsService _service;
-  final DsClientCache _cache;
-  final DsClient _dsClient;
   final Duration _authRetryDelay;
   ///
   /// [JdsService] startup sequence.
@@ -26,9 +23,7 @@ class JdsServiceStartup {
     Duration authRetryDelay = const Duration(milliseconds: 1000),
   }) : 
     _service = service,
-    _cache = cache,
-    _authRetryDelay = authRetryDelay,
-    _dsClient = dsClient;
+    _authRetryDelay = authRetryDelay;
   ///
   /// Pull points config from JDS service,
   /// save it to cache (if provided) 
