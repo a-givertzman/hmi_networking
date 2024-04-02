@@ -6,7 +6,7 @@ import 'package:hmi_networking/src/core/jds_service/jds_point_config/ds_point_ad
 ///
 class JdsPointConfig {
   final DsDataType type;
-  final DsPointAddress address;
+  final DsPointAddress? address;
   final int? alarmClass;
   final String? comment;
   final DsFilters? filters;
@@ -14,7 +14,7 @@ class JdsPointConfig {
   ///
   const JdsPointConfig({
     required this.type, 
-    required this.address, 
+    this.address, 
     this.alarmClass, 
     this.comment, 
     this.filters, 
@@ -24,9 +24,10 @@ class JdsPointConfig {
   factory JdsPointConfig.fromMap(Map<String, dynamic> map) {
     final filters = map['filters'];
     final history = map['history'];
+    final address = map['address'];
     return JdsPointConfig(
       type: DsDataType.fromString(map['type']), 
-      address: DsPointAddress.fromMap(map['address']),
+      address: address != null ? DsPointAddress.fromMap(address) : null,
       alarmClass: map['alarm'],
       comment: map['comment'],
       filters: filters != null ? DsFilters.fromMap(filters) : null,
@@ -36,7 +37,8 @@ class JdsPointConfig {
   ///
   Map<String, dynamic> toMap() => {
     'type': type.value,
-    'address': address.toMap(),
+    if(address != null)
+      'address': address?.toMap(),
     if(alarmClass != null)
       'alarm': alarmClass,
     if(comment != null)
