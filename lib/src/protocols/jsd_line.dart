@@ -170,14 +170,6 @@ class JdsLine implements CustomProtocolLine {
   //
   @override
   Future<ResultF<void>> requestAll() async {
-    _lineSocket.requestAll();
-    return send(DsDataPoint(
-      type: DsDataType.bool,
-      name: DsPointName('/App/Jds/Gi'),
-      value: true,
-      status: DsStatus.ok,
-      cot: DsCot.req,
-      timestamp: DateTime.now().toUtc().toIso8601String(),
-    ));
+    return _lineSocket.requestAll();
   }
 }
