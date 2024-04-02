@@ -1,23 +1,34 @@
 import 'dart:async';
+
+import 'package:hmi_core/hmi_core_option.dart';
+bool _defaultIsEqual(Object? a, Object? b) => a == b;
 ///
 class NonRepetitiveStream<T> {
   final StreamController<T> _controller = StreamController<T>();
   late final StreamSubscription<T> _subscription;
-  T? _lastValue;
+  final bool Function(T, T) _isEqual;
+  Option<T> _lastValue = const None();
   ///
   NonRepetitiveStream({
     required Stream<T> stream,
-  }) {
+    bool Function(T last, T next) isEqual = _defaultIsEqual,
+  }) : 
+    _isEqual = isEqual {
     _subscription = stream.listen(
       (event) {
-        if (_lastValue != event) {
-          _lastValue = event;
+        final isEqual = switch(_lastValue) {
+          Some<T>(:final value) => _isEqual(value, event),
+          None() => false,
+        };
+        if (!isEqual) {
+          _lastValue = Some(event);
           _controller.add(event);
         }
       },
       onError: (error, stackTrace) {
         _controller.addError(error, stackTrace);
       },
+      onDone: () => _controller.close(),
     );
   }
   ///
