@@ -17,13 +17,11 @@ class JdsServiceStartupOnReconnect {
   JdsServiceStartupOnReconnect({
     required Stream<DsDataPoint<int>> connectionStatuses,
     required JdsServiceStartup startup,
-    bool initialConnectionStatus = false,
   }) :
     _connectionStatuses = connectionStatuses,
-    _startup = startup, 
-    _isConnected = initialConnectionStatus;
+    _startup = startup;
   ///
-  void run() async {
+  Future<void> run() async {
     _connectionSubscription = _connectionStatuses.listen((point) {
       _log.info('ConnectionStatus: status: ${point.status}');
       if (point.status == DsStatus.ok) {
