@@ -137,7 +137,7 @@ class JdsLine implements CustomProtocolLine {
   ///
   static final _dataPointTransformer = StreamTransformer<Uint8List, DsDataPoint>.fromHandlers(
     handleData: (data, sink) {
-      _log.debug('[$JdsLine._dataPointTransformer] data: $data');
+      // _log.debug('[$JdsLine._dataPointTransformer] data: $data');
       for (final chunck in _chunks(data, Jds.endOfTransmission)) {
         final rawPoint = String.fromCharCodes(chunck);
         if(rawPoint.isNotEmpty) {
