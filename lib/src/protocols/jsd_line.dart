@@ -125,7 +125,7 @@ class JdsLine implements CustomProtocolLine {
         // log(_debug, '[$JdsLine._dataPointTransformer] data[$i]: ${data[i]}');
         final chunk = data.sublist(start, i);
         // log(_debug, '[$JdsLine._dataPointTransformer] chunk: $chunk');
-        _log.debug('[$JdsLine._dataPointTransformer] chunk: ${String.fromCharCodes(chunk)}');
+        // _log.debug('[$JdsLine._dataPointTransformer] chunk: ${String.fromCharCodes(chunk)}');
         yield chunk;
         start = i + 1;
       }
