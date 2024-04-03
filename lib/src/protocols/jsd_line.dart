@@ -11,7 +11,7 @@ class Jds {
 }
 ///
 class JdsLine implements CustomProtocolLine {
-  static final _log = const Log('JdsLine')..level = LogLevel.info;
+  static const _log = Log('JdsLine');
   final LineSocket _lineSocket;
   ///
   /// Реализация протокола связи с сервером DataServer
@@ -34,7 +34,7 @@ class JdsLine implements CustomProtocolLine {
   /// depending on type stored in the json['type'] field
   // ignore: long-method
   static DsDataPoint _dataPointFromJson(Map<String, dynamic> json) {
-    _log.debug('[$JdsLine._dataPointFromJson] json: $json');
+    // _log.debug('[$JdsLine._dataPointFromJson] json: $json');
     try {
       final dType = DsDataType.fromString(json['type'] as String);
       if (dType == DsDataType.bool) {
@@ -97,20 +97,19 @@ class JdsLine implements CustomProtocolLine {
           timestamp: json['timestamp'] as String,
         );
       } else {
-        _throwNotImplementedFailure(dType);
+        _throwNotImplementedFailure(dType, json);
       }
     } catch (error) {
-      _log.debug('[$JdsLine.fromJson] error: $error');
       throw Failure.convertion(
-        message: 'Ошибка в методе $JdsLine._dataPointFromJson() $error',
+        message: 'Ошибка в методе $JdsLine._dataPointFromJson() $error\njson: $json',
         stackTrace: StackTrace.current,
       );
     }
   }
   ///
-  static Never _throwNotImplementedFailure(DsDataType dataType) {
+  static Never _throwNotImplementedFailure(DsDataType dataType, Map<String, dynamic> json) {
     throw Failure(
-      message: 'Convertion for type "$dataType" is not implemented yet', 
+      message: 'Convertion for type "$dataType" is not implemented yet,\njson: $json', 
       stackTrace: StackTrace.current,
     );
   }
