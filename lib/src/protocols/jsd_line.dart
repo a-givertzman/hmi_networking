@@ -146,7 +146,7 @@ class JdsLine implements CustomProtocolLine {
             final point = _dataPointFromJson(jsonPoint);
             sink.add(point);
           } catch(_) {
-            _log.warning('invalid json string: $rawPoint');
+            _log.warning('[._dataPointFromJson()] invalid json string: $rawPoint');
           }
         }
       }
