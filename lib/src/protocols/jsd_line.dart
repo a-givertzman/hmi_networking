@@ -101,7 +101,7 @@ class JdsLine implements CustomProtocolLine {
       }
     } catch (error) {
       throw Failure.convertion(
-        message: 'Ошибка в методе $JdsLine._dataPointFromJson() $error\njson: $json',
+        message: 'Ошибка в методе $JdsLine._dataPointFromJson() $error',
         stackTrace: StackTrace.current,
       );
     }
@@ -109,7 +109,7 @@ class JdsLine implements CustomProtocolLine {
   ///
   static Never _throwNotImplementedFailure(DsDataType dataType, Map<String, dynamic> json) {
     throw Failure(
-      message: 'Convertion for type "$dataType" is not implemented yet,\njson: $json', 
+      message: 'Convertion for type "$dataType" is not implemented yet, json: $json', 
       stackTrace: StackTrace.current,
     );
   }
@@ -142,8 +142,12 @@ class JdsLine implements CustomProtocolLine {
         final rawPoint = String.fromCharCodes(chunck);
         if(rawPoint.isNotEmpty) {
           final jsonPoint = const JsonCodec().decode(rawPoint) as Map<String, dynamic>;
-          final point = _dataPointFromJson(jsonPoint);
-          sink.add(point);
+          try {
+            final point = _dataPointFromJson(jsonPoint);
+            sink.add(point);
+          } catch(_) {
+            _log.warning('invalid json string: $rawPoint');
+          }
         }
       }
     },
