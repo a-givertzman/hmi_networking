@@ -9,7 +9,7 @@ import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
 ///
 /// Клиент подключения к DataServer
 class DsClientReal implements DsClient {
-  static const _debug = true;
+  static const _log = Log('DsClientReal');
   bool _isActive = false;
   final CustomProtocolLine _line;
   final Map<String, StreamController<DsDataPoint>> _receivers = {};
@@ -29,7 +29,7 @@ class DsClientReal implements DsClient {
   bool isConnected() => _line.isConnected;
   ///
   void _onCancel(StreamController<DsDataPoint>? controller) {
-    log(_debug, '[$DsClientReal.onCancel] ');
+    _log.debug('[.onCancel()] ');
     _receivers.removeWhere((key, value) => value == controller);
     if (controller != null) {
       controller.close();
@@ -60,7 +60,7 @@ class DsClientReal implements DsClient {
         onListen: () async {
           if (!_isActive) {
             _isActive = true;
-            log(_debug, '[$DsClientReal._setupStreamController] before _run');
+            _log.debug('[._setupStreamController()] before _run');
             _dsClientConnectionListener = DsClientConnectionListener(
               _stream<int>('Local.System.Connection'),
               connectionStatus: _line.isConnected ? DsStatus.ok : DsStatus.invalid,
@@ -72,13 +72,13 @@ class DsClientReal implements DsClient {
             );
             _dsClientConnectionListener.run();
             _listenLine();
-            log(_debug, '[$DsClientReal._setupStreamController] after _run');
+            _log.debug('[._setupStreamController()] after _run');
           }
         },
       );
       streamController.onCancel = () => _onCancel(streamController);
       _receivers[name] = streamController;
-      log(_debug, '[$DsClientReal._setupStreamController] value: $name,   streamCtrl: $streamController');
+      _log.debug('[._setupStreamController()] value: $name,   streamCtrl: $streamController');
       return streamController;
     } else {
       if (_receivers.containsKey(name)) {
@@ -87,11 +87,11 @@ class DsClientReal implements DsClient {
           // log(_debug, '[$DsClientReal._setupStreamController] value: $name,   streamCtrl: $streamController');
           return streamController;
         } else {
-          log(_debug, 'Ошибка в методе $DsClientReal._setupStreamController: streamController could not be null');
+          _log.warning('Ошибка в методе _setupStreamController: streamController could not be null');
           throw Exception('Ошибка в методе $DsClientReal._setupStreamController: streamController could not be null');
         }
       } else {
-        log(_debug, 'Ошибка в методе $DsClientReal._setupStreamController: name not found: $name');
+        _log.warning('Ошибка в методе _setupStreamController: name not found: $name');
         throw Exception('Ошибка в методе $DsClientReal._setupStreamController: name not found: $name');
       }
     }    
@@ -110,7 +110,7 @@ class DsClientReal implements DsClient {
           if (parsedValue != null) {
             value = (parsedValue > 0) ^ inverse;
           } else {
-            log(_debug, '[$DsClientReal._streamToBool] bool.parse error for event: $event');
+            _log.warning('[._streamToBool()] bool.parse error for event: $event');
             status = DsStatus.invalid;
           }
         }
@@ -135,7 +135,7 @@ class DsClientReal implements DsClient {
         if (parsedValue != null) {
           value = parsedValue + offset;
         } else {
-          log(_debug, 'int.parse error for event: $event');
+          _log.warning('[._streamToInt()] int.parse error for event: $event');
           status = DsStatus.invalid;
         }
         return DsDataPoint<int>(
@@ -179,7 +179,7 @@ class DsClientReal implements DsClient {
         if (parsedValue != null) {
           value = parsedValue + offset;
         } else {
-          log(_debug, 'double.parse error for event: $event');
+          _log.warning('[._streamToDouble()] double.parse error for event: $event');
           status = DsStatus.invalid;
         }
         return DsDataPoint<double>(
@@ -234,7 +234,7 @@ class DsClientReal implements DsClient {
   /// Слушает socket, 
   /// раскидывает полученные события по подписчикам
   void _listenLine() {
-    log(_debug, '[$DsClientReal]');
+    _log.debug('[._listenLine()]');
     _line.stream.listen(
       (dataPoint) {
         _cache?.add(dataPoint);
@@ -251,15 +251,15 @@ class DsClientReal implements DsClient {
         }
       },
       onError: (e) {
-        log(_debug, '[$DsClientReal._run] error: $e');
+        _log.warning('[._listenLine()] error: $e');
         // _socket.close();
       },
       onDone: () {
-        log(_debug, '[$DsClientReal] done');
+        _log.debug('[._listenLine()] done');
         _line.close();
       },
     );
-    log(_debug, '[$DsClientReal] exit');
+    _log.debug('[._listenLine()] exit');
   }
   ///
   /// Посылает команду сервеер S7 DataServer
