@@ -7,7 +7,7 @@ import 'package:hmi_networking/src/core/ds_client/cache/memory/ds_client_memory_
 /// 
 /// Periodically persists primary cache into secondary. 
 final class DsClientDelayedCache implements DsClientCache {
-  static final _log = const Log('DsClientDelayedCache')..level = LogLevel.debug;
+  static const _log = Log('DsClientDelayedCache');
   final DsClientCache _primaryCache;
   final DsClientCache _secondaryCache;
   final Duration _cachingTimeout;

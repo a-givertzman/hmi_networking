@@ -26,7 +26,7 @@ class EmulationParams {
 ///
 /// Методы работающие только в режиме эмуляции для удобства тестирования
 class DsClientFake implements DsClient {
-  static final _log = const Log('DsClientFake')..level = LogLevel.info;
+  static const _log = Log('DsClientFake');
   final Map<String, StreamController<DsDataPoint>> _receivers = {};
   final Map<String, CustomDataGenerator> _generators = {};
   late StreamTransformer doubleTransformer;
