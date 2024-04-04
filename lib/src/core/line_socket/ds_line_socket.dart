@@ -128,7 +128,7 @@ class DsLineSocket implements LineSocket {
         ),
       );
     } else {
-      _log.debug('[.send] event: $data');
+      // _log.debug('[.send] event: $data');
       try {
         if (_isConnected) {
           socket.add(data);
