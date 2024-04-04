@@ -43,8 +43,8 @@ class JdsServiceStartupOnReconnect {
     });
     _log.info('Entering startup loop...');
     while (true) {
-      _log.info('_isConnected: $_isConnected');
-      _log.info('_isStartupCompleted: $_isStartupCompleted');
+      // _log.info('_isConnected: $_isConnected');
+      // _log.info('_isStartupCompleted: $_isStartupCompleted');
       if (_isConnected && !_isStartupCompleted) {
         _log.info('Starting up...');
         final result = await _startup.run();
