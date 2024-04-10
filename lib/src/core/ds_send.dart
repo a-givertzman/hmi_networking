@@ -30,7 +30,7 @@ class DsSend<T> {
     required DsCot cot,
     required List<DsCot> responseCots,
     String? response,
-    int responseTimeout = 10,
+    int responseTimeout = 5,
   }) : 
     assert(_types.containsKey(T)),
     _dsClient = dsClient,
