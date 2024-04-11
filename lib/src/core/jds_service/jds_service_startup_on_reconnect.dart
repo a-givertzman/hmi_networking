@@ -25,9 +25,9 @@ class JdsServiceStartupOnReconnect {
   ///
   Future<void> run() async {
     _connectionSubscription = _connectionStatuses.listen((point) {
-      _log.info('ConnectionStatus: status: ${point.status}');
+      _log.debug('ConnectionStatus: status: ${point.status}');
       if (point.status == DsStatus.ok) {
-        _log.info('ConnectionStatus: value : ${point.value} (${DsStatus.ok.value})');
+        _log.debug('ConnectionStatus: value : ${point.value} (${DsStatus.ok.value})');
         final connectionStatus = '${point.value}';
         if (connectionStatus == '${DsStatus.ok.value}') {
           _log.info('ConnectionStatus: is connected!');
