@@ -9,7 +9,7 @@ class JdsServiceStartupOnReconnect {
   static const _log = Log('JdsServiceStartupOnReconnect');
   final Stream<DsDataPoint<int>> _connectionStatuses;
   final JdsServiceStartup _startup;
-  bool _isConnected = true;
+  bool _isConnected ;
   bool _isStartupCompleted = false;
   StreamSubscription? _connectionSubscription;
   ///
@@ -17,8 +17,10 @@ class JdsServiceStartupOnReconnect {
   JdsServiceStartupOnReconnect({
     required Stream<DsDataPoint<int>> connectionStatuses,
     required JdsServiceStartup startup,
+    bool isConnected = true,
   }) :
     _connectionStatuses = connectionStatuses,
+    _isConnected = isConnected,
     _startup = startup;
   ///
   Future<void> run() async {
