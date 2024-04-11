@@ -8,9 +8,9 @@ import 'package:hmi_networking/src/core/jds_service/jds_point_config/jds_point_c
 ///
 /// Collection of JDS requests supported by service on external server.
 class JdsService {
-  static const _responceTimeout = Duration(milliseconds: 500);
   final DsClient _dsClient;
   final PointRoute _route;
+  final Duration _responseTimeout;
   ///
   /// Collection of JDS requests supported by service on external server.
   /// 
@@ -18,8 +18,10 @@ class JdsService {
   const JdsService({
     required DsClient dsClient,
     PointRoute route = const PointRoute.empty(),
+    Duration responseTimeout = const Duration(milliseconds: 500),
   }) : 
     _dsClient = dsClient,
+    _responseTimeout = responseTimeout,
     _route = route;
   ///
   /// Proceed to authentication process with [token].
@@ -29,7 +31,7 @@ class JdsService {
       pointName: _route.join(DsPointName('/Auth.Secret')),
       cot: DsCot.req, 
       responseCots: [DsCot.reqCon, DsCot.reqErr],
-      responseTimeout: _responceTimeout,
+      responseTimeout: _responseTimeout,
     ).exec(token)
     .onError(
       (error, stackTrace) => Err(
@@ -48,7 +50,7 @@ class JdsService {
       pointName: _route.join(DsPointName('/Points')),
       cot: DsCot.req, 
       responseCots: [DsCot.reqCon, DsCot.reqErr],
-      responseTimeout: _responceTimeout,
+      responseTimeout: _responseTimeout,
     ).exec('')
     .then<ResultF<JdsPointConfigs>>((result) async {
       switch(result) {
@@ -79,7 +81,7 @@ class JdsService {
       pointName: _route.join(DsPointName('/Subscribe')),
       cot: DsCot.req, 
       responseCots: [DsCot.reqCon, DsCot.reqErr],
-      responseTimeout: _responceTimeout,
+      responseTimeout: _responseTimeout,
     ).exec('[${names.map((name) => '"$name"').join(',')}]')
     .onError(
       (error, stackTrace) => Err(
