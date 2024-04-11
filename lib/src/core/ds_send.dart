@@ -17,7 +17,7 @@ class DsSend<T> {
   final DsCot _cot;
   final List<DsCot> _responseCots;
   final String? _response;
-  final int _responseTimeout;
+  final Duration _responseTimeout;
   ///
   /// [dsClient] - instance if DsClient 
   /// [pointName] - full name identifies DataServer Point
@@ -30,7 +30,7 @@ class DsSend<T> {
     required DsCot cot,
     required List<DsCot> responseCots,
     String? response,
-    int responseTimeout = 5,
+    Duration responseTimeout = const Duration(seconds: 5),
   }) : 
     assert(_types.containsKey(T)),
     _dsClient = dsClient,
@@ -66,7 +66,7 @@ class DsSend<T> {
         ),
       )
       .timeout(
-        Duration(seconds: _responseTimeout), 
+        _responseTimeout, 
         onTimeout: () => Err(
           Failure(
             message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${_response ?? _pointName.name})', 
