@@ -5,7 +5,7 @@ import 'package:hmi_core/hmi_core.dart';
 abstract interface class DsClientCache {
   ///
   /// Retrieves point from cache by its name.
-  Future<Option<DsDataPoint>> get(String pointName);
+  Future<Option<DsDataPoint>> get(DsPointName pointName);
   ///
   /// Retrieves all points from cache.
   Future<List<DsDataPoint>> getAll();

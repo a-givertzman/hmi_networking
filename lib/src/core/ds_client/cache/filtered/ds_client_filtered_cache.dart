@@ -18,9 +18,9 @@ class DsClientFilteredCache implements DsClientCache {
     required bool Function(DsDataPoint) filter,
     required DsClientCache cache,
     bool filterOnGet = false,
-  }) : 
-    _filter = filter, 
-    _cache = cache, 
+  }) :
+    _filter = filter,
+    _cache = cache,
     _filterOnGet = filterOnGet;
   
   //
@@ -37,7 +37,7 @@ class DsClientFilteredCache implements DsClientCache {
   }
   //
   @override
-  Future<Option<DsDataPoint>> get(String pointName) async {
+  Future<Option<DsDataPoint>> get(DsPointName pointName) async {
     final option = await _cache.get(pointName);
     return switch(option) {
       Some(value:final point) => switch(_filterOnGet) {
