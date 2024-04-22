@@ -6,7 +6,7 @@ import 'api_params.dart';
 import 'api_request.dart';
 ///
 class JsonTo<T> {
-  static const _debug = false;
+  static const _log = Log('JsonTo');
   final ApiRequest _request;
   ///
   const JsonTo({
@@ -15,11 +15,11 @@ class JsonTo<T> {
   _request = request;
   ///
   Future<Response<T>> parse({required ApiParams params}) {
-    log(_debug, '[$JsonTo.parse] params: ', params);
+    _log.debug('<$T> [.parse] params: $params');
     return _request
       .fetch(params: params)
       .then((json) {
-        log(_debug, '[$JsonTo.parse] _json: ', json);
+        _log.debug('<$T> [.parse] json: $json');
         if (json.isNotEmpty) {
           try {
             final T parsed = const JsonCodec().decode(json) as T;
@@ -29,7 +29,7 @@ class JsonTo<T> {
               errDump: '',
             );
           } catch (error) {
-            log(_debug, 'Ошибка в методе $runtimeType.parse() on json: "$json"\n\t$error');
+            _log.error('<$T> Ошибка в методе $runtimeType.parse() on json: "$json"\n\t$error');
             return Response(
               errCount: 1,
               errDump: 'Ошибка в методе $runtimeType.parse() $error',
@@ -40,7 +40,7 @@ class JsonTo<T> {
             // );
           }
         } else {
-          log(_debug, 'Ошибка в методе $runtimeType.parse() json is empty');
+          _log.error('<$T> Ошибка в методе $runtimeType.parse() json is empty');
           return Response(
             errCount: 1,
             errDump: 'Ошибка в методе $runtimeType.parse() json is empty',

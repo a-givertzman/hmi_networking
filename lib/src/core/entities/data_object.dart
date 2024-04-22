@@ -14,7 +14,7 @@ abstract class IDataObject {
 ///
 ///
 class DataObject implements IDataObject {
-  static const _debug = true;
+  static const _log = Log('debug');
   final Map<String, ValueObject> _map = {};
   final DataSet<Map<String, String>> _remote;
   late bool isEmpty;
@@ -69,12 +69,11 @@ class DataObject implements IDataObject {
     return _remote
       .fetchWith(params: params)
       .then((response) {
-        log(_debug, '[$runtimeType.fetch] response: ', response);
+        _log.debug('[.fetch] response: $response');
         if (!response.hasError && response.hasData) {
           final data = response.data;
           if (data != null && data.isNotEmpty) {
-            log(_debug, '[DataObject.fetch]');
-            log(_debug, '[DataObject.fetch] response.data:', response.data);
+            _log.debug('[.fetch] response.data: ${response.data}');
             final Map<String, dynamic> sqlMap = data;
             final sqlMapEntry = sqlMap.entries.first;
             final row = sqlMapEntry.value as Map<String, dynamic>;
@@ -108,7 +107,7 @@ class DataObject implements IDataObject {
       });
       _valid = true;
     } catch (error) {
-      log(_debug, 'Ошибка в методе $runtimeType.fromRow() \n$error');
+      _log.error('Ошибка в методе .fromRow() \n$error');
       _valid = false;
       // throw Failure.dataObject(
       //   message: 'Ошибка в методе $classInst.parse() ${e.toString()}'

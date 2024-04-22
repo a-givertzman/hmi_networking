@@ -8,7 +8,7 @@ import 'package:hmi_networking/src/core/line_socket/line_socket.dart';
 
 ///
 class DsLineSocket implements LineSocket {
-  static final _log = const Log('DsLineSocket')..level = LogLevel.info;
+  static const _log = Log('DsLineSocket');
   bool _isActive = false;
   bool _isConnected = false;
   bool _cancel = false;
@@ -98,7 +98,8 @@ class DsLineSocket implements LineSocket {
           type: DsDataType.integer, 
           name: DsPointName('/Local/Local.System.Connection'), 
           value: isConnected ? DsStatus.ok.value : DsStatus.invalid.value, 
-          status: DsStatus.ok, 
+          status: DsStatus.ok,
+          cot: DsCot.inf,
           timestamp: DsTimeStamp.now().toString(),
         ).toJson(),
       ),
@@ -127,7 +128,7 @@ class DsLineSocket implements LineSocket {
         ),
       );
     } else {
-      _log.debug('[.send] event: $data');
+      // _log.debug('[.send] event: $data');
       try {
         if (_isConnected) {
           socket.add(data);

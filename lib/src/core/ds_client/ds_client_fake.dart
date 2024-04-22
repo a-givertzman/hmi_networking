@@ -26,7 +26,7 @@ class EmulationParams {
 ///
 /// Методы работающие только в режиме эмуляции для удобства тестирования
 class DsClientFake implements DsClient {
-  static final _log = const Log('DsClientFake')..level = LogLevel.info;
+  static const _log = Log('DsClientFake');
   final Map<String, StreamController<DsDataPoint>> _receivers = {};
   final Map<String, CustomDataGenerator> _generators = {};
   late StreamTransformer doubleTransformer;
@@ -88,7 +88,7 @@ class DsClientFake implements DsClient {
   /// В качестве результата Result<bool> получает результат записи в socket
   @override
   Future<ResultF<void>> send(
-    DsCommand dsCommand,
+    DsDataPoint point,
   ) {
     throw Failure.unexpected(
       message: '[$DsClientFake.send] method not implemented, used only for emulation in the test mode', 
@@ -245,6 +245,7 @@ class DsClientFake implements DsClient {
           name: data.name, 
           value: int.parse('${data.value}'),
           status: data.status,
+          cot: data.cot,
           timestamp: data.timestamp,
         ),
       );
@@ -255,6 +256,7 @@ class DsClientFake implements DsClient {
           name: data.name, 
           value: int.parse('${data.value}') > 0,
           status: data.status,
+          cot: data.cot,
           timestamp: data.timestamp,
         ),
       );
@@ -265,6 +267,7 @@ class DsClientFake implements DsClient {
           name: data.name, 
           value: double.parse('${data.value}'),
           status: data.status,
+          cot: data.cot,
           timestamp: data.timestamp,
         ),
       );
@@ -286,6 +289,7 @@ class DsClientFake implements DsClient {
           name: DsPointName('/'), 
           value: false, 
           status: DsStatus.ok,
+          cot: data.cot,
           timestamp: DateTime.now().toIso8601String(),
         ),
       );
@@ -296,6 +300,7 @@ class DsClientFake implements DsClient {
           name: DsPointName('/'), 
           value: true, 
           status: DsStatus.ok,
+          cot: data.cot,
           timestamp: DateTime.now().toIso8601String(),
         ),
       );
@@ -315,6 +320,7 @@ class DsClientFake implements DsClient {
       name: name, //'AnalogSensors.Winch.EncoderBR1',
       value: event,
       status: DsStatus.ok,
+      cot: DsCot.inf,
       timestamp: DateTime.now().toIso8601String(),
     );
     if (_receivers.keys.contains(point.name.name)) {
@@ -328,6 +334,7 @@ class DsClientFake implements DsClient {
       type: DsDataType.integer,
       name: name, //'AnalogSensors.Winch.EncoderBR1',
       value: event,
+      cot: DsCot.inf,
       status: DsStatus.ok,
       timestamp: DateTime.now().toIso8601String(),
     );

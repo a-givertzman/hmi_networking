@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
@@ -10,7 +9,7 @@ import 'package:hmi_networking/src/protocols/custom_protocol_line.dart';
 ///
 /// Клиент подключения к DataServer
 class DsClientReal implements DsClient {
-  static const _debug = true;
+  static const _log = Log('DsClientReal');
   bool _isActive = false;
   final CustomProtocolLine _line;
   final Map<String, StreamController<DsDataPoint>> _receivers = {};
@@ -20,6 +19,7 @@ class DsClientReal implements DsClient {
   DsClientReal({
     required CustomProtocolLine line,
     DsClientCache? cache,
+    FutureOr<void> Function(bool isConnected)? onConnectionChanged,
   }):
     _line = line,
     _cache = cache;
@@ -29,7 +29,7 @@ class DsClientReal implements DsClient {
   bool isConnected() => _line.isConnected;
   ///
   void _onCancel(StreamController<DsDataPoint>? controller) {
-    log(_debug, '[$DsClientReal.onCancel] ');
+    _log.debug('[.onCancel()] ');
     _receivers.removeWhere((key, value) => value == controller);
     if (controller != null) {
       controller.close();
@@ -43,47 +43,42 @@ class DsClientReal implements DsClient {
   }
   ///
   Stream<DsDataPoint<T>> _stream<T>(String name) {
-    if (T == bool) {
-      return _streamToBool(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>;
-    }
-    if (T == int) {
-      return _streamToInt(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>;
-    }
-    if (T == double) {
-      return _streamToDouble(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>;
-    }
-    return _setupStreamController(name).stream as Stream<DsDataPoint<T>>;
+    return switch(T) {
+      bool => _streamToBool(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>,
+      int => _streamToInt(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>,
+      double => _streamToDouble(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>,
+      String => _streamToString(_setupStreamController(name).stream) as Stream<DsDataPoint<T>>,
+      _ => _setupStreamController(name).stream as Stream<DsDataPoint<T>>,
+    };
   }
   ///
   /// Вернет StreamController с именем [name] из Map<String, StreamContoller> _receivers
   /// если такой есть, если нет, то создаст.
   StreamController<DsDataPoint> _setupStreamController(String name) {
-    // StreamController<DsDataPoint> streamController;
     if (!_receivers.containsKey(name)) {
       final streamController = StreamController<DsDataPoint>.broadcast(
-        onListen: () {
+        onListen: () async {
           if (!_isActive) {
             _isActive = true;
-            log(_debug, '[$DsClientReal._setupStreamController] before _run');
+            _log.debug('[._setupStreamController()] before _run');
             _dsClientConnectionListener = DsClientConnectionListener(
               _stream<int>('Local.System.Connection'),
               connectionStatus: _line.isConnected ? DsStatus.ok : DsStatus.invalid,
-              onConnectionChanged: (connectionStatus) {
+              onConnectionChanged: (connectionStatus) async {
                 if (connectionStatus == DsStatus.ok) {
-                  log(_debug, '[$DsClientReal._setupStreamController] _line.requestAll on connected');
                   _line.requestAll();
                 }
               },
             );
             _dsClientConnectionListener.run();
             _listenLine();
-            log(_debug, '[$DsClientReal._setupStreamController] after _run');
+            _log.debug('[._setupStreamController()] after _run');
           }
         },
       );
       streamController.onCancel = () => _onCancel(streamController);
       _receivers[name] = streamController;
-      log(_debug, '[$DsClientReal._setupStreamController] value: $name,   streamCtrl: $streamController');
+      _log.debug('[._setupStreamController()] value: $name,   streamCtrl: $streamController');
       return streamController;
     } else {
       if (_receivers.containsKey(name)) {
@@ -92,11 +87,11 @@ class DsClientReal implements DsClient {
           // log(_debug, '[$DsClientReal._setupStreamController] value: $name,   streamCtrl: $streamController');
           return streamController;
         } else {
-          log(_debug, 'Ошибка в методе $DsClientReal._setupStreamController: streamController could not be null');
+          _log.warning('Ошибка в методе _setupStreamController: streamController could not be null');
           throw Exception('Ошибка в методе $DsClientReal._setupStreamController: streamController could not be null');
         }
       } else {
-        log(_debug, 'Ошибка в методе $DsClientReal._setupStreamController: name not found: $name');
+        _log.warning('Ошибка в методе _setupStreamController: name not found: $name');
         throw Exception('Ошибка в методе $DsClientReal._setupStreamController: name not found: $name');
       }
     }    
@@ -115,7 +110,7 @@ class DsClientReal implements DsClient {
           if (parsedValue != null) {
             value = (parsedValue > 0) ^ inverse;
           } else {
-            log(_debug, '[$DsClientReal._streamToBool] bool.parse error for event: $event');
+            _log.warning('[._streamToBool()] bool.parse error for event: $event');
             status = DsStatus.invalid;
           }
         }
@@ -124,6 +119,7 @@ class DsClientReal implements DsClient {
           name: event.name,
           value: value,
           status: status,
+          cot: event.cot,
           timestamp: event.timestamp,
         );
       });
@@ -139,7 +135,7 @@ class DsClientReal implements DsClient {
         if (parsedValue != null) {
           value = parsedValue + offset;
         } else {
-          log(_debug, 'int.parse error for event: $event');
+          _log.warning('[._streamToInt()] int.parse error for event: $event');
           status = DsStatus.invalid;
         }
         return DsDataPoint<int>(
@@ -147,6 +143,22 @@ class DsClientReal implements DsClient {
           name: event.name,
           value: value,
           status: status,
+          cot: event.cot,
+          timestamp: event.timestamp,
+        );
+      });
+  }
+  ///
+  Stream<DsDataPoint<String>> _streamToString(Stream<DsDataPoint> stream) {
+    return stream
+      .map((event) {
+        // log(_debug, '[$DsClientReal.streamInt.map] event: ', event.name, '\t', event.value);
+        return DsDataPoint<String>(
+          type: DsDataType.string,
+          name: event.name,
+          value: event.value.toString(),
+          status: event.status,
+          cot: event.cot,
           timestamp: event.timestamp,
         );
       });
@@ -167,7 +179,7 @@ class DsClientReal implements DsClient {
         if (parsedValue != null) {
           value = parsedValue + offset;
         } else {
-          log(_debug, 'double.parse error for event: $event');
+          _log.warning('[._streamToDouble()] double.parse error for event: $event');
           status = DsStatus.invalid;
         }
         return DsDataPoint<double>(
@@ -175,6 +187,7 @@ class DsClientReal implements DsClient {
           name: event.name,
           value: value,
           status: status,
+          cot: event.cot,
           timestamp: event.timestamp,
         );
       });
@@ -221,9 +234,10 @@ class DsClientReal implements DsClient {
   /// Слушает socket, 
   /// раскидывает полученные события по подписчикам
   void _listenLine() {
-    log(_debug, '[$DsClientReal]');
+    _log.debug('[._listenLine()]');
     _line.stream.listen(
       (dataPoint) {
+        _cache?.add(dataPoint);
         final name = dataPoint.name.name;
         // log(_debug, '[$DsClientReal.dataPoint] : $dataPoint');
         // log(_debug, '[$DsClientReal._listenLine] point name: ${dataPoint.name}');
@@ -233,20 +247,19 @@ class DsClientReal implements DsClient {
           if (receiver != null && !receiver.isClosed) {
               // log(_debug, '[$DsClientReal._run] receiver: ${receiver}');
               receiver.add(dataPoint);
-              _cache?.add(dataPoint);
           }
         }
       },
       onError: (e) {
-        log(_debug, '[$DsClientReal._run] error: $e');
+        _log.warning('[._listenLine()] error: $e');
         // _socket.close();
       },
       onDone: () {
-        log(_debug, '[$DsClientReal] done');
+        _log.debug('[._listenLine()] done');
         _line.close();
       },
     );
-    log(_debug, '[$DsClientReal] exit');
+    _log.debug('[._listenLine()] exit');
   }
   ///
   /// Посылает команду сервеер S7 DataServer
@@ -256,9 +269,9 @@ class DsClientReal implements DsClient {
   /// В качестве результата Result<bool> получает результат записи в socket
   @override
   Future<ResultF<void>> send(
-    DsCommand dsCommand,
+    DsDataPoint point,
   ) {
-    return _line.send(dsCommand);
+    return _line.send(point);
   }
   ///
   /// Делает запрос на S7 DataServer что бы получить все точки данных
@@ -270,12 +283,12 @@ class DsClientReal implements DsClient {
     if (cache == null) {
       return _line.requestAll();
     } else {
-      for(final entry in _receivers.entries) {
-        final pointName = entry.key;
-        final option = await cache.get(pointName);
-        if(option case Some(value:final cachedPoint)) {
-          final controller = entry.value;
-          controller.add(cachedPoint);
+      final cachedPoints = await cache.getAll();
+      final receiversNames = _receivers.keys.toSet();
+      for(final point in cachedPoints) {
+        final pointName = point.name.name;
+        if(receiversNames.contains(pointName)) {
+          _receivers[pointName]?.add(point);
         }
       }
       return const Ok(null);
@@ -287,13 +300,13 @@ class DsClientReal implements DsClient {
   /// Данные не ждем, они прийдут в потоке
   @override
   Future<ResultF<void>> requestNamed(List<String> names) {
-    return send(DsCommand(
-      dsClass: DsDataClass.requestList,
+    return send(DsDataPoint(
       type: DsDataType.bool,
-      name: '',
+      name: DsPointName('/App/Jds/Gi'),
       value: names,
       status: DsStatus.ok,
-      timestamp: DsTimeStamp.now(),
+      cot: DsCot.req,
+      timestamp: DsTimeStamp.now().toString(),
     ));
   }
   ///

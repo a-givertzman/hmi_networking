@@ -6,7 +6,7 @@ import 'package:hmi_networking/src/api/json_to.dart';
 import 'package:hmi_networking/src/core/entities/response.dart';
 ///
 class DataSet<T> {
-  static const _debug = false;
+  static const _log = Log('DataSet');
   final ApiRequest _apiRequest;
   final ApiParams _params;
   final bool empty;
@@ -35,18 +35,18 @@ class DataSet<T> {
   }
   ///
   Future<Response<Map<String, dynamic>>> fetch() {
-    log(_debug, '[${DataSet<T>}.fetch]');
+    _log.debug('<$T> [.fetch]');
     return _fetch(_apiRequest, _params);
   }
   ///
   Future<Response<Map<String, dynamic>>> fetchWith({required Map<String, dynamic> params}) {
-    log(_debug, '[${DataSet<T>}.fetchWith]');
+    _log.debug('<$T> [.fetchWith]');
     final uParams = _params.updateWith(params);
     return _fetch(_apiRequest, uParams);
   }
   ///
   Future<Response<Map<String, dynamic>>> _fetch(ApiRequest apiRequest, ApiParams params) {
-    log(_debug, '[${DataSet<T>}._fetch]');
+    _log.debug('<$T> [._fetch]');
     return ApiHandleError<Map<String, dynamic>>(
       json: JsonTo<Map<String, dynamic>>(
         request: apiRequest,

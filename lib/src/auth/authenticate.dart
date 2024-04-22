@@ -3,7 +3,7 @@ import 'auth_result.dart';
 import 'user/app_user_single.dart';
 ///
 class Authenticate {
-  final _log = const Log('Authenticate')..level = LogLevel.debug;
+  static const _log = Log('Authenticate');
   final _storeKey = 'spwd';
   AppUserSingle _user;
   ///

@@ -5,19 +5,18 @@ import 'json_to.dart';
 
 ///
 class ApiHandleError<T> {
-  static const _debug = true;
+  static const _log = Log('ApiHandleError');
   final JsonTo<Map<String, dynamic>> _json;
   ApiHandleError({
     required JsonTo<Map<String, dynamic>> json,
   }):
     _json = json;
   Future<Response<T>> fetch({required ApiParams params}) {
-    log(_debug, '[ApiHandleError.fetch]');
+    _log.debug('<$T> [ApiHandleError.fetch]');
     return _json
       .parse(params: params)
       .then((parsedResponse) {
-        // final int dataCount = int.parse('${_parsed['dataCount']}');
-        log(_debug, '[ApiHandleError.fetch] _parsedResponse: ', parsedResponse);
+        _log.debug('<$T> [.fetch] parsedResponse: $parsedResponse');
         if (parsedResponse.hasData) {
           final sqlData = parsedResponse.data;
           if (sqlData != null) {

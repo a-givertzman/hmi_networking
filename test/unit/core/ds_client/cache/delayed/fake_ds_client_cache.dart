@@ -1,5 +1,4 @@
-import 'package:hmi_core/hmi_core_option.dart';
-import 'package:hmi_core/src/core/entities/ds_data_point.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 
 final class FakeDsClientCache implements DsClientCache {
@@ -22,7 +21,7 @@ final class FakeDsClientCache implements DsClientCache {
   }
 
   @override
-  Future<Option<DsDataPoint>> get(String pointName) async {
+  Future<Option<DsDataPoint>> get(DsPointName pointName) async {
     final point = internalMap[pointName];
     return switch(point) {
       null => const None() as Option<DsDataPoint>, 

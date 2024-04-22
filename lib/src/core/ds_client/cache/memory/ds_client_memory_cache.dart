@@ -15,8 +15,8 @@ final class DsClientMemoryCache implements DsClientCache {
   }
   //
   @override
-  Future<Option<DsDataPoint>> get(String pointName) async {
-    final point = _cache[pointName];
+  Future<Option<DsDataPoint>> get(DsPointName pointName) async {
+    final point = _cache[pointName.toString()];
     return switch(point) {
       null => const None() as Option<DsDataPoint>, 
       _ => Some(point),
@@ -28,14 +28,14 @@ final class DsClientMemoryCache implements DsClientCache {
   //
   @override
   Future<void> add(DsDataPoint point) async {
-    _cache[point.name.name] = point;
+    _cache[point.name.toString()] = point;
   }
   //
   @override
   Future<void> addMany(Iterable<DsDataPoint> points) async {
     _cache.addEntries(
       points.map(
-        (point) => MapEntry(point.name.name, point),
+        (point) => MapEntry(point.name.toString(), point),
       ),
     );
   }

@@ -8,7 +8,7 @@ import 'api_params.dart';
 /// с параметрами params
 /// Возвращает строку json
 class ApiRequest {
-  static const _debug = true;
+  static const _log = Log('ApiRequest');
   final String _url;
   final String _api;
   final int _port;
@@ -21,17 +21,17 @@ class ApiRequest {
     _api = api,
     _port = port;
   Future<String> fetch({required ApiParams params}) {
-    log(_debug, '[ApiRequest.fetch]');
+    _log.debug('[.fetch]');
     return _fetchJsonFromUrl(_url, _port, _api, params);
   }
   ///
   Future<String> _fetchJsonFromUrl(String url, int port, String api, ApiParams params) async {
-    log(_debug, '[ApiRequest._fetchJsonFromUrl] ip: $url:$port$api');
+    _log.debug('[._fetchJsonFromUrl] ip: $url:$port$api');
     return Socket
       .connect(url, _port, timeout: const Duration(seconds: 5))
       .then((socket) {
         final jsonData = params.toJson();
-        log(_debug, '[ApiRequest._fetchJsonFromUrl] jsonData: ', jsonData);
+        _log.debug('[._fetchJsonFromUrl] jsonData: $jsonData');
         socket.add(
           utf8.encode(jsonData),
         );
@@ -47,14 +47,14 @@ class ApiRequest {
             socket.close();
           },
           onDone: () {
-            log(_debug, '[ApiRequest.onDone]');
+            _log.debug('[.onDone]');
             if (!complete.isCompleted) {
               complete.complete('');
             }
             socket.close();
           },
           onError: (Object error) {
-            log(_debug, '[ApiRequest.onError]');
+            _log.debug('[.onError]');
             socket.close();
             return __connectionFailure(error, StackTrace.current);
           },

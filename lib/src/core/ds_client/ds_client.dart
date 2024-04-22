@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 
@@ -31,7 +32,7 @@ abstract class DsClient {
   /// в потоке Stream<DsDataPoint> stream
   /// В качестве результата Result<bool> получает результат записи в socket
   Future<ResultF<void>> send(
-    DsCommand dsCommand,
+    DsDataPoint point,
   );
   ///
   /// Делает запрос на S7 DataServer что бы получить все точки данных
