@@ -21,7 +21,7 @@ void main() {
       );
       for(final point in testPoints) {
         await cache.add(point);
-        expect(fakeFile.internalMap[point.name.name], equals(point));
+        expect(fakeFile.internalMap[point.name.toString()], equals(point));
       }
     });
     test('addMany(points) inserts multiple points to file', () async {
@@ -60,7 +60,7 @@ void main() {
         DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point1'), value: 342134, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
         DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.timeInvalid, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf), 
       ];
-      const pointName = 'point1';
+      const pointName = '/test/point1';
       final fakeFile = FakeDsCacheFile();
       final cache = DsClientFileCache(
         cacheFile: fakeFile,
@@ -70,17 +70,17 @@ void main() {
       for(final point in uniqueTestPoints.sublist(1)) {
         expect(
           fakeFile.internalMap[pointName], equals(oldPoint), 
-          reason: 'Should be equal to old value before an addition.',
+          reason: 'Should be equal to old value before an addition. Internal map: ${fakeFile.internalMap}',
         );
         final newPoint = point;
         expect(
           newPoint, isNot(equals(oldPoint)),
-          reason: 'Points should have different attributes in this test.',
+          reason: 'Points should have different attributes in this test. Internal map: ${fakeFile.internalMap}',
         );
         await cache.add(newPoint);
         expect(
           fakeFile.internalMap[pointName], equals(newPoint), 
-          reason: 'Should be equal to new value after an addition.',
+          reason: 'Should be equal to new value after an addition. Internal map: ${fakeFile.internalMap}',
         );
         oldPoint = newPoint;
       }

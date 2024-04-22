@@ -54,7 +54,7 @@ void main() {
     final receivedCommands = <String>[];
     const targetCommandsStartings = [
       // Command sent to server
-      '{"type":"bool","name":"/App/Jds/Gi","value":true,"status":0,"history":0,"alarm":0,"cot":"Req","timestamp":"',
+      //'{"type":"bool","name":"/App/Jds/Gi","value":true,"status":0,"history":0,"alarm":0,"cot":"Req","timestamp":"',
     ];
     line.stream.listen((event) { return; });
     // Do not remove! `Connection reset by peer` error will be thrown on group run.

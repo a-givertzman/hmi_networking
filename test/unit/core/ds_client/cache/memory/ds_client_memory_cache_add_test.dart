@@ -16,7 +16,7 @@ void main() {
       final cache = DsClientMemoryCache();
       for(final point in testPoints) {
         await cache.add(point);
-        final option = await cache.get(point.name.name);
+        final option = await cache.get(point.name);
           expect(option, isA<Some>());
           final receivedPoint = (option as Some<DsDataPoint>).value;
           expect(receivedPoint, equals(point));
@@ -55,7 +55,7 @@ void main() {
         DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point1'), value: 342134, status: DsStatus.ok, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf),
         DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point1'), value: false, status: DsStatus.timeInvalid, timestamp: "2024-03-04T19:25:29.228612", cot: DsCot.inf), 
       ];
-      const pointName = 'point1';
+      final pointName = DsPointName('/test/point1');
       final cache = DsClientMemoryCache();
       DsDataPoint oldPoint = uniqueTestPoints[0];
       await cache.add(oldPoint);

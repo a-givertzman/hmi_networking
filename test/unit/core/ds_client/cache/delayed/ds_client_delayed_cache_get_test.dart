@@ -15,7 +15,13 @@ void main() {
       expect(await cache.getAll(), equals(const <DsDataPoint>[]));
     });
     test('get(pointName) returns null if no initial cache provided', () async {
-      final testPointNames = ['Winch2.EncoderBR1', 'ConstantTension.Active', 'HPA.LowNiroPressure', 'HPU.HighPressure', 'Winch1.Overload'];
+      final testPointNames = [
+        DsPointName('/Winch2.EncoderBR1'),
+        DsPointName('/ConstantTension.Active'),
+        DsPointName('/HPA.LowNiroPressure'),
+        DsPointName('/HPU.HighPressure'),
+        DsPointName('/Winch1.Overload'),
+      ];
       final cache = DsClientDelayedCache(
         primaryCache: FakeDsClientCache(),
         secondaryCache:  FakeDsClientCache(),
@@ -26,16 +32,16 @@ void main() {
     });
     final initialCaches = [
       {
-        '': DsDataPoint(type: DsDataType.bool, name: DsPointName('/'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        '/': DsDataPoint(type: DsDataType.bool, name: DsPointName('/'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
       },
       {
-        'abc': DsDataPoint(type: DsDataType.bool, name: DsPointName('/'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
-        '123': DsDataPoint(type: DsDataType.bool, name: DsPointName('/'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        '/abc': DsDataPoint(type: DsDataType.bool, name: DsPointName('/abc'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        '/123': DsDataPoint(type: DsDataType.bool, name: DsPointName('/123'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
       },
       {
-        'point1': DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point1'), value: 474.20942, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
-        'point2': DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point2'), value: 342134, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
-        'point3': DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf), 
+        '/point1': DsDataPoint(type: DsDataType.real, name: DsPointName('/test/point1'), value: 474.20942, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        '/point2': DsDataPoint(type: DsDataType.integer, name: DsPointName('/test/point2'), value: 342134, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
+        '/point3': DsDataPoint(type: DsDataType.bool, name: DsPointName('/test/point3'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf), 
       },
     ];
     test('getAll() returns provided initial cache', () async {
@@ -52,7 +58,7 @@ void main() {
         final cacheEntries = initialCache.entries.toList();
         final cache = DsClientMemoryCache(initialCache: initialCache);
         for(var i=0; i<cacheEntries.length; i++) {
-          final pointName = cacheEntries[i].key;
+          final pointName = DsPointName(cacheEntries[i].key);
           final point = cacheEntries[i].value;
           final option = await cache.get(pointName);
           expect(option, isA<Some>());
