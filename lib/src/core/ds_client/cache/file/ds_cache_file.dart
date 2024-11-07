@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_entities.dart';
+import 'package:hmi_core/hmi_core_json.dart';
+import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_text_file.dart';
 import 'package:hmi_networking/src/core/entities/jds_data_point.dart';
 
 ///

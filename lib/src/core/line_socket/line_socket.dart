@@ -1,6 +1,6 @@
 
 import 'dart:typed_data';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 
 /// 
 /// Listen socket, send to socket,

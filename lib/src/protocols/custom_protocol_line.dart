@@ -1,5 +1,5 @@
-import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_entities.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 /// 
 /// Interface to communicate with remote device(s) in both ways by sending commands 
 /// and receiving events (in the form of [DsDataPoint]s).

@@ -1,5 +1,6 @@
-import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_entities.dart';
+import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 /// 
 /// [DsDataPoint] with json transformation capabilities.
 final class JdsDataPoint<T> implements DsDataPoint<T> {

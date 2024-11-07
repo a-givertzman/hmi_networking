@@ -1,6 +1,8 @@
 import 'dart:async';
-import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_entities.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_stream.dart';
 import 'package:hmi_networking/src/core/ds_client/cache/ds_client_cache.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client_connection_listener.dart';

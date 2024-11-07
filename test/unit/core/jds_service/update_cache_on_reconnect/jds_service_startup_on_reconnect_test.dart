@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/src/core/result_new/result.dart';
+import 'package:hmi_core/hmi_core_entities.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_networking/hmi_networking.dart';
 ///
 final class _FakeJdsStartup implements JdsServiceStartup {
