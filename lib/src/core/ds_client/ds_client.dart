@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_entities.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 
 ///
 abstract class DsClient {

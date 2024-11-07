@@ -2,8 +2,11 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_entities.dart';
+import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result.dart';
+import 'package:hmi_core/hmi_core_stream.dart';
 import 'package:hmi_networking/src/core/ds_client/ds_client.dart';
 
 ///
