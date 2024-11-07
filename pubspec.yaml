@@ -14,7 +14,7 @@ dependencies:
   hmi_core:
       git:
         url: https://github.com/a-givertzman/hmi_core.git
-        ref: 2.1.0
+        ref: 2.1.1
   shared_preferences: ^2.0.20
   async: ^2.11.0
 
