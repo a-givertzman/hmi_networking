@@ -22,8 +22,6 @@ export 'src/core/jds_service/jds_point_config/ds_filters.dart';
 export 'src/core/jds_service/jds_point_config/ds_point_address.dart';
 export 'src/core/line_socket/ds_line_socket.dart';
 export 'src/core/line_socket/line_socket.dart';
-export 'src/core/ds_data_stream_extract.dart';
-export 'src/core/entities/ds_data_point_extracted.dart';
 export 'src/core/ds_send.dart';
 export 'src/core/non_repetitive_stream.dart';
 export 'src/core/entities/double_container.dart';
