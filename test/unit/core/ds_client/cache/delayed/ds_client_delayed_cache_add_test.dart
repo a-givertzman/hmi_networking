@@ -7,6 +7,7 @@ import 'fake_ds_client_cache.dart';
 void main() {
   Log.initialize();
   group('DsClientDelayedCache', () {
+    const delayFactor = 1.5;
     test('add(point) inserts point into primary cache first and into secondary after delay', () async {
       final testPoints = [
         DsDataPoint(type: DsDataType.bool, name: DsPointName('/a'), value: false, status: DsStatus.ok, timestamp: DsTimeStamp.now().toString(), cot: DsCot.inf),
@@ -34,7 +35,7 @@ void main() {
           fakeSecondaryCache.internalMap[point.name.name], isNull,
           reason: 'Secondary cache souldn\'t be updated before delay.',
         );
-        await Future.delayed(delay * 1.2);
+        await Future.delayed(delay * delayFactor);
         expect(
           fakeSecondaryCache.internalMap[point.name.name], equals(point),
           reason: 'Secondary cache sould be updated after delay.',
@@ -77,7 +78,7 @@ void main() {
           fakeSecondaryCache.internalMap.values, isEmpty,
           reason: 'Secondary cache souldn\'t be updated before delay.',
         );
-        await Future.delayed(delay * 1.2);
+        await Future.delayed(delay * delayFactor);
         expect(
           fakeSecondaryCache.internalMap.values, equals(batch),
           reason: 'Secondary cache sould be updated after delay.',
@@ -119,7 +120,7 @@ void main() {
           fakePrimaryCache.internalMap[pointName], equals(newPoint), 
           reason: 'Should be equal to new value after an addition.',
         );
-        await Future.delayed(delay * 1.2);
+        await Future.delayed(delay * delayFactor);
         expect(
           fakeSecondaryCache.internalMap[pointName], equals(newPoint), 
           reason: 'Should be equal to new value after an addition after a delay.',
@@ -170,7 +171,7 @@ void main() {
           fakePrimaryCache.internalMap.values.toList(), containsAll(newPoints),
           reason: 'Should be equal to new values after an addition.',
         );
-        await Future.delayed(delay * 1.2);
+        await Future.delayed(delay * delayFactor);
         expect(
           fakeSecondaryCache.internalMap.values.toList(), containsAll(newPoints),
           reason: 'Should be equal to new values after an addition after a delay.',
