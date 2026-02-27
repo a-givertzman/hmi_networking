@@ -93,9 +93,8 @@ class DsClientFake implements DsClient {
   Future<ResultF<void>> send(
     DsDataPoint point,
   ) {
-    throw Failure.unexpected(
-      message: '[$DsClientFake.send] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
+    throw Failure(
+      '[$DsClientFake.send] method not implemented, used only for emulation in the test mode', 
     );
   }
   ///
@@ -105,9 +104,8 @@ class DsClientFake implements DsClient {
   /// данные не ждем, они прийдут в потоке
   @override
   Future<ResultF<void>> requestNamed(List<String> names) {
-    throw Failure.unexpected(
-      message: '[$DsClientFake.requestNamed] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
+    throw Failure(
+      '[$DsClientFake.requestNamed] method not implemented, used only for emulation in the test mode', 
     );
   }
   //
@@ -145,18 +143,16 @@ class DsClientFake implements DsClient {
       _log.debug('[$DsClientFake.stream()] value: $filterByValue,   streamCtrl: $streamController');
       return streamController.stream;
     } else {
-      throw Failure.unexpected(
-        message: '[$DsClientFake.stream()] streamController can`t be null', 
-        stackTrace: StackTrace.current,
+      throw Failure(
+        '[$DsClientFake.stream()] streamController can`t be null', 
       );
     }
   }
   //
   @override
   Stream<DsDataPoint<double>> streamReal(String name, {double offset = 0.0}) {
-    throw Failure.unexpected(
-      message: '[$DsClientFake.streamReal] method not implemented, used only for emulation in the test mode', 
-      stackTrace: StackTrace.current,
+    throw Failure(
+      '[$DsClientFake.streamReal] method not implemented, used only for emulation in the test mode', 
     );
   }
   //
@@ -187,9 +183,8 @@ class DsClientFake implements DsClient {
       // ignore: void_checks
       return Future.value(Ok(streamController.stream));
     } else {
-      throw Failure.unexpected(
-        message: '[$DsClientFake.stream()] streamController can`t be null', 
-        stackTrace: StackTrace.current,
+      throw Failure(
+        '[$DsClientFake.stream()] streamController can`t be null', 
       );
     }
   }
@@ -233,9 +228,8 @@ class DsClientFake implements DsClient {
       _log.debug('[$DsClientFake._streamEmulated()] value: $filterByValue,   streamCtrl: $streamController');
       return streamController.stream;
     } else {
-      throw Failure.unexpected(
-        message: '[$DsClientFake._streamEmulated()] streamController can`t be null', 
-        stackTrace: StackTrace.current,
+      throw Failure(
+        '[$DsClientFake._streamEmulated()] streamController can`t be null', 
       );
     }
   }
@@ -276,9 +270,8 @@ class DsClientFake implements DsClient {
       );
     } else {
       sink.addError(
-        Failure.unexpected(
-          message: 'Ошибка в методе _handleToTStreamData класса $DsClientFake: usupported data type',
-          stackTrace: StackTrace.current,
+        Failure(
+          'Ошибка в методе _handleToTStreamData класса $DsClientFake: usupported data type',
         ),
       );
     }
@@ -309,9 +302,8 @@ class DsClientFake implements DsClient {
       );
     } else {
       sink.addError(
-        Failure.unexpected(
-          message: 'Ошибка в методе _handleToBoolStreamData класса $DsClientFake:\ninput data must be 0 or 1, but $data given',
-          stackTrace: StackTrace.current,
+        Failure(
+          'Ошибка в методе _handleToBoolStreamData класса $DsClientFake:\ninput data must be 0 or 1, but $data given',
         ),
       );
     }

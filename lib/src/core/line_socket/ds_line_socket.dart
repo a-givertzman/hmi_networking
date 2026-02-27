@@ -41,9 +41,8 @@ class DsLineSocket implements LineSocket {
       _controller.onListen = _listenSocket;
       return _controller.stream;
     }
-    throw Failure.connection(
-      message: 'Ошибка в методе $DsLineSocket._stream: already connected to socket.', 
-      stackTrace: StackTrace.current,
+    throw Failure(
+      'Ошибка в методе $DsLineSocket._stream: already connected to socket.', 
     );
   }
   ///
@@ -124,9 +123,8 @@ class DsLineSocket implements LineSocket {
       _log.debug('[.send] failed, socket was: $socket');
       await Future.delayed(const Duration(milliseconds: 100));
       return Err(
-        Failure.connection(
-          message: 'Not connected', 
-          stackTrace: StackTrace.current,
+        Failure(
+          'Not connected', 
         ),
       );
     } else {
@@ -138,17 +136,15 @@ class DsLineSocket implements LineSocket {
         }
         return Err(
           Failure(
-            message: 'Ошибка в методе $runtimeType.send: socket is not connected',
-            stackTrace: StackTrace.current,
+            'Ошибка в методе $runtimeType.send: socket is not connected',
           ),
         );
       } catch (error) {
         _log.debug('[.send] error: $error');
         await _closeSocket(socket);
         return Err(
-          Failure.connection(
-            message: '$error', 
-            stackTrace: StackTrace.current,
+          Failure(
+            error.toString(), 
           ),
         );         
       }

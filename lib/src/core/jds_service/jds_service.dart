@@ -38,8 +38,7 @@ class JdsService {
     .onError(
       (error, stackTrace) => Err(
         Failure(
-          message: error.toString(), 
-          stackTrace: stackTrace,
+          error.toString(), 
         ),
       ),
     );
@@ -69,8 +68,7 @@ class JdsService {
     .onError(
       (error, stackTrace) => Err(
         Failure(
-          message: error.toString(), 
-          stackTrace: stackTrace,
+          error.toString(), 
         ),
       ),
     );
@@ -88,8 +86,7 @@ class JdsService {
     .onError(
       (error, stackTrace) => Err(
         Failure(
-          message: error.toString(), 
-          stackTrace: stackTrace,
+          error.toString(), 
         ),
       ),
     );
