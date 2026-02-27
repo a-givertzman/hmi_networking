@@ -27,9 +27,8 @@ class AppUserGroup implements UserGroup {
     if (_groups.containsKey(group)) {
       _group = group;
     } else {
-      throw Failure.convertion(
-          message: "[UserGroup] '$group' несуществующая группа",
-          stackTrace: StackTrace.current,
+      throw Failure(
+          "[UserGroup] '$group' несуществующая группа",
       );
     }
   }
@@ -48,9 +47,8 @@ class AppUserGroup implements UserGroup {
         return status;
       }
     }
-    throw Failure.unexpected(
-      message: '[$runtimeType] $key - несуществующая группа',
-      stackTrace: StackTrace.current,
+    throw Failure(
+      '[$runtimeType] $key - несуществующая группа',
     );
   }
 }

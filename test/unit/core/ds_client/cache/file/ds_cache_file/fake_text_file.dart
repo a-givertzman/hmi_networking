@@ -14,7 +14,7 @@ class FakeTextFile implements TextFile {
   //
   @override
   Future<ResultF<String>> get content async {
-    return _isReadOk ? Ok(contentText) : Err(Failure(message: '', stackTrace: StackTrace.empty));
+    return _isReadOk ? Ok(contentText) : Err(Failure(''));
   }
   //
   @override
