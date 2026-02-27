@@ -37,8 +37,9 @@ class JdsService {
     ).exec(token)
     .onError(
       (error, stackTrace) => Err(
-        Failure(
-          error.toString(), 
+        Failure.pass(
+          "DsSend",
+          error, 
         ),
       ),
     );
@@ -67,8 +68,9 @@ class JdsService {
     })
     .onError(
       (error, stackTrace) => Err(
-        Failure(
-          error.toString(), 
+        Failure.pass(
+          "DsSend",
+          error, 
         ),
       ),
     );
@@ -85,8 +87,9 @@ class JdsService {
     ).exec('[${names.map((name) => '"$name"').join(',')}]')
     .onError(
       (error, stackTrace) => Err(
-        Failure(
-          error.toString(), 
+        Failure.pass(
+          "DsSend",
+          error, 
         ),
       ),
     );
