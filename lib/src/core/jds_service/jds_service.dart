@@ -38,7 +38,7 @@ class JdsService {
     .onError(
       (error, stackTrace) => Err(
         Failure.pass(
-          "DsSend",
+          "JdsService.authenticate | ",
           error, 
         ),
       ),
@@ -69,7 +69,7 @@ class JdsService {
     .onError(
       (error, stackTrace) => Err(
         Failure.pass(
-          "DsSend",
+          "JdsService.points | ",
           error, 
         ),
       ),
@@ -88,7 +88,7 @@ class JdsService {
     .onError(
       (error, stackTrace) => Err(
         Failure.pass(
-          "DsSend",
+          "JdsService.subscribe | ",
           error, 
         ),
       ),

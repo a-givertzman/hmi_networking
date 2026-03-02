@@ -61,8 +61,9 @@ class DsSend<T> {
       .then<ResultF<DsDataPoint<T>>>((point) => point.toResult())
       .onError(
         (error, stackTrace) => Err(
-          Failure(
-            error.toString(), 
+          Failure.pass(
+            "DsSend.exec | ",
+            error, 
           ),
         ),
       )

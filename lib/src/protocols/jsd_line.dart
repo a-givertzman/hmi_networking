@@ -102,8 +102,9 @@ class JdsLine implements CustomProtocolLine {
         _throwNotImplementedFailure(dType, json);
       }
     } catch (error) {
-      throw Failure(
-        'Ошибка в методе $JdsLine._dataPointFromJson() $error',
+      throw Failure.pass(
+        "CustomProtocolLine._dataPointFromJson | ",
+        error,
       );
     }
   }

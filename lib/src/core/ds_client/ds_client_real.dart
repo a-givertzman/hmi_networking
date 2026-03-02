@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:hmi_core/hmi_core_entities.dart';
-import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 import 'package:hmi_core/hmi_core_stream.dart';
@@ -91,11 +90,11 @@ class DsClientReal implements DsClient {
           return streamController;
         } else {
           _log.warning('Ошибка в методе _setupStreamController: streamController could not be null');
-          throw Failure('Ошибка в методе $DsClientReal._setupStreamController: streamController could not be null');
+          throw Exception('Ошибка в методе $DsClientReal._setupStreamController: streamController could not be null');
         }
       } else {
         _log.warning('Ошибка в методе _setupStreamController: name not found: $name');
-        throw Failure('Ошибка в методе $DsClientReal._setupStreamController: name not found: $name');
+        throw Exception('Ошибка в методе $DsClientReal._setupStreamController: name not found: $name');
       }
     }    
   }

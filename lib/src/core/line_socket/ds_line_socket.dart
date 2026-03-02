@@ -143,8 +143,9 @@ class DsLineSocket implements LineSocket {
         _log.debug('[.send] error: $error');
         await _closeSocket(socket);
         return Err(
-          Failure(
-            error.toString(), 
+          Failure.pass(
+            "DsLineSocket.send | ",
+            error, 
           ),
         );         
       }
