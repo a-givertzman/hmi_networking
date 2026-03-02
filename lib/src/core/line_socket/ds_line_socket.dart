@@ -144,7 +144,7 @@ class DsLineSocket implements LineSocket {
         await _closeSocket(socket);
         return Err(
           Failure.pass(
-            "DsLineSocket.send | ",
+            "DsLineSocket.send",
             error, 
           ),
         );         

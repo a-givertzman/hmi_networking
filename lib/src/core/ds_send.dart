@@ -62,7 +62,7 @@ class DsSend<T> {
       .onError(
         (error, stackTrace) => Err(
           Failure.pass(
-            "DsSend.exec | ",
+            "DsSend.exec",
             error, 
           ),
         ),

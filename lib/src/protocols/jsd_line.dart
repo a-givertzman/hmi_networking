@@ -103,7 +103,7 @@ class JdsLine implements CustomProtocolLine {
       }
     } catch (error) {
       throw Failure.pass(
-        "CustomProtocolLine._dataPointFromJson | ",
+        "CustomProtocolLine._dataPointFromJson",
         error,
       );
     }
