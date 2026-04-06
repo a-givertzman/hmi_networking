@@ -61,9 +61,9 @@ class DsSend<T> {
       .then<ResultF<DsDataPoint<T>>>((point) => point.toResult())
       .onError(
         (error, stackTrace) => Err(
-          Failure(
-            message: error.toString(), 
-            stackTrace: stackTrace,
+          Failure.pass(
+            "DsSend.exec",
+            error, 
           ),
         ),
       )
@@ -71,8 +71,7 @@ class DsSend<T> {
         _responseTimeout, 
         onTimeout: () => Err(
           Failure(
-            message: 'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${_response ?? _pointName.name})', 
-            stackTrace: StackTrace.current,
+            'Ошибка в методе $runtimeType.exec: Timeout exceeded ($_responseTimeout sec) on stream(${_response ?? _pointName.name})', 
           ),
         ),
       );

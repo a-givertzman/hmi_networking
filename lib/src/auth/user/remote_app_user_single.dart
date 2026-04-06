@@ -80,9 +80,8 @@ class _RemoteAppUserSingle extends DataObject implements AppUserSingle {
         '${this['group']}',
       ];
     }
-    throw Failure.dataObject(
-      message: 'Ошибка в методе userGroup класса [$runtimeType] пользователь еще не проинициализирован',
-      stackTrace: StackTrace.current,
+    throw Failure(
+      'Ошибка в методе userGroup класса [$runtimeType] пользователь еще не проинициализирован',
     );
   }
   //

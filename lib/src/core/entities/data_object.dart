@@ -45,9 +45,8 @@ class DataObject implements IDataObject {
         return value;
       }
     }
-    throw Failure.dataObject(
-      message: "Ошибка в методе $runtimeType.operator [] нет свойства '$key' или оно null",
-      stackTrace: StackTrace.current,
+    throw Failure(
+      "Ошибка в методе $runtimeType.operator [] нет свойства '$key' или оно null",
     );
   }
   ///
@@ -84,9 +83,8 @@ class DataObject implements IDataObject {
       })
       .catchError((error, stackTrace) {
         _valid = false;
-        throw Failure.dataObject(
-          message: 'Ошибка в методе fetch класса $runtimeType:\n$error',
-          stackTrace: stackTrace,
+        throw Failure(
+          'Ошибка в методе fetch класса $runtimeType:\n$error',
         );
       });  
   }

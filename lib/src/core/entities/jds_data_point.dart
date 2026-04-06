@@ -64,9 +64,8 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
           timestamp: timestamp,
           cot: cot,
         ) as DsDataPoint<T>,
-        DsDataType.time || DsDataType.dateAndTime  => throw Failure.convertion(
-          message: 'Ошибка в методе $JdsDataPoint.fromJson(): тип $type не поддерживается',
-          stackTrace: StackTrace.current,
+        DsDataType.time || DsDataType.dateAndTime  => throw Failure(
+          'Ошибка в методе $JdsDataPoint.fromJson(): тип $type не поддерживается',
         ),
       },
     );
@@ -86,9 +85,8 @@ final class JdsDataPoint<T> implements DsDataPoint<T> {
         DsDataType.lInt    ||
         DsDataType.real    => _point.value,
         DsDataType.string => _point.value.toString(),
-        DsDataType.time || DsDataType.dateAndTime  => throw Failure.convertion(
-          message: 'Ошибка в методе $JdsDataPoint.fromJson(): тип ${_point.type} не поддерживается',
-          stackTrace: StackTrace.current,
+        DsDataType.time || DsDataType.dateAndTime  => throw Failure(
+          'Ошибка в методе $JdsDataPoint.fromJson(): тип ${_point.type} не поддерживается',
         ),
       }.toString(),
       'status': _point.status.value,

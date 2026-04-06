@@ -67,9 +67,9 @@ class ApiRequest {
   }
   ///
   Never __connectionFailure(Object? error, StackTrace stackTrace) {
-    throw Failure.connection(
-      message: 'Ошибка в методе $runtimeType._fetchFromUrl: $error',
-      stackTrace: stackTrace,
+    throw Failure.pass(
+      'Ошибка в методе $runtimeType._fetchFromUrl',
+      error,
     );
   }
   /// do not delete !!!
