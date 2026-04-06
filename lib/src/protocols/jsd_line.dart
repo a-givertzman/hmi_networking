@@ -102,17 +102,16 @@ class JdsLine implements CustomProtocolLine {
         _throwNotImplementedFailure(dType, json);
       }
     } catch (error) {
-      throw Failure.convertion(
-        message: 'Ошибка в методе $JdsLine._dataPointFromJson() $error',
-        stackTrace: StackTrace.current,
+      throw Failure.pass(
+        "CustomProtocolLine._dataPointFromJson",
+        error,
       );
     }
   }
   ///
   static Never _throwNotImplementedFailure(DsDataType dataType, Map<String, dynamic> json) {
     throw Failure(
-      message: 'Convertion for type "$dataType" is not implemented yet, json: $json', 
-      stackTrace: StackTrace.current,
+      'Convertion for type "$dataType" is not implemented yet, json: $json', 
     );
   }
   ///

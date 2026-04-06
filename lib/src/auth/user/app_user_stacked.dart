@@ -37,9 +37,8 @@ class AppUserStacked extends AppUser {
       final user = _users.peek;
       return user.clear();
     }
-    throw Failure.dataObject(
-      message: 'Ошибка в методе "clear" класса [$runtimeType] нет ни одного пользователя в стэке',
-      stackTrace: StackTrace.current,
+    throw Failure(
+      'Ошибка в методе "clear" класса [$runtimeType] нет ни одного пользователя в стэке',
     );
   }
   //
@@ -49,9 +48,8 @@ class AppUserStacked extends AppUser {
       final user = _users.peek;
       return user.exists();
     }
-    throw Failure.dataObject(
-      message: 'Ошибка в методе "exists" класса [$runtimeType] нет ни одного пользователя в стэке',
-      stackTrace: StackTrace.current,
+    throw Failure(
+      'Ошибка в методе "exists" класса [$runtimeType] нет ни одного пользователя в стэке',
     );
   }
   //
@@ -61,9 +59,8 @@ class AppUserStacked extends AppUser {
       final user = _users.peek;
       return user.fetchByLogin(login);
     }
-    throw Failure.dataObject(
-      message: 'Ошибка в методе "fetchByLogin" класса [$runtimeType] нет ни одного пользователя в стэке',
-      stackTrace: StackTrace.current,
+    throw Failure(
+      'Ошибка в методе "fetchByLogin" класса [$runtimeType] нет ни одного пользователя в стэке',
     );
   }
   //
@@ -73,9 +70,8 @@ class AppUserStacked extends AppUser {
       final user = _users.peek;
       return user.userGroups();
     }
-    throw Failure.dataObject(
-      message: 'Ошибка в методе "userGroup" класса [$runtimeType] нет ни одного пользователя в стэке',
-      stackTrace: StackTrace.current,
+    throw Failure(
+      'Ошибка в методе "userGroup" класса [$runtimeType] нет ни одного пользователя в стэке',
     );
   }
   //
@@ -85,9 +81,8 @@ class AppUserStacked extends AppUser {
       final user = _users.peek;
       return user.valid();
     }
-    throw Failure.dataObject(
-      message: 'Ошибка в методе "valid" класса [$runtimeType] нет ни одного пользователя в стэке',
-      stackTrace: StackTrace.current,
+    throw Failure(
+      'Ошибка в методе "valid" класса [$runtimeType] нет ни одного пользователя в стэке',
     );
   }
 }

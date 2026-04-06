@@ -16,9 +16,8 @@ class DataSource {
       final dataSet = _dataSets[name];
         return dataSet! as DataSet<T>;
     }
-    throw Failure.dataSource(
-      message: 'Ошибка в методе $DataSource.dataSet(): $name - несуществующий DataSet',
-      stackTrace: StackTrace.current,
+    throw Failure(
+      'Ошибка в методе $DataSource.dataSet(): $name - несуществующий DataSet',
     );
   }
 }

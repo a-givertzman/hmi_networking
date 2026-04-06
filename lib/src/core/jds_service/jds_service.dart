@@ -37,9 +37,9 @@ class JdsService {
     ).exec(token)
     .onError(
       (error, stackTrace) => Err(
-        Failure(
-          message: error.toString(), 
-          stackTrace: stackTrace,
+        Failure.pass(
+          "JdsService.authenticate",
+          error, 
         ),
       ),
     );
@@ -68,9 +68,9 @@ class JdsService {
     })
     .onError(
       (error, stackTrace) => Err(
-        Failure(
-          message: error.toString(), 
-          stackTrace: stackTrace,
+        Failure.pass(
+          "JdsService.points",
+          error, 
         ),
       ),
     );
@@ -87,9 +87,9 @@ class JdsService {
     ).exec('[${names.map((name) => '"$name"').join(',')}]')
     .onError(
       (error, stackTrace) => Err(
-        Failure(
-          message: error.toString(), 
-          stackTrace: stackTrace,
+        Failure.pass(
+          "JdsService.subscribe",
+          error, 
         ),
       ),
     );
